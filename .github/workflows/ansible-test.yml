@@ -159,7 +159,7 @@ jobs:
   integration:
     needs: integration_matrix
     runs-on: ubuntu-latest
-    name: I (Ⓐ${{ matrix.ansible }}+py${{ matrix.python }})
+    name: I (Ⓐ${{ matrix.ansible }}+py${{ matrix.python }}) - ${{ matrix.lbry_module }}
     strategy:
       fail-fast: false
       matrix:
@@ -201,8 +201,8 @@ jobs:
 
       # OPTIONAL If your integration test requires Python libraries or modules from other collections
       # Install them like this
-      #- name: Install collection dependencies
-      #  run: ansible-galaxy collection install ansible.netcommon -p .
+      - name: Install collection dependencies
+        run: ansible-galaxy collection install community.docker -p .
 
       # Run the integration tests
       - name: Run integration test - ${{ matrix.lbry_module }} - ${{ matrix.python }} - ${{ matrix.ansible }}
