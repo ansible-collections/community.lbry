@@ -189,6 +189,9 @@ jobs:
         with:
           path: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
+      - name: Install docker-compose
+        run: apt install docker-compose -y
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
