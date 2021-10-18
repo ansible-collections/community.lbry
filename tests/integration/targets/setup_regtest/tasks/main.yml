@@ -45,9 +45,6 @@
     delay: 30
     timeout: 90
 
-- pause:
-    seconds: 9999999
-
 - name: Wait for lbrynet server components to fully load
   community.lbry.lbry_status:
   register: result

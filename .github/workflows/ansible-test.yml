@@ -207,7 +207,7 @@ jobs:
 
       # OPTIONAL If your integration test requires Python libraries or modules from other collections
       # Install them like this
-      - name: Install collection dependencies
+      - name: Install community.docker
         run: ansible-galaxy collection install community.docker -p .
 
       # Run the integration tests
