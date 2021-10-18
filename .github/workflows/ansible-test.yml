@@ -125,7 +125,7 @@ jobs:
     runs-on: ubuntu-20.04
     defaults:
       run:
-        working-directory: ansible_collections/community/mongodb
+        working-directory: ansible_collections/community/lbry
     outputs:
       matrix: ${{ steps.json-list.outputs.modules-to-test }}
 
@@ -134,7 +134,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
         with:
-          path: ansible_collections/community/mongodb
+          path: ansible_collections/community/lbry
 
       - name: Generate module list
         run: |
