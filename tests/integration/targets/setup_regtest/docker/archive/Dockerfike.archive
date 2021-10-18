@@ -1,0 +1,21 @@
+FROM ubuntu:20.04
+RUN apt-get update && \
+    apt-get install software-properties-common -y && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install build-essential \
+                    python3.7 \
+                    python3.7-dev \
+                    git \
+                    python3.7-venv \
+                    libssl-dev \
+                    python-protobuf \
+                    ffmpeg  -y
+RUN git clone https://github.com/lbryio/lbry-sdk.git
+WORKDIR lbry-sdk
+RUN python3.7 -m venv lbry-venv && \
+    . lbry-venv/bin/activate && \
+    make install
+EXPOSE 5279/tcp
+EXPOSE 5280/tcp
+CMD ["./lbry-venv/bin/lbrynet", "start", "--api", "0.0.0.0:5279", "--streaming-server", "0.0.0.0:5280"]

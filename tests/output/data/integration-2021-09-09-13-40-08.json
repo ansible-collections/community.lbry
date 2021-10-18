@@ -1,0 +1,28 @@
+{
+    "targets": {
+        "lbry_publish": {
+            "aliases": [
+                "lbry_publish", 
+                "module/", 
+                "module/lbry_publish/", 
+                "module/lbry_publish/lbry_publish", 
+                "non_destructive/", 
+                "non_destructive/lbry_publish", 
+                "posix/", 
+                "role/", 
+                "role/lbry_publish"
+            ], 
+            "coverage": false, 
+            "coverage_label": "", 
+            "modules": [
+                "lbry_publish"
+            ], 
+            "name": "lbry_publish", 
+            "python_version": "3.6", 
+            "run_time_seconds": 176, 
+            "setup_always": [], 
+            "setup_once": [], 
+            "type": "role"
+        }
+    }
+}

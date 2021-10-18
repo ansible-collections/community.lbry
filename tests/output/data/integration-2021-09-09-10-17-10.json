@@ -1,0 +1,28 @@
+{
+    "targets": {
+        "lbry_get": {
+            "aliases": [
+                "lbry_get", 
+                "module/", 
+                "module/lbry_get/", 
+                "module/lbry_get/lbry_get", 
+                "non_destructive/", 
+                "non_destructive/lbry_get", 
+                "posix/", 
+                "role/", 
+                "role/lbry_get"
+            ], 
+            "coverage": false, 
+            "coverage_label": "", 
+            "modules": [
+                "lbry_get"
+            ], 
+            "name": "lbry_get", 
+            "python_version": "3.6", 
+            "run_time_seconds": 155, 
+            "setup_always": [], 
+            "setup_once": [], 
+            "type": "role"
+        }
+    }
+}

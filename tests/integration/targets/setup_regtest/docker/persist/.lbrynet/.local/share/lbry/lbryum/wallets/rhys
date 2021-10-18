@@ -1,0 +1,96 @@
+{
+    "accounts": [
+        {
+            "address_generator": {
+                "change": {
+                    "gap": 6,
+                    "maximum_uses_per_address": 1
+                },
+                "name": "deterministic-chain",
+                "receiving": {
+                    "gap": 20,
+                    "maximum_uses_per_address": 1
+                }
+            },
+            "certificates": {},
+            "encrypted": false,
+            "ledger": "lbc_mainnet",
+            "modified_on": 1634464439,
+            "name": "rhys",
+            "private_key": "xprv9s21ZrQH143K2N1grbyWaPoQQWAqA72PSSvsJzMcDFqR7FLAJxHKwP6x66ozD6NL7kSYt5ykqW55Fs4xY4k7gMV8ti6p8HWYkrVnQ2h3yJm",
+            "public_key": "xpub661MyMwAqRbcEr69xdWWwXk8xY1KZZkEofrU7NmDmbNPz3fJrVbaVBRRwP6ERUgnLuHLBtcEvbM7wUdZn5uuV6eoqHcBacLZWyoGPP94qAD",
+            "seed": "neglect define advance slender usage firm soccer depend note close fetch cluster"
+        },
+        {
+            "address_generator": {
+                "change": {
+                    "gap": 6,
+                    "maximum_uses_per_address": 1
+                },
+                "name": "deterministic-chain",
+                "receiving": {
+                    "gap": 20,
+                    "maximum_uses_per_address": 1
+                }
+            },
+            "certificates": {},
+            "encrypted": false,
+            "ledger": "lbc_mainnet",
+            "modified_on": 1634464442,
+            "name": "rhys",
+            "private_key": "xprv9s21ZrQH143K39LutELEpDJHgTTHvhw5W1XXQ5MPpC31sPq5XBvDH5Y8Pz2QcVC7agBy1LLcBy8coQFxTrsvSvW7YJqtSqYm9vRMfmCKkGX",
+            "public_key": "xpub661MyMwAqRbcFdRNzFsFBMF2EVHnLAevsET8CTm1NXZzkCAE4jETpsrcFH87o2cxUsyqTGMLs5S3H7qUrsKNEGvGwrftEAhkucqzFrPWpUK",
+            "seed": "buyer bid wedding either foam ugly this caught clutch walnut awake under"
+        },
+        {
+            "address_generator": {
+                "change": {
+                    "gap": 6,
+                    "maximum_uses_per_address": 1
+                },
+                "name": "deterministic-chain",
+                "receiving": {
+                    "gap": 20,
+                    "maximum_uses_per_address": 1
+                }
+            },
+            "certificates": {},
+            "encrypted": false,
+            "ledger": "lbc_mainnet",
+            "modified_on": 1634464443,
+            "name": "rhys",
+            "private_key": "xprv9s21ZrQH143K2QZzTdYp6tcgFKd5qdwoMBkH9N1kqjjdVSfwaadjzMMRgiXqdPF9UGoUfSNDMuas91g5q7DJ9vq1uKX8GdnjqZ7rt77ykcc",
+            "public_key": "xpub661MyMwAqRbcEteTZf5pU2ZQoMTaF6feiQfswkRNQ5GcNF1687wzY9fuY29BajrLJqGXXrMH2PjA9h1URqjgWDwaWS9Gb4KbmWov6Kqbj9B",
+            "seed": "ribbon bamboo fog dog evoke common siren layer sadness eight card funny"
+        },
+        {
+            "address_generator": {
+                "change": {
+                    "gap": 6,
+                    "maximum_uses_per_address": 1
+                },
+                "name": "deterministic-chain",
+                "receiving": {
+                    "gap": 20,
+                    "maximum_uses_per_address": 1
+                }
+            },
+            "certificates": {},
+            "encrypted": false,
+            "ledger": "lbc_mainnet",
+            "modified_on": 1634464469,
+            "name": "rhys",
+            "private_key": "xprv9s21ZrQH143K2cfhJNc1seQ64cQoGoMZ6Fc3LCaCvgtLbTyN1p4FQ7iDoj2DCjkBfcqexrJUR6iovetTjRypbtE1Z8cmMbag3eE7Ja7pTKU",
+            "public_key": "xpub661MyMwAqRbcF6kAQQ92EnLpceFHgG5QTUXe8aypV2RKUGJWZMNVwv2hf1rX6UrLJgRZvYFv3XDdCeY67WGRwR9pcMDPhC3ktFtvLGUQenS",
+            "seed": "choose obvious sleep filter pride rocket beauty buyer caught hurt already curious"
+        }
+    ],
+    "name": "My Wallet",
+    "preferences": {
+        "encrypt-on-disk": {
+            "ts": 1634464439,
+            "value": false
+        }
+    },
+    "version": 1
+}

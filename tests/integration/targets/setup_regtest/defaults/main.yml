@@ -1,0 +1,9 @@
+---
+  docker_containers:
+    - lbrycrd
+    - walletserver
+    - es01
+    - lbrynet
+    - mysql
+    - chainquery
+  lbrynet_port: 5279

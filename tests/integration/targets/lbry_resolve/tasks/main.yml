@@ -1,0 +1,13 @@
+---
+  - name: Resolve a file from lbry
+    community.lbry.lbry_resolve:
+      urls:
+        - 'astream#ea41b9f807c6982cf97a1178838dfef64feaa014'
+    register: result
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "result.failed"
+        - "result.changed == False"
+        - "'Error resolving file(s) from lbrynet' in result.msg"

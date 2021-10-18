@@ -1,0 +1,28 @@
+---
+  - name: Get ffmpeg info
+    community.lbry.lbry_ffmpeg_find:
+    register: result
+
+  - assert:
+      that:
+        - "result.jsonrpc == '2.0'"
+        - "result.result.available == False"
+        #- "result.result.which | length == 0"
+        - "result.result.analyze_audio_volume"
+
+  - name: Install ffmpeg inside the docker container
+    community.docker.docker_container_exec:
+      container: docker_lbrynet_1
+      command: /bin/bash -c "apt update -y && apt install ffmpeg -y"
+      user: root
+
+  - name: Get ffmpeg info
+    community.lbry.lbry_ffmpeg_find:
+    register: result
+
+  - assert:
+      that:
+        - "result.jsonrpc == '2.0'"
+        - "result.result.available"
+        - "result.result.which == '/usr/bin/ffmpeg'"
+        - "result.result.analyze_audio_volume"

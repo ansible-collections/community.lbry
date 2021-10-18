@@ -1,0 +1,40 @@
+---
+  - name: Create a test file to upload to lbry
+    copy:
+      content: |
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eget odio nec ipsum aliquet fermentum sit amet in nulla. Fusce quis turpis eu lectus porta posuere. Mauris imperdiet augue lobortis facilisis euismod. Maecenas dapibus ultricies lacus eget fringilla. In in molestie tortor. Maecenas pulvinar ipsum iaculis, tincidunt magna eget, pellentesque diam. Phasellus cursus feugiat justo et vehicula. Nam velit ex, fermentum a accumsan sed, porttitor non dolor. Aenean luctus euismod odio sit amet fermentum. Aenean quis ex leo. Nam enim lacus, tempus in orci at, semper porttitor lacus. Sed vel porttitor lorem.
+      dest: /tmp/lorum_ipsum.txt
+
+  - name: Copy file to the lbry docker container
+    command: docker cp /tmp/lorum_ipsum.txt docker_lbrynet_1:/tmp/lorum_ipsum.txt
+
+  - name: Upload file to lbry - Missing bid
+    community.lbry.lbry_publish:
+      name: lorem-ipsum
+      file_path: /tmp/lorum_ipsum.txt
+      title: Lorem Ipsum Dolor Sit Amet
+      author: rhysmeister
+    register: result
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "result.failed"
+        - "result.changed == False"
+        - "'is a required argument for new publishes' in result.msg"
+
+  - name: Upload file to lbry - add bid no funds
+    community.lbry.lbry_publish:
+      name: lorem-ipsum
+      file_path: /tmp/lorum_ipsum.txt
+      title: Lorem Ipsum Dolor Sit Amet
+      author: rhysmeister
+      bid: '0.01'
+    register: result
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "result.failed"
+        - "result.changed == False"
+        - "'Not enough funds to cover this transaction' in result.msg"

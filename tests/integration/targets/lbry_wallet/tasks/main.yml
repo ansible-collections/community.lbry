@@ -1,0 +1,344 @@
+---
+  # Create a wallet tests
+  - name: Create a new wallet - check mode
+    community.lbry.lbry_wallet:
+      wallet_id: mywallet
+      state: present
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Wallet created'"
+
+  - name: Create a new wallet
+    community.lbry.lbry_wallet:
+      wallet_id: mywallet
+      state: present
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Wallet created'"
+
+  - name: Create a new wallet - again
+    community.lbry.lbry_wallet:
+      wallet_id: mywallet
+      state: present
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'Wallet already exists'"
+
+  # Remove wallet tests
+  - name: Remove a wallet - check mode
+    community.lbry.lbry_wallet:
+      wallet_id: mywallet
+      state: absent
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Wallet removed'"
+
+  - name: Remove a wallet
+    community.lbry.lbry_wallet:
+      wallet_id: mywallet
+      state: absent
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Wallet removed'"
+
+  - name: Remove a wallet - again
+    community.lbry.lbry_wallet:
+      wallet_id: mywallet
+      state: absent
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'Wallet does not exist'"
+  # Lock / Unlock / Encrypt / Decrypt wallet tests
+  - name: Lock a wallet that does not exist
+    community.lbry.lbry_wallet:
+      wallet_id: mywallet
+      state: locked
+    register: result
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'You cannot lock a wallet that does not exist'"
+        - "result.failed"
+
+  - name: Unlock a wallet that does not exist
+    community.lbry.lbry_wallet:
+      wallet_id: mywallet
+      state: unlocked
+    register: result
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'You cannot unlock a wallet that does not exist'"
+        - "result.failed"
+
+  - name: Create a new wallet for the tests
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: present
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Wallet created'"
+
+  - name: Lock the wallet - check mode
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: locked
+    check_mode: yes
+    register: result
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "result.failed"
+        - "result.changed == False"
+        - "result.msg == 'Wallet must be encrypted before locking'"
+
+  - name: Lock the wallet
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: locked
+    register: result
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "result.failed"
+        - "result.changed == False"
+        - "result.msg == 'Wallet must be encrypted before locking'"
+
+  - name: Encrypt wallet - check mode
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: encrypted
+      password: x123456x
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Wallet encrypted'"
+
+  - name: Get wallet info
+    community.lbry.lbry_wallet_info:
+      wallet_id: lockedwallet
+    register: result
+
+  - name: Ensure that wallet is not actually encrypted
+    assert:
+      that:
+        - "result.is_encrypted == False"
+
+  - name: Encrypt wallet
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: encrypted
+      password: x123456x
+      debug: no
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Wallet encrypted'"
+
+  - name: Get wallet info
+    community.lbry.lbry_wallet_info:
+      wallet_id: lockedwallet
+    register: result
+
+  - name: Ensure that wallet is encrypted
+    assert:
+      that:
+        - "result.is_encrypted"
+
+  - name: Lock the wallet - should succeed
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: locked
+      debug: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == True"
+        - "result.msg == 'Wallet locked'"
+
+  - name: Get wallet info
+    community.lbry.lbry_wallet_info:
+      wallet_id: lockedwallet
+    register: result
+
+  - name: Ensure that wallet is locked
+    assert:
+      that:
+        - "result.is_locked"
+
+  - name: Lock the wallet - again
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: locked
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'Wallet already locked'"
+
+  - name: Decrpt the wallet - check mode will fail
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: decrypted
+      password: x123456x
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.failed"
+        - "result.changed == False"
+        - "result.msg == 'Wallet must be unlocked before decrypting'"
+
+  - name: Decrypt the walltet - will fail
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: decrypted
+      password: x123456x
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.failed"
+        - "result.changed == False"
+        - "result.msg == 'Wallet must be unlocked before decrypting'"
+
+  - name: Unlock the wallet - check mode
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: unlocked
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Wallet unlocked'"
+
+  - name: Unlock the wallet
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: unlocked
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Wallet unlocked'"
+
+  - name: Get wallet info
+    community.lbry.lbry_wallet_info:
+      wallet_id: lockedwallet
+    register: result
+
+  - name: Ensure that wallet is unlocked
+    assert:
+      that:
+        - "result.is_locked == False"
+
+  - name: Unlock the wallet - again
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: unlocked
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'Wallet is already unlocked'"
+
+  - name: Decrypt the wallet - check mode
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: decrypted
+      password: x123456x
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Wallet decrypted"
+
+  - name: Decrypt the wallet
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: decrypted
+      password: x123456x
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Wallet decrypted"
+
+  - name: Get wallet info
+    community.lbry.lbry_wallet_info:
+      wallet_id: lockedwallet
+    register: result
+
+  - name: Ensure that wallet is decrypted
+    assert:
+      that:
+        - "result.is_encrypted == False"
+
+  - name: Decrypt the wallet - again
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: decrypted
+      password: x123456x
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'Wallet already decrypted"
+
+  - name: Attempt encrypt without a password
+    community.lbry.lbry_wallet:
+      wallet_id: lockedwallet
+      state: decrypted
+    register: result
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "result.failed"
+        - "result.msg == 'You must supply a password when encrypting or decrypting a wallet'"

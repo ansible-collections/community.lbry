@@ -1,0 +1,5 @@
+lbryum_servers:
+- walletserver:50001
+wallets:
+- default_wallet
+- rhys1

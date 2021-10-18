@@ -1,0 +1,142 @@
+version: "3.5"
+services:
+  lbrycrd:
+    image: lbry/lbrycrd:block_info_fix
+    container_name: lbrycrd
+    restart: "no"
+    ports:
+      - "15201:29246"
+      - "15200:29245"
+    expose:
+      - "29246"
+      - "29245"
+    networks:
+      - lbry
+    environment:
+      - RUN_MODE=regtest
+      # - RPC_ALLOW_IP=10.6.1.3
+  walletserver:
+    depends_on:
+      - es01
+    image: lbry/wallet-server:v0.105.0
+    container_name: walletserver
+    restart: always
+    ports:
+      - "50001:50001" # rpc port
+      - "2112:2112"   # uncomment to enable prometheus
+    environment:
+      - DB_DIRECTORY=/database
+      - DAEMON_URL=http://lbry:lbry@lbrycrd:29245
+      - TCP_PORT=50001
+      - PROMETHEUS_PORT=2112
+      - QUERY_TIMEOUT_MS=3000  # how long search queries allowed to run before cancelling, in milliseconds
+      - TRENDING_ALGORITHMS=variable_decay
+      - MAX_SEND=10000000000000  # deprecated. leave it high until its removed
+      - MAX_SUBS=1000000000000  # deprecated. leave it high until its removed
+      - ELASTIC_HOST=es01
+      - ELASTIC_PORT=9200
+    command: lbry.wallet.server.coin.LBCRegTest
+    volumes:
+      - "walletserver:/database"
+    networks:
+      - lbry
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
+    container_name: es01
+    environment:
+      - node.name=es01
+      - discovery.type=single-node
+      - indices.query.bool.max_clause_count=8196
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    expose:
+      - "9200"
+    volumes:
+      - es01:/usr/share/elasticsearch/data
+    networks:
+      - lbry
+  lbrynet:
+    image: lbry/lbrynet:v0.99.0
+    container_name: lbrynet
+    restart: always
+    ports:
+      - "5279:5279"
+      - "5280:5280"
+    expose:
+      - "5279"
+      - "5280"
+    depends_on:
+      - walletserver
+    environment:
+      - LBRY_STREAMING_SERVER=0.0.0.0:5280
+    volumes:
+      - "./persist/.lbrynet:/home/lbrynet"
+      - "./e2e:/etc/lbry" #Put your daemon_settings.yml here
+      # /private/var/tmp for OSX and /var/tmp for Linux
+      #- "${LOCAL_TMP_DIR}"
+    networks:
+      - lbry
+  mysql:
+    image: mysql/mysql-server:5.7.33
+    container_name: mysql
+    restart: "no"
+    ports:
+      - "15500:3306"
+    expose:
+      - "3306"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_DATABASE=lbry
+      - MYSQL_USER=lbry
+      - MYSQL_PASSWORD=lbry
+      - MYSQL_LOG_CONSOLE=true
+    volumes:
+      - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
+      - "./chainquery/docker/my.cnf:/etc/mysql/conf.d/chainquery-optimizations.cnf"
+    networks:
+      - lbry
+  ###################
+  ## Internal APIs ##
+  ###################
+  #internalapis:
+  #  image: lbry/internal-apis:master
+  #  restart: "no"
+  #  ports:
+  #    - "15400:8080"
+  #  expose:
+  #    - "8080"
+  #  depends_on:
+  #    - mysql
+  #    - lbrycrd
+  #  environment:
+  #    - MYSQL_DSN=lbry:lbry@tcp(mysql:3306)/lbry
+  #    - LBRYCRD_CONNECT=rpc://lbry:lbry@lbrycrd:29245
+  #    - REPLICA_DSN=lbry:lbry@tcp(mysql:3306)/lbry
+  #  entrypoint: wait-for-it -t 0 chainquery:6300 -- wait-for-it -t 0 lbrycrd:29245 -- ./latest serve
+  chainquery:
+    image: lbry/chainquery:master
+    container_name: chainquery
+    restart: "no"
+    ports:
+      - 6300:6300
+    depends_on:
+      - lbrycrd
+      - mysql
+    ## TODO: Uncomment this in a docker-compose.override.yml to allow for external configurations.
+    volumes:
+      - ./chainqueryconfig.toml:/etc/lbry/chainqueryconfig.toml
+    entrypoint: wait-for-it -t 0 lbrycrd:29245 -- wait-for-it -t 0 mysql:3306 -- start
+    networks:
+      - lbry
+volumes:
+  es01:
+  walletserver:
+networks:
+  lbry:
+    driver: bridge

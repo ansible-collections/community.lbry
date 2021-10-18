@@ -1,0 +1,29 @@
+{
+    "targets": {
+        "lbry_wallet_balance": {
+            "aliases": [
+                "lbry_wallet_balance", 
+                "module/", 
+                "module/lbry_wallet_balance/", 
+                "module/lbry_wallet_balance/lbry_wallet_balance", 
+                "non_destructive/", 
+                "non_destructive/lbry_wallet_balance", 
+                "posix/", 
+                "role/", 
+                "role/lbry_wallet_balance"
+            ], 
+            "coverage": false, 
+            "coverage_label": "", 
+            "modules": [
+                "lbry_wallet_balance"
+            ], 
+            "name": "lbry_wallet_balance", 
+            "python_version": "3.9", 
+            "run_time_seconds": 122, 
+            "setup_always": [], 
+            "setup_once": [], 
+            "type": "role", 
+            "validation_seconds": 2
+        }
+    }
+}

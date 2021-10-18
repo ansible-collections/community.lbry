@@ -1,0 +1,56 @@
+---
+- name: Ensure required python moules are installed
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - docker
+    - six
+
+#- name: Ensure docker-compose is available
+#  package:
+#    name:
+#      - docker
+#      - docker-compose
+
+#- name: Ensure docker is started
+#  service:
+#    name: docker
+#    state: started
+
+- name: Create the temp dirs required by the docker containers
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - ./docker/persist
+    - ./docker/persist/.lbrycrd
+    - ./docker/persist/.lbrynet
+    - ./docker/e2e
+
+- name: Ensure any existing docker containers are removed
+  community.docker.docker_container:
+    name: "{{ item }}"
+    state: absent
+  with_items: "{{ docker_containers }}"
+
+- name: Run docker-compose file
+  shell: docker-compose -f {{ docker_compose_file | default('docker-compose.yml') }} up --detach
+  args:
+    chdir: "{{role_path}}/docker"
+  notify: Clean up docker containers and volumes
+
+- name: Wait for lbrynet to become available
+  wait_for:
+    port: "{{ lbrynet_port }}"
+    delay: 30
+    timeout: 90
+
+- pause:
+    seconds: 9999999
+
+- name: Wait for lbrynet server components to fully load
+  community.lbry.lbry_status:
+  register: result
+  until: "result.result.startup_status.values() is all"
+  retries: 25
+  delay: 10

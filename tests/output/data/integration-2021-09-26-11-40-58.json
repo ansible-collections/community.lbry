@@ -1,0 +1,29 @@
+{
+    "targets": {
+        "lbry_resolve": {
+            "aliases": [
+                "lbry_resolve", 
+                "module/", 
+                "module/lbry_resolve/", 
+                "module/lbry_resolve/lbry_resolve", 
+                "non_destructive/", 
+                "non_destructive/lbry_resolve", 
+                "posix/", 
+                "role/", 
+                "role/lbry_resolve"
+            ], 
+            "coverage": false, 
+            "coverage_label": "", 
+            "modules": [
+                "lbry_resolve"
+            ], 
+            "name": "lbry_resolve", 
+            "python_version": "3.9", 
+            "run_time_seconds": 119, 
+            "setup_always": [], 
+            "setup_once": [], 
+            "type": "role", 
+            "validation_seconds": 1
+        }
+    }
+}

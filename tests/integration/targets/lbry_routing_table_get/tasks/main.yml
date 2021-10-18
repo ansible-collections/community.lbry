@@ -1,0 +1,10 @@
+---
+  - name: Get routing table from lbry server
+    community.lbry.lbry_routing_table_get:
+    register: result
+
+  - assert:
+      that:
+        - "result.jsonrpc == '2.0'"
+        - "result.result.buckets | length > 0"
+        - "result.result.node_id"

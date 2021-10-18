@@ -1,0 +1,29 @@
+{
+    "targets": {
+        "lbry_wallet": {
+            "aliases": [
+                "lbry_wallet", 
+                "module/", 
+                "module/lbry_wallet/", 
+                "module/lbry_wallet/lbry_wallet", 
+                "non_destructive/", 
+                "non_destructive/lbry_wallet", 
+                "posix/", 
+                "role/", 
+                "role/lbry_wallet"
+            ], 
+            "coverage": false, 
+            "coverage_label": "", 
+            "modules": [
+                "lbry_wallet"
+            ], 
+            "name": "lbry_wallet", 
+            "python_version": "3.9", 
+            "run_time_seconds": 126, 
+            "setup_always": [], 
+            "setup_once": [], 
+            "type": "role", 
+            "validation_seconds": 1
+        }
+    }
+}

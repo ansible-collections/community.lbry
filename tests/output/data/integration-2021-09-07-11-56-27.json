@@ -1,0 +1,28 @@
+{
+    "targets": {
+        "lbry_status": {
+            "aliases": [
+                "lbry_status", 
+                "module/", 
+                "module/lbry_status/", 
+                "module/lbry_status/lbry_status", 
+                "non_destructive/", 
+                "non_destructive/lbry_status", 
+                "posix/", 
+                "role/", 
+                "role/lbry_status"
+            ], 
+            "coverage": false, 
+            "coverage_label": "", 
+            "modules": [
+                "lbry_status"
+            ], 
+            "name": "lbry_status", 
+            "python_version": "3.6", 
+            "run_time_seconds": 78, 
+            "setup_always": [], 
+            "setup_once": [], 
+            "type": "role"
+        }
+    }
+}
