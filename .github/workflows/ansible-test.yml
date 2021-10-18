@@ -199,6 +199,9 @@ jobs:
           # will run on all python versions it supports.
           python-version: ${{ matrix.python }}
 
+      - name: Install coverage
+        run: pip install coverage --user
+
       - name: Install ansible-base (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
 
