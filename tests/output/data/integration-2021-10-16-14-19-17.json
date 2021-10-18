@@ -1,0 +1,29 @@
+{
+    "targets": {
+        "lbry_routing_table_get": {
+            "aliases": [
+                "lbry_routing_table_get", 
+                "module/", 
+                "module/lbry_routing_table_get/", 
+                "module/lbry_routing_table_get/lbry_routing_table_get", 
+                "non_destructive/", 
+                "non_destructive/lbry_routing_table_get", 
+                "posix/", 
+                "role/", 
+                "role/lbry_routing_table_get"
+            ], 
+            "coverage": false, 
+            "coverage_label": "", 
+            "modules": [
+                "lbry_routing_table_get"
+            ], 
+            "name": "lbry_routing_table_get", 
+            "python_version": "3.9", 
+            "run_time_seconds": 339, 
+            "setup_always": [], 
+            "setup_once": [], 
+            "type": "role", 
+            "validation_seconds": 1
+        }
+    }
+}

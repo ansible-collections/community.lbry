@@ -1,0 +1,12 @@
+---
+  - name: Get a file from lbry
+    community.lbry.lbry_get:
+      uri: 'astream#ea41b9f807c6982cf97a1178838dfef64feaa014'
+    register: result
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "result.failed"
+        - "result.changed == False"
+        - "'Failed to resolve stream at' in result.msg"

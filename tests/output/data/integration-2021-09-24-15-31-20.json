@@ -1,0 +1,29 @@
+{
+    "targets": {
+        "lbry_version": {
+            "aliases": [
+                "lbry_version", 
+                "module/", 
+                "module/lbry_version/", 
+                "module/lbry_version/lbry_version", 
+                "non_destructive/", 
+                "non_destructive/lbry_version", 
+                "posix/", 
+                "role/", 
+                "role/lbry_version"
+            ], 
+            "coverage": false, 
+            "coverage_label": "", 
+            "modules": [
+                "lbry_version"
+            ], 
+            "name": "lbry_version", 
+            "python_version": "3.9", 
+            "run_time_seconds": 112, 
+            "setup_always": [], 
+            "setup_once": [], 
+            "type": "role", 
+            "validation_seconds": 1
+        }
+    }
+}

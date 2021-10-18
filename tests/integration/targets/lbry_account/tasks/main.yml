@@ -1,0 +1,70 @@
+---
+  # Create account tests
+  - name: Create a new account - check mode
+    community.lbry.lbry_account:
+      name: rhys
+      state: present
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Account created'"
+
+  - name: Create a new account
+    community.lbry.lbry_account:
+      name: rhys
+      state: present
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Account created'"
+
+  - name: Create a new account - again
+    community.lbry.lbry_account:
+      name: rhys
+      state: present
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'Account already exists'"
+
+  # Remove account tests
+  - name: Remove an account - check mode
+    community.lbry.lbry_account:
+      name: rhys
+      state: absent
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Account removed'"
+
+  - name: Remove an account
+    community.lbry.lbry_account:
+      name: rhys
+      state: absent
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Account removed'"
+
+  - name: Remove an account - again
+    community.lbry.lbry_account:
+      name: rhys
+      state: absent
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'Account does not exist'"

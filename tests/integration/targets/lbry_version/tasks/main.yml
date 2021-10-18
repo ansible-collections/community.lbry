@@ -1,0 +1,11 @@
+---
+  - name: Get version of lbry server
+    community.lbry.lbry_version:
+    register: result
+
+  - assert:
+      that:
+        - "result.jsonrpc == '2.0'"
+        - "result.result.build == 'release'"
+        - "result.result.os_system == 'Linux'"
+        - "result.result.python_version.startswith('3')"

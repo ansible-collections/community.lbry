@@ -1,0 +1,6 @@
+---
+- name: Clean up docker containers
+  community.docker.docker_container:
+    name: "{{ item }}"
+    state: absent
+  with_items: "{{ docker_containers }}"

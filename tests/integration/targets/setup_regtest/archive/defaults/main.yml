@@ -1,0 +1,13 @@
+---
+lbrycrd: https://github.com/lbryio/lbrycrd/releases/download/v0.17.3.3/lbrycrd-linux-1733.zip
+lbry: https://github.com/lbryio/lbry-sdk/releases/download/v0.102.0/lbrynet-linux.zip
+
+required_packages:
+  - python-pip
+  - zip
+  - unzip
+  - libsnappy-dev
+  - wget
+  - cmake
+  - net-tools
+  - ffmpeg

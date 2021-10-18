@@ -1,0 +1,28 @@
+{
+    "targets": {
+        "lbry_stop": {
+            "aliases": [
+                "lbry_stop", 
+                "module/", 
+                "module/lbry_stop/", 
+                "module/lbry_stop/lbry_stop", 
+                "non_destructive/", 
+                "non_destructive/lbry_stop", 
+                "posix/", 
+                "role/", 
+                "role/lbry_stop"
+            ], 
+            "coverage": false, 
+            "coverage_label": "", 
+            "modules": [
+                "lbry_stop"
+            ], 
+            "name": "lbry_stop", 
+            "python_version": "3.6", 
+            "run_time_seconds": 140, 
+            "setup_always": [], 
+            "setup_once": [], 
+            "type": "role"
+        }
+    }
+}

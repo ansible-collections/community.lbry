@@ -1,0 +1,28 @@
+{
+    "targets": {
+        "lbry_ffmpeg_find": {
+            "aliases": [
+                "lbry_ffmpeg_find", 
+                "module/", 
+                "module/lbry_ffmpeg_find/", 
+                "module/lbry_ffmpeg_find/lbry_ffmpeg_find", 
+                "non_destructive/", 
+                "non_destructive/lbry_ffmpeg_find", 
+                "posix/", 
+                "role/", 
+                "role/lbry_ffmpeg_find"
+            ], 
+            "coverage": false, 
+            "coverage_label": "", 
+            "modules": [
+                "lbry_ffmpeg_find"
+            ], 
+            "name": "lbry_ffmpeg_find", 
+            "python_version": "3.6", 
+            "run_time_seconds": 180, 
+            "setup_always": [], 
+            "setup_once": [], 
+            "type": "role"
+        }
+    }
+}

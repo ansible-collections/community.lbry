@@ -1,0 +1,197 @@
+---
+# This role is based on the instructions at https://lbry.tech/resources/regtest-setup
+# Should be run in a Ubuntu 16.04 docker container
+- name: Ensure required packages are installed
+  package:
+    name: "{{ required_packages }}"
+    state: present
+
+- name: Ensure directories exists
+  file:
+    name: "{{ item }}"
+    state: directory
+  with_items:
+    - /opt
+    - /var/lbryum-server
+
+- name: Ensure lbryum user exists
+  user:
+    name: lbryum
+
+- name: Fix permissions
+  file:
+    name: /var/lbryum-server
+    state: directory
+    owner: lbryum
+    group: users
+
+- name: Create lbryum config
+  copy:
+    content: |
+      [lbrycrdd]
+      lbrycrdd_host = localhost
+      lbrycrdd_port = 18332
+      # user and password from lbrycrd.conf
+      lbrycrdd_user = test
+      lbrycrdd_password = test
+
+      [network]
+      type=lbrycrd_regtest
+    dest: /etc/lbryum.conf
+
+#- name: Create virtualenv
+#  shell: virtualenv -p /usr/bin/python2.7 /opt/lbry-env
+#  args:
+#    creates: /opt/lbry-env
+
+- name: Download and unarchive a release of lbrycrd
+  unarchive:
+    src: "{{ lbrycrd }}"
+    dest: "/opt"
+    remote_src: yes
+
+- name: Ensure config directories exists
+  file:
+    name: "{{ item }}"
+    state: directory
+  with_items:
+    - ~/.lbrycrd/
+    - ~/.lbryum/
+
+- name: Create lbrycrd config file
+  copy:
+    content: |
+      [regtest]
+      txindex=1
+      server=1
+      daemon=1
+      rpcuser=test
+      rpcpassword=test
+      connect=127.0.0.1:18444
+    dest: ~/.lbrycrd/lbrycrd.conf
+
+- name:
+  copy:
+    content: |
+      {
+         "chain": "lbrycrd_regtest",
+         "default_servers": {
+         "localhost": {
+           "t": "50001"
+         }
+        }
+      }
+    dest: ~/.lbryum/config
+
+# Needed?
+#- name: Install the leveldb package
+#  shell: |
+#    set -e;
+#    wget https://github.com/google/leveldb/archive/refs/tags/1.23.tar.gz
+#    mv 1.23.tar.gz leveldb.tar.gz
+#    tar -zxf leveldb.tar.gz
+#    mv leveldb-1.23 leveldb
+#    cd leveldb
+    #mkdir -p build && cd build
+#    cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
+#    touch /root/leveldb.success
+#  args:
+#    creates: /root/leveldb.success
+#    chdir: /opt
+
+- name: Download and unarchive a release of lbry
+  unarchive:
+    src: "{{ lbry }}"
+    dest: /opt
+    remote_src: yes
+
+- shell: ls -lh /opt
+
+#- name: Setup lbry pip stuff
+#  shell: |
+#    source /opt/lbry-env/bin/activate
+#    pip install -r requirements.txt
+#    pip install -e .
+#    mkdir ~/.lbrynet
+#    touch ~/.lbrynet/daemon_settings.yml
+#  args:
+#    chdir: /opt/lbrycrdd
+#    creates: ~/.lbrynet/daemon_settings.yml
+
+- name: Ensure /root/.lbrynet dir exists
+  file:
+    path: /root/.lbrynet
+    state: directory
+
+- name: Set config options for lbry
+  copy:
+    content: |
+      blockchain_name: lbrycrd_regtest
+      lbryum_servers:
+        - spv26.lbry.com:50001
+      reflect_uploads: false
+      share_usage_data: false
+      use_upnp: false
+    dest: ~/.lbrynet/daemon_settings.yml
+
+- name: Fire up lbrycrd daemon
+  shell: nohup ./lbrycrdd -regtest -printtoconsole > lbrycrdd.log 2>&1 &
+  args:
+    chdir: /opt
+
+- pause:
+    seconds: 30
+
+- name: Generate some coins
+  shell: |
+    ./lbrycrd-cli -regtest generate 173
+  args:
+    chdir: /opt
+
+- name: Start lbrynet daemon
+  shell: nohup ./lbrynet start --api 127.0.0.1:5279 --streaming-server 127.0.0.1:5280 --config ~/.lbrynet/daemon_settings.yml &
+  args:
+    chdir: /opt
+
+- name: Wait for lbrynet to respond
+  wait_for:
+    port: 5279
+    delay: 5
+    timeout: 30
+
+- name: Wait for lbrynet server components to fully load
+  community.lbry.lbry_status:
+  register: result
+  until: "result.result.startup_status.values() is all"
+  retries: 25
+  delay: 10
+  ignore_errors: yes  # TODO Remove
+
+- pause:
+    seconds: 30
+
+- name: Create a new wallet and default account
+  community.lbry.lbry_wallet:
+    wallet_id: mywallet
+    state: present
+    create_account: yes
+
+- name: Send credits to wallet
+  shell: ./lbrycrd-cli -regtest sendtoaddress mywallet 100 && touch mywallet.success
+  args:
+    creates: mywallet.success
+    chdir: /opt
+  ignore_errors: yes
+
+#- name: Debug step
+#  shell: netstat -tulpen
+
+#- name: Run the lbryum-server
+#  shell: |
+#    source /opt/lbry-env/bin/activate
+#    runuser -l lbryum -c 'lbryum-server --conf=/etc/lbryum.conf' &
+#    lbryum daemon start &
+#    lbryum getunusedaddress  # TODO
+#    ./lbrycrd-cli sendtoaddress <address> <num_of_credits>  # TODO
+#  args:
+#    chdir: /opt/

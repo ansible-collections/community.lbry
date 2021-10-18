@@ -1,0 +1,36 @@
+---
+  # Create a wallet tests
+  - name: Wallet does not exist
+    community.lbry.lbry_wallet_info:
+      wallet_id: idonotexist
+    register: result
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "result.failed"
+        - "result.msg == 'Wallet does not exist'"
+
+  - name: Create a wallet
+    community.lbry.lbry_wallet:
+      wallet_id: mywallet
+      state: present
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Wallet created'"
+
+  - name: Get wallet info
+    community.lbry.lbry_wallet_info:
+      wallet_id: mywallet
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.wallet_id == 'mywallet'"
+        - "result.is_encrypted == False"
+        - "result.is_locked == False"
+        - "result.is_syncing == False"

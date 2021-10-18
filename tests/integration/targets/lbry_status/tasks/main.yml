@@ -1,0 +1,9 @@
+---
+  - name: Get status of lbry server
+    community.lbry.lbry_status:
+    register: result
+
+  - assert:
+      that:
+        - "result.result.ffmpeg_status.available == False"
+        - "result.jsonrpc == '2.0'"
