@@ -48,8 +48,9 @@
 - package:
     name: curl
     state: present
-    
-- shell: curl -d'{"method": "status", "params": {}}' http://0.0.0.0:5279
+
+- shell: |
+    curl -d'{"method": "status", "params": {}}' http://0.0.0.0:5279
 
 - name: Wait for lbrynet server components to fully load
   community.lbry.lbry_status:
