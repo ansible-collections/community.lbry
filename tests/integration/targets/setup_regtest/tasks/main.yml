@@ -53,6 +53,8 @@
 
 - shell: docker ps
 
+- shell: docker container logs lbrynet
+
 - shell: sudo netstat -tulpen
 
 - shell: |
