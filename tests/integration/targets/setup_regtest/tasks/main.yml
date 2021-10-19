@@ -42,8 +42,8 @@
 - name: Wait for lbrynet to become available
   wait_for:
     port: "{{ lbrynet_port }}"
-    delay: 30
-    timeout: 90
+    delay: 60
+    timeout: 120
 
 - name: Wait for lbrynet server components to fully load
   community.lbry.lbry_status:
