@@ -54,6 +54,8 @@
 - shell: docker ps
 
 - shell: docker-compose logs lbrynet
+  args:
+    chdir: "{{role_path}}/docker"
 
 - shell: sudo netstat -tulpen
 
