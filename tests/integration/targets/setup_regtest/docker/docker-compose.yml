@@ -76,7 +76,7 @@ services:
     environment:
       - LBRY_STREAMING_SERVER=0.0.0.0:5280
     volumes:
-      - "./persist/.lbrynet:/home/lbrynet"
+      #- "./persist/.lbrynet:/home/lbrynet"
       - "./e2e:/etc/lbry" #Put your daemon_settings.yml here
       # /private/var/tmp for OSX and /var/tmp for Linux
       #- "${LOCAL_TMP_DIR}"
