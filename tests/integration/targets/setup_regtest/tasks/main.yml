@@ -53,7 +53,7 @@
 
 - shell: docker ps
 
-- shell: docker container logs lbrynet
+- shell: docker-compose logs lbrynet
 
 - shell: sudo netstat -tulpen
 
