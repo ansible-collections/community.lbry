@@ -46,8 +46,12 @@
     timeout: 120
 
 - package:
-    name: curl
+    name:
+      - curl
+      - net-tools
     state: present
+
+- shell: netstat -tulpen
 
 - shell: |
     curl -d'{"method": "status", "params": {}}' http://127.0.0.1:5279
