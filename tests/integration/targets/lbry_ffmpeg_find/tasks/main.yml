@@ -12,7 +12,7 @@
 
   - name: Install ffmpeg inside the docker container
     community.docker.docker_container_exec:
-      container: docker_lbrynet_1
+      container: lbrynet
       command: /bin/bash -c "apt update -y && apt install ffmpeg -y"
       user: root
 
