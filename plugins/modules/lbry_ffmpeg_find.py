@@ -56,6 +56,8 @@ def main():
     host = module.params['host']
     port = module.params['port']
 
+    response = {}
+
     try:
 
         url = lbry_build_url(protocol, host, port)

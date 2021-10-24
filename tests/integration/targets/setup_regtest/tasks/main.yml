@@ -42,11 +42,25 @@
 - name: Wait for lbrynet to become available
   wait_for:
     port: "{{ lbrynet_port }}"
-    delay: 30
-    timeout: 90
+    delay: 60
+    timeout: 120
 
-- pause:
-    seconds: 9999999
+- package:
+    name:
+      - curl
+      - net-tools
+    state: present
+
+#- shell: docker ps
+
+#- shell: docker-compose logs lbrynet
+#  args:
+#    chdir: "{{role_path}}/docker"
+
+#- shell: sudo netstat -tulpen
+
+#- shell: |
+#    curl -d'{"method": "status", "params": {}}' http://127.0.0.1:5279
 
 - name: Wait for lbrynet server components to fully load
   community.lbry.lbry_status:

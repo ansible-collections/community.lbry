@@ -6,7 +6,7 @@
       dest: /tmp/lorum_ipsum.txt
 
   - name: Copy file to the lbry docker container
-    command: docker cp /tmp/lorum_ipsum.txt docker_lbrynet_1:/tmp/lorum_ipsum.txt
+    command: docker cp /tmp/lorum_ipsum.txt lbrynet:/tmp/lorum_ipsum.txt
 
   - name: Upload file to lbry - Missing bid
     community.lbry.lbry_publish:

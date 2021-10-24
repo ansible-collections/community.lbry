@@ -112,6 +112,8 @@ def main():
     state = module.params['state']
     debug = module.params['debug']
 
+    response = {}
+
     try:
         url = lbry_build_url(protocol, host, port)
         accounts = lbry_account_list(url)
