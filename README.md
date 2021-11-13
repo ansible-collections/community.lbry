@@ -26,6 +26,12 @@ curl -d'{"method": "status", "params": {}}' http://0.0.0.0:5279
 curl -d'{"method": "ffmpeg_find", "params": {}}' http://0.0.0.0:5279
 ```
 
+# Check settings
+
+```
+curl -d'{"method": "settings_get", "params": {}}' http://0.0.0.0:5279
+```
+
 # API Calls
 
 ## Create an Account
