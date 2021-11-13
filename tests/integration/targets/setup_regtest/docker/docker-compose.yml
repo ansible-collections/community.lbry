@@ -18,8 +18,9 @@ services:
   walletserver:
     depends_on:
       - es01
-    image: lbry/wallet-server:v0.105.0
+    image: lbry/wallet-server:latest-release
     container_name: walletserver
+    #command: lbry.wallet.server.coin.LBCRegTest
     restart: always
     ports:
       - "50001:50001" # rpc port
@@ -27,15 +28,21 @@ services:
     environment:
       - DB_DIRECTORY=/database
       - DAEMON_URL=http://lbry:lbry@lbrycrd:29245
+      - MAX_QUERY_WORKERS=4
+      - CACHE_MB=1024
+      - CACHE_ALL_TX_HASHES=
+      - CACHE_ALL_CLAIM_TXOS=
+      - MAX_SEND=1000000000000000000
+      - MAX_RECEIVE=1000000000000000000
+      - MAX_SESSIONS=100000
+      - HOST=0.0.0.0
+      #- PORT=50001
       - TCP_PORT=50001
       - PROMETHEUS_PORT=2112
-      - QUERY_TIMEOUT_MS=3000  # how long search queries allowed to run before cancelling, in milliseconds
-      - TRENDING_ALGORITHMS=variable_decay
-      - MAX_SEND=10000000000000  # deprecated. leave it high until its removed
-      - MAX_SUBS=1000000000000  # deprecated. leave it high until its removed
-      - ELASTIC_HOST=es01
+      - FILTERING_CHANNEL_IDS=770bd7ecba84fd2f7607fb15aedd2b172c2e153f 95e5db68a3101df19763f3a5182e4b12ba393ee8
+      - BLOCKING_CHANNEL_IDS=dd687b357950f6f271999971f43c785e8067c3a9 06871aa438032244202840ec59a469b303257cad b4a2528f436eca1bf3bf3e10ff3f98c57bd6c4c6
       - ELASTIC_PORT=9200
-    command: lbry.wallet.server.coin.LBCRegTest
+      - ELASTIC_HOST=es01
     volumes:
       - "walletserver:/database"
     networks:
@@ -46,7 +53,7 @@ services:
     environment:
       - node.name=es01
       - discovery.type=single-node
-      - indices.query.bool.max_clause_count=8196
+      - indices.query.bool.max_clause_count=4096
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
     ulimits:
@@ -74,6 +81,7 @@ services:
     depends_on:
       - walletserver
     environment:
+      - RUN_MODE=regtest
       - LBRY_STREAMING_SERVER=0.0.0.0:5280
     volumes:
       #- "./persist/.lbrynet:/home/lbrynet"

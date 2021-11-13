@@ -1,5 +1,7 @@
+blockchain_name: lbrycrd_regtest
 lbryum_servers:
-- walletserver:50001
+  - walletserver:50001
 wallets:
-- default_wallet
-- rhys1
+  - default_wallet
+use_upnp: false
+allowed_origin: "*"
