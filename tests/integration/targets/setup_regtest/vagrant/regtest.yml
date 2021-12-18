@@ -6,6 +6,10 @@
 
   tasks:
 
+  - name: Run apt-get update
+    apt:
+      update_cache: yes
+
   - name: Install required packages
     package:
       name: "{{ required_packages }}"
@@ -24,10 +28,19 @@
   - name: Create lbry user
     user:
       name: lbry
+      shell: /bin/bash
       groups: 
         - lbry
         - users
-        - docker
+
+  - name: Create required directories
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: lbry
+      group: lbry
+    with_items:
+      - "/home/lbry/etc/"
 
   - name: Download a lbrycrd release
     unarchive:
@@ -93,6 +106,8 @@
     wait_for:
       port: 29245
 
+  # TODO Need to pause of verify the server is ready here
+
   - name: Generate some coins
     shell: |
       runuser -u lbry -- ./lbrycrd-cli -rpcuser=lbry -rpcpassword=lbry -rpcport=29245 -regtest generate 120 && touch coins.success
@@ -100,6 +115,7 @@
      creates: coins.success
      chdir: /home/lbry
     become: yes
+    when: False
 
   - name: Add dockers gpg key
     shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -150,18 +166,20 @@
         - es01:/usr/share/elasticsearch/data
       networks:
         - name: "lbry"
+    register: elastic
 
   - name: Wait for the elastic container to become active
     wait_for:
       port: 9200
       delay: 30
+    when: elastic.changed
 
   - name: Start a wallet server in a container
     docker_container:
       name: walletserver
       image: lbry/wallet-server:latest-release
       ports:
-        - "127.0.0.1:50001:50001" # rpc port
+        - "127.0.0.1:50001:50001/udp" # rpc port
         - "127.0.0.1:2112:2112"
       env:
         "DB_DIRECTORY": "/database"
@@ -178,12 +196,49 @@
         "BLOCKING_CHANNEL_IDS": "dd687b357950f6f271999971f43c785e8067c3a9 06871aa438032244202840ec59a469b303257cad b4a2528f436eca1bf3bf3e10ff3f98c57bd6c4c6"
         "ELASTIC_PORT": "9200"
         "ELASTIC_HOST": "es01"
+        "ALLOW_LAN_UDP": "True"
+        "ALLOW_LOCALHOST": " True"
+        "NET": "regtest"
       volumes:
         - "wallet_server:/database"
       networks:
         - name: "lbry"
+    register: walletserver
 
-  - name: Wait for the walletserver to become active
+  #- name: Wait for the walletserver to become active
+  #  wait_for:
+  #    port: 50001
+  #    delay: 30
+  #  when: walletserver.changed
+
+  - name: Create the daemon_settings.yml file
+    copy:
+      content: |
+        blockchain_name: lbrycrd_regtest
+        lbryum_servers:
+          - walletserver:50001
+        wallets:
+          - default_wallet
+        use_upnp: false
+        allowed_origin: "*"
+        streaming_server: "0.0.0.0:5280"
+        api: "0.0.0.0:5279"
+      dest: /home/lbry/etc/daemon_settings.yml
+
+  - name: Start a lbrynet docker container
+    docker_container:
+      name: lbrynet
+      image: lbry/lbrynet:v0.99.0
+      ports:
+        - "127.0.0.1:5279:5279"
+        - "127.0.0.1:5280:5280"
+      volumes:
+        - "lbrynet:/home/lbrynet"
+        - "/home/lbry/etc:/etc/lbry" #Put your daemon_settings.yml here
+      networks:
+        - name: lbry
+
+  - name: Wait for the lbrynet server to become active
     wait_for:
-      port: 50001
-      delay: 30
+      port: 5279
+      delay: 3
