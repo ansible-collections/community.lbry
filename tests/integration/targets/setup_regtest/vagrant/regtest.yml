@@ -276,4 +276,4 @@
     retries: 25
     delay: 10
     vars:
-    ansible_python_interpreter: /usr/bin/python3
+      ansible_python_interpreter: /usr/bin/python3
