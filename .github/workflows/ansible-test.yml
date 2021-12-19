@@ -212,7 +212,7 @@ jobs:
         run: ansible-galaxy collection install community.docker -p /home/runner/.ansible/collections
 
       - name: Run Playbook to setup regtest env
-        run: ansible-playbook -l $(hostname) ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}/tests/integration/targets/setup_regtest/vagrant/regtest.yml -b
+        run: ansible-playbook -l localhost ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}/tests/integration/targets/setup_regtest/vagrant/regtest.yml -b
 
       # Run the integration tests
       - name: Run integration test - ${{ matrix.lbry_module }} - ${{ matrix.python }} - ${{ matrix.ansible }}
