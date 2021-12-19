@@ -2,7 +2,7 @@
   # Create a wallet tests
   - name: Create a new wallet - check mode
     community.lbry.lbry_wallet:
-      wallet_id: mywallet
+      wallet_id: mywalletXXX
       state: present
     check_mode: yes
     register: result
@@ -14,7 +14,7 @@
 
   - name: Create a new wallet
     community.lbry.lbry_wallet:
-      wallet_id: mywallet
+      wallet_id: mywalletXXX
       state: present
     register: result
 
@@ -25,7 +25,7 @@
 
   - name: Create a new wallet - again
     community.lbry.lbry_wallet:
-      wallet_id: mywallet
+      wallet_id: mywalletXXX
       state: present
     register: result
 
@@ -37,7 +37,7 @@
   # Remove wallet tests
   - name: Remove a wallet - check mode
     community.lbry.lbry_wallet:
-      wallet_id: mywallet
+      wallet_id: mywalletXXX
       state: absent
     check_mode: yes
     register: result
@@ -49,7 +49,7 @@
 
   - name: Remove a wallet
     community.lbry.lbry_wallet:
-      wallet_id: mywallet
+      wallet_id: mywalletXXX
       state: absent
     register: result
 
@@ -60,7 +60,7 @@
 
   - name: Remove a wallet - again
     community.lbry.lbry_wallet:
-      wallet_id: mywallet
+      wallet_id: mywalletXXX
       state: absent
     register: result
 
@@ -71,7 +71,7 @@
   # Lock / Unlock / Encrypt / Decrypt wallet tests
   - name: Lock a wallet that does not exist
     community.lbry.lbry_wallet:
-      wallet_id: mywallet
+      wallet_id: mywalletXXX
       state: locked
     register: result
     ignore_errors: yes
@@ -84,7 +84,7 @@
 
   - name: Unlock a wallet that does not exist
     community.lbry.lbry_wallet:
-      wallet_id: mywallet
+      wallet_id: mywalletXXX
       state: unlocked
     register: result
     ignore_errors: yes
