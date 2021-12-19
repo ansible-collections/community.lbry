@@ -205,7 +205,7 @@ jobs:
       # OPTIONAL If your integration test requires Python libraries or modules from other collections
       # Install them like this
       - name: Install community.docker
-        run: ansible-galaxy collection install community.docker -p .
+        run: ansible-galaxy collection install community.docker -p /home/runner/.ansible/collections
 
       - name: Run Playbook to setup regtest env
         run: ansible-playbook -l localhost ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}/tests/integration/targets/setup_regtest/vagrant/regtest.yml -b
