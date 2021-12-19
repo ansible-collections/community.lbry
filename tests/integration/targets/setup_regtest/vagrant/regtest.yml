@@ -50,6 +50,8 @@
   - name: Create lbry docker network
     community.docker.docker_network:
       name: lbry
+    vars:
+      ansible_python_interpreter: /usr/bin/python3
 
   - name: Create lbry group
     group: 
