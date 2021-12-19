@@ -204,7 +204,7 @@ def main():
                         if debug:
                             r['response'] = str(response)
                         if "error" in response or "error" in response['result']:
-                            module.fail_json(msg=f'Error unlocking wallet: {response}')
+                            module.fail_json(msg='Error unlocking wallet: {0}'.format(response))
                     changed = True
                     r['msg'] = 'Wallet unlocked'
         elif state == 'encrypted':
@@ -222,7 +222,7 @@ def main():
                         if debug:
                             r['response'] = str(response)
                         if "error" in response or (isinstance(response['result'], dict) and "error" in response['result']):
-                            module.fail_json(msg=f'Error encrypting wallet: {response}')
+                            module.fail_json(msg='Error encrypting wallet: {0}'.format(response))
                     changed = True
                     r['msg'] = 'Wallet encrypted'
                     r['payload'] = str(payload)
