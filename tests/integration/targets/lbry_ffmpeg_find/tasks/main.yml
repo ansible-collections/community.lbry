@@ -17,7 +17,7 @@
   #    command: /bin/bash -c "apt update -y && apt install ffmpeg -y"
   #    user: root
   - name: Install ffmpeg inside the docker container
-    shell: docker exec lbrynet --user root /bin/bash -c "apt update -y && apt install ffmpeg -y"
+    shell: docker exec --user root lbrynet /bin/bash -c "apt update -y && apt install ffmpeg -y"
 
   - name: Get ffmpeg info
     community.lbry.lbry_ffmpeg_find:
