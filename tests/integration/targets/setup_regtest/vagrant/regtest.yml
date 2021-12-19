@@ -258,8 +258,6 @@
       - "lbrynet"
       - "walletserver"
       - "es01"
-    vars:
-      ansible_python_interpreter: /usr/bin/python3
 
   - name: Ensure lbrynet server components are fully loaded
     community.lbry.lbry_status:
