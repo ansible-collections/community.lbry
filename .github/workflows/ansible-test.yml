@@ -200,6 +200,9 @@ jobs:
           # will run on all python versions it supports.
           python-version: ${{ matrix.python }}
 
+      - name: Install pip packages
+        run: pip install docker requests --user
+
       - name: Install coverage
         run: pip install coverage --user
 
