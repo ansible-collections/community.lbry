@@ -11,14 +11,19 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 ---
 module: lbry_account
+
 short_description: Manage LBRY accounts.
+
 description:
   - Manage LBRY accounts.
   - Add and remove accounts.
+
 author: Rhys Campbell (@rhysmeister)
 version_added: "1.0.0"
+
 extends_documentation_fragment:
   - community.lbry.lbry_common_options
+
 options:
   name:
     description:
@@ -46,6 +51,7 @@ options:
       - Show additional debug output.
     type: bool
     default: false
+
 requirements:
   - requests
 '''
