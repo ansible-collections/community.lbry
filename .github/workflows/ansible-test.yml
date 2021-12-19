@@ -189,9 +189,6 @@ jobs:
         with:
           path: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
-      - name: Install docker-compose
-        run: sudo apt install docker-compose -y
-
       - name: Set up Python - ${{ matrix.python }}
         uses: actions/setup-python@v2
         with:
@@ -209,6 +206,9 @@ jobs:
       # Install them like this
       - name: Install community.docker
         run: ansible-galaxy collection install community.docker -p .
+
+      - name: Run Playbook to setup regtest env
+        run: ansible-playbook localhost ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}/tests/integration/targets/setup_regtest/vagrant/regtest.yml -b
 
       # Run the integration tests
       - name: Run integration test - ${{ matrix.lbry_module }} - ${{ matrix.python }} - ${{ matrix.ansible }}

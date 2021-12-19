@@ -20,6 +20,37 @@
       name: "{{ pip_packages }}"
       state: present
 
+  - name: Add dockers gpg key
+    shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    args:
+      creates: /usr/share/keyrings/docker-archive-keyring.gpg
+
+  - name: Add the stable docker repo 
+    shell: |
+      echo \
+       "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    args:
+      creates: /etc/apt/sources.list.d/docker.list
+
+  - name: Apt update
+    shell: apt update -y
+
+  - name: Install docker
+    package:
+      name: "{{ docker_packages }}"
+      state: present
+
+  - name: Ensure the docker service is started 
+    service:
+      name: docker
+      state: started
+      enabled: yes
+
+  - name: Create lbry docker network
+    community.docker.docker_network:
+      name: lbry
+
   - name: Create lbry group
     group: 
       name: lbry
@@ -32,6 +63,13 @@
       groups: 
         - lbry
         - users
+        - docker
+
+  - name: Add vagrant user to docker group
+    user:
+      name: vagrant
+      groups: docker
+      append: yes
 
   - name: Create required directories
     file:
@@ -116,37 +154,6 @@
      chdir: /home/lbry
     become: yes
     when: False
-
-  - name: Add dockers gpg key
-    shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-    args:
-      creates: /usr/share/keyrings/docker-archive-keyring.gpg
-
-  - name: Add the stable docker repo 
-    shell: |
-      echo \
-       "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    args:
-      creates: /etc/apt/sources.list.d/docker.list
-
-  - name: Apt update
-    shell: apt update -y
-
-  - name: Install docker
-    package:
-      name: "{{ docker_packages }}"
-      state: present
-
-  - name: Ensure the docker service is started 
-    service:
-      name: docker
-      state: started
-      enabled: yes
-
-  - name: Create lbry docker network
-    community.docker.docker_network:
-      name: lbry
 
   - name: Start an elastic server in a container
     docker_container:
@@ -242,3 +249,19 @@
     wait_for:
       port: 5279
       delay: 3
+
+  - name: Ensure all docker containers are still running
+    docker_container:
+      name: "{{ item }}"
+      state: "started"
+    loop:
+      - "lbrynet"
+      - "walletserver"
+      - "es01"
+
+  - name: Ensure lbrynet server components are fully loaded
+    community.lbry.lbry_status:
+    register: result
+    until: "result.result.startup_status.values() is all"
+    retries: 25
+    delay: 10
