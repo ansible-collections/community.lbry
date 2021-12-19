@@ -176,6 +176,8 @@
       networks:
         - name: "lbry"
     register: elastic
+    vars:
+      ansible_python_interpreter: /usr/bin/python3
 
   - name: Wait for the elastic container to become active
     wait_for:
@@ -213,7 +215,9 @@
       networks:
         - name: "lbry"
     register: walletserver
-
+    vars:
+      ansible_python_interpreter: /usr/bin/python3
+  
   #- name: Wait for the walletserver to become active
   #  wait_for:
   #    port: 50001
@@ -246,7 +250,9 @@
         - "/home/lbry/etc:/etc/lbry" #Put your daemon_settings.yml here
       networks:
         - name: lbry
-
+    vars:
+      ansible_python_interpreter: /usr/bin/python3
+  
   - name: Wait for the lbrynet server to become active
     wait_for:
       port: 5279
@@ -260,6 +266,8 @@
       - "lbrynet"
       - "walletserver"
       - "es01"
+    vars:
+      ansible_python_interpreter: /usr/bin/python3
 
   - name: Ensure lbrynet server components are fully loaded
     community.lbry.lbry_status:
@@ -267,3 +275,5 @@
     until: "result.result.startup_status.values() is all"
     retries: 25
     delay: 10
+    vars:
+    ansible_python_interpreter: /usr/bin/python3
