@@ -86,6 +86,7 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
 # Module execution
 #
 
+
 def main():
     argument_spec = lbry_common_argument_spec()
     argument_spec.update(
@@ -116,9 +117,9 @@ def main():
             "params": {}
         }
         request_params = {}
-        for item in ['urls', 'wallet_id', 'new_sdk_server',  'include_purchase_receipt',
+        for item in ['urls', 'wallet_id', 'new_sdk_server', 'include_purchase_receipt',
                      'include_is_my_output', 'include_sent_supports', 'include_sent_tips',
-                        'include_received_tips']:
+                     'include_received_tips']:
             payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
         error_count = 0
@@ -126,7 +127,7 @@ def main():
             if "error" in response['result'][url]:
                 error_count += 1
             if error_count == len(module.params['urls']):
-                module.fail_json(msg=f'Error resolving file(s) from lbrynet: {response}')
+                module.fail_json(msg='Error resolving file(s) from lbrynet: {0}'.format(response))
     except Exception as e:
         module.fail_json(msg='Error resolving file from lbrynet: %s' % to_native(e))
 

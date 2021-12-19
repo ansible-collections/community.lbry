@@ -1,8 +1,8 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
-#from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-#from ansible.module_utils.six.moves import configparser
-#from ansible.module_utils._text import to_native
+# from ansible.module_utils.basic import AnsibleModule, missing_required_lib
+# from ansible.module_utils.six.moves import configparser
+# from ansible.module_utils._text import to_native
 
 import requests
 import json
@@ -20,7 +20,7 @@ def lbry_common_argument_spec():
 
 
 def lbry_build_url(protocol, host, port):
-    return f"{protocol}://{host}:{port}/".format(protocol, host, port)
+    return "{0://{1:{2}/".format(protocol, host, port)
 
 
 def lbry_request(url, payload, headers={"Content-Type": "application/json"}):
@@ -60,7 +60,7 @@ def lbry_wallet_list(url):
     payload = {
         "method": "wallet_list",
         "params": {}
-        }
+    }
     response = lbry_request(url, payload)
     return response['result']['items']
 
@@ -89,7 +89,7 @@ def lbry_wallet_status(url):
 def lbry_account_list(url):
     payload = {
         "method": "account_list",
-        "params": { "page_size": 99999 }
-        }
+        "params": {"page_size": 99999}
+    }
     response = lbry_request(url, payload)
     return response['result']['items']

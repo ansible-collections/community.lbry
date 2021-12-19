@@ -148,7 +148,7 @@ def main():
                     if debug:
                         r['response'] = str(response)
                     if "error" in response or "error" in response['result']:
-                        module.fail_json(msg=f'Error creating wallet: {response}')
+                        module.fail_json(msg='Error creating wallet: {0}'.format(response))
                 changed = True
                 r['msg'] = "Wallet created"
             else:
@@ -158,7 +158,7 @@ def main():
                 module.exit_json(changed=False, msg="Wallet does not exist")
             else:
                 payload['method'] = "wallet_remove"
-                payload["params"] = { "wallet_id": wallet_id }
+                payload["params"] = {"wallet_id": wallet_id}
                 if not module.check_mode:
                     response = lbry_request(url, payload)
                     if debug:
@@ -177,13 +177,13 @@ def main():
                 else:
                     if wallet_status['result']['is_encrypted']:
                         payload['method'] = "wallet_lock"
-                        payload["params"] = { "wallet_id": wallet_id }
+                        payload["params"] = {"wallet_id": wallet_id}
                         if not module.check_mode:
                             response = lbry_request(url, payload)
                             if debug:
                                 r['response'] = str(response)
                             if "error" in response or "error" in response['result']:
-                                module.fail_json(msg=f'Error locking wallet: {response}')
+                                module.fail_json(msg='Error locking wallet: {0}'.format(response))
                         changed = True
                         r['msg'] = 'Wallet locked'
                     else:
@@ -198,7 +198,7 @@ def main():
                     module.exit_json(changed=False, msg="Wallet is already unlocked")
                 else:
                     payload['method'] = "wallet_unlock"
-                    payload["params"] = { "wallet_id": wallet_id }
+                    payload["params"] = {"wallet_id": wallet_id}
                     if not module.check_mode:
                         response = lbry_request(url, payload)
                         if debug:
@@ -216,7 +216,7 @@ def main():
                     module.exit_json(changed=False, msg="Wallet is already encrypted")
                 else:
                     payload["method"] = "wallet_encrypt"
-                    payload["params"] = {"wallet_id":wallet_id,"new_password":new_password}
+                    payload["params"] = {"wallet_id": wallet_id, "new_password": new_password}
                     if not module.check_mode:
                         response = lbry_request(url, payload)
                         if debug:
@@ -237,7 +237,7 @@ def main():
                 else:
                     if not wallet_status['result']['is_locked']:
                         payload['method'] = "wallet_decrypt"
-                        payload["params"] = { "wallet_id": wallet_id, "new_password": new_password }
+                        payload["params"] = {"wallet_id": wallet_id, "new_password": new_password}
                         if not module.check_mode:
                             response = lbry_request(url, payload)
                             if debug:
@@ -258,13 +258,12 @@ def main():
             if not wallet_exists:
                 module.fail_json(msg="You cannot unload a wallet that does not exist")
             else:
-                 pass  # Need a way to check a wallet exists without loading/unloading it
+                pass  # Need a way to check a wallet exists without loading/unloading it
     except Exception as e:
         if not debug:
             module.fail_json(msg='Error running module: %s' % to_native(e))
         else:
             module.fail_json(msg='Error running module: {0}, response: {1}, payload {2}'.format(traceback.format_exc(), str(response), str(payload)))
-
 
     module.exit_json(changed=changed, **r)
 

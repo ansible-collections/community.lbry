@@ -68,7 +68,10 @@ options:
     type: str
   author:
     description:
-      - author of the publication. The usage for this field is not the same as for channels. The author field is used to credit an author who is not the publisher and is not represented by the channel. For example, a pdf file of 'The Odyssey' has an author of 'Homer' but may by published to a channel such as '@classics', or to no channel at all
+      - author of the publication. 
+      - The usage for this field is not the same as for channels. 
+      - The author field is used to credit an author who is not the publisher and is not represented by the channel. 
+      - For example, a pdf file of 'The Odyssey' has an author of 'Homer' but may by published to a channel such as '@classics', or to no channel at all
     type: str
   tags:
     description:
@@ -82,7 +85,8 @@ options:
     elements: str
   locations:
     description:
-      - locations relevant to the stream, consisting of 2 letter `country` code and a `state`, `city` and a postal `code` along with a `latitude` and `longitude`
+      - locations relevant to the stream.
+      - Consisting of 2 letter `country` code and a `state`, `city` and a postal `code` along with a `latitude` and `longitude`
     type: list
     elements: dict
     example: {'country': 'US', 'state': 'NH'}
@@ -184,6 +188,7 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
 # Module execution
 #
 
+
 def main():
     argument_spec = lbry_common_argument_spec()
     argument_spec.update(
@@ -242,8 +247,8 @@ def main():
             if item not in ['host', 'port', 'protocol', 'debug']:
                 payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
-        if "error" in r or "error" in r['result']:
-            module.fail_json(msg=f'Error publishing file to lbrynet: {response}')
+        if "error" in response or "error" in response['result']:
+            module.fail_json(msg='Error publishing file to lbrynet: {0}'.format(response))
     except Exception as e:
         module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
 

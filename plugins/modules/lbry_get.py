@@ -72,6 +72,7 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
 # Module execution
 #
 
+
 def main():
     argument_spec = lbry_common_argument_spec()
     argument_spec.update(
@@ -103,12 +104,12 @@ def main():
         for item in ['uri', 'file_name', 'download_directory', 'timeout', 'save_file', 'wallet_id']:
             payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
-        if "error" in r or "error" in r['result']:
-            module.fail_json(msg=f'Error getting file from lbrynet: {response}')
+        if "error" in response or "error" in response['result']:
+            module.fail_json(msg='Error getting file from lbrynet: {0}'.format(response))
     except Exception as e:
         module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
 
-    module.exit_json(changed=False, **r)
+    module.exit_json(changed=False, **response)
 
 
 if __name__ == '__main__':

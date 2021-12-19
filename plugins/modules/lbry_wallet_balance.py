@@ -103,7 +103,7 @@ def main():
             payload["params"] = { "wallet_id": wallet_id }
             response = lbry_request(url, payload)
             if "error" in response or "error" in response['result']:
-                module.fail_json(msg=f'Error getting wallet info: {response}')
+                module.fail_json(msg='Error getting wallet info: {0}'.format(response))
             else:
                 r['wallet_id'] = wallet_id
                 r['balance'] = response['result']
@@ -115,7 +115,6 @@ def main():
             module.fail_json(msg='Error running module: %s' % to_native(e))
         else:
             module.fail_json(msg='Error running module: {0}, response: {1}'.format(traceback.format_exc(), str(response)))
-
 
     module.exit_json(changed=False, **r)
 

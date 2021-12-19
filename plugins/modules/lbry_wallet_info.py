@@ -90,7 +90,7 @@ def main():
         if wallet_exists:
             response = lbry_wallet_status(url)
             if "error" in response or "error" in response['result']:
-                module.fail_json(msg=f'Error getting wallet info: {response}')
+                module.fail_json(msg='Error getting wallet info: {0}'.format(response))
             else:
                 r['wallet_id'] = wallet_id
                 r['is_encrypted'] = response['result']['is_encrypted']
@@ -104,7 +104,6 @@ def main():
             module.fail_json(msg='Error running module: %s' % to_native(e))
         else:
             module.fail_json(msg='Error running module: {0}, response: {1}'.format(traceback.format_exc(), str(response)))
-
 
     module.exit_json(changed=False, **r)
 
