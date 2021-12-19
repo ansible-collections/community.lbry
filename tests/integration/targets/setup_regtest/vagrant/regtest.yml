@@ -50,8 +50,6 @@
   - name: Create lbry docker network
     community.docker.docker_network:
       name: lbry
-    vars:
-      ansible_python_interpreter: /usr/bin/python3
 
   - name: Create lbry group
     group: 
@@ -176,8 +174,6 @@
       networks:
         - name: "lbry"
     register: elastic
-    vars:
-      ansible_python_interpreter: /usr/bin/python3
 
   - name: Wait for the elastic container to become active
     wait_for:
@@ -215,8 +211,6 @@
       networks:
         - name: "lbry"
     register: walletserver
-    vars:
-      ansible_python_interpreter: /usr/bin/python3
   
   #- name: Wait for the walletserver to become active
   #  wait_for:
@@ -250,8 +244,6 @@
         - "/home/lbry/etc:/etc/lbry" #Put your daemon_settings.yml here
       networks:
         - name: lbry
-    vars:
-      ansible_python_interpreter: /usr/bin/python3
   
   - name: Wait for the lbrynet server to become active
     wait_for:
@@ -275,5 +267,3 @@
     until: "result.result.startup_status.values() is all"
     retries: 25
     delay: 10
-    vars:
-      ansible_python_interpreter: /usr/bin/python3
