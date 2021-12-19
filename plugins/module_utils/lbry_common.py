@@ -20,7 +20,7 @@ def lbry_common_argument_spec():
 
 
 def lbry_build_url(protocol, host, port):
-    return "{0://{1:{2}/".format(protocol, host, port)
+    return "{0}://{1}:{2}/".format(protocol, host, port)
 
 
 def lbry_request(url, payload, headers={"Content-Type": "application/json"}):

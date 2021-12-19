@@ -68,10 +68,10 @@ options:
     type: str
   author:
     description:
-      - author of the publication. 
-      - The usage for this field is not the same as for channels. 
-      - The author field is used to credit an author who is not the publisher and is not represented by the channel. 
-      - For example, a pdf file of 'The Odyssey' has an author of 'Homer' but may by published to a channel such as '@classics', or to no channel at all
+      - author of the publication.
+      - The usage for this field is not the same as for channels.
+      - The author field is used to credit an author who is not the publisher and is not represented by the channel.
+      - For example, a pdf file of 'The Odyssey' has an author of 'Homer' but may by published to a channel such as '@classics', or to no channel at all.
     type: str
   tags:
     description:

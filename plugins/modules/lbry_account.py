@@ -73,9 +73,9 @@ account_details:
   returned: when account_details module parameter is true
   type: dict
   sample: |
-    {"address_generator": {"change": {"gap": 6, "maximum_uses_per_address": 1}, "name": "deterministic-chain", 
-     "receiving": {"gap": 20, "maximum_uses_per_address": 1}}, "encrypted": false, "id": "bMPwucZGFEjFqTk7EcSVyzEyCCp6Vif9yf", 
-     "is_default": false, "ledger": "lbc_mainnet", "modified_on": 1632675624, "name": "rhys", "private_key": "myprivatekey", 
+    {"address_generator": {"change": {"gap": 6, "maximum_uses_per_address": 1}, "name": "deterministic-chain",
+     "receiving": {"gap": 20, "maximum_uses_per_address": 1}}, "encrypted": false, "id": "bMPwucZGFEjFqTk7EcSVyzEyCCp6Vif9yf",
+     "is_default": false, "ledger": "lbc_mainnet", "modified_on": 1632675624, "name": "rhys", "private_key": "myprivatekey",
      "public_key": "mypublickey", "seed": "shadow reject anchor chief stove sick fitness address hen pave give claw"}
 '''
 
@@ -159,7 +159,7 @@ def main():
                 url = lbry_build_url(protocol, host, port)
                 payload = {
                     "method": "account_remove",
-                    "params": { "account_id": account_id }
+                    "params": {"account_id": account_id}
                 }
                 if not module.check_mode:
                     response = lbry_request(url, payload)
@@ -173,7 +173,6 @@ def main():
             module.fail_json(msg='Error running module: %s' % to_native(e))
         else:
             module.fail_json(msg='Error running module: {0}, response: {1}, payload {2}'.format(traceback.format_exc(), str(response), str(payload)))
-
 
     module.exit_json(changed=changed, **r)
 

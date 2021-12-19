@@ -164,7 +164,7 @@ def main():
                     if debug:
                         r['response'] = str(response)
                     if "error" in response or "error" in response['result']:
-                        module.fail_json(msg=f'Error removing wallet: {response}')
+                        module.fail_json(msg='Error removing wallet: {0}'.format(response))
                 changed = True
                 r['msg'] = 'Wallet removed'
         elif state == 'locked':  # TODO cannot locked an unencrypted wallet check this
@@ -243,7 +243,7 @@ def main():
                             if debug:
                                 r['response'] = str(response)
                             if "error" in response or (isinstance(response['result'], dict) and "error" in response['result']):
-                                module.fail_json(msg=f'Error decrypting wallet: {response}')
+                                module.fail_json(msg='Error decrypting wallet: {0}'.format(response))
                         changed = True
                         r['msg'] = 'Wallet decrypted'
                     else:
