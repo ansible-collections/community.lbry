@@ -189,6 +189,10 @@ jobs:
         with:
           path: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
+      - name: Build and install collection
+        run: ansible-galaxy collection build && ansible-galaxy collection install community-lbry-*.tar.gz
+        working-directory: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
+
       - name: Set up Python - ${{ matrix.python }}
         uses: actions/setup-python@v2
         with:
