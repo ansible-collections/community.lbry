@@ -89,8 +89,6 @@ options:
       - Consisting of 2 letter `country` code and a `state`, `city` and a postal `code` along with a `latitude` and `longitude`
     type: list
     elements: dict
-    example: >
-      "{'country': 'US', 'state': 'NH'}"
   license:
     description:
       - publication license
