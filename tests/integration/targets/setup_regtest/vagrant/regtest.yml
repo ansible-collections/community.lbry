@@ -244,7 +244,7 @@
         - "127.0.0.1:5280:5280"
       volumes:
         - "lbrynet:/home/lbrynet"
-        - "/home/lbry/etc:/etc/lbry" #Put your daemon_settings.yml here
+        - "/home/lbry/etc:/etc/lbry:Z" #Put your daemon_settings.yml here
       networks:
         - name: lbry
   
