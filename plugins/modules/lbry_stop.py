@@ -75,7 +75,7 @@ def main():
             changed = True
         else:
             changed = False
-            r['result'] = "lbry port already closed"
+            response['result'] = "lbry port already closed"
     except Exception as e:
         module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
 
