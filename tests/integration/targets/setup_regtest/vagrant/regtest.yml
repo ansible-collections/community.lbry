@@ -231,6 +231,9 @@
         streaming_server: "0.0.0.0:5280"
         api: "0.0.0.0:5279"
       dest: /home/lbry/etc/daemon_settings.yml
+      mode: 0664
+      owner: lbry
+      group: lbry
 
   - name: Start a lbrynet docker container
     docker_container:
