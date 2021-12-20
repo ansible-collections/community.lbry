@@ -231,7 +231,7 @@
         streaming_server: "0.0.0.0:5280"
         api: "0.0.0.0:5279"
       dest: /home/lbry/etc/daemon_settings.yml
-      mode: 0664
+      mode: 0666
       owner: lbry
       group: lbry
 
