@@ -19,8 +19,8 @@ import socket
 
 def lbry_common_argument_spec():
     options = dict(
-        host=dict(type='str', default='127.0.0.1'),
-        port=dict(type='int', default=5279),
+        host=dict(type='str', default='127.0.0.1', aliases=['login_host']),
+        port=dict(type='int', default=5279, aliases=['login_port']),
         protocol=dict(type='str', default="http"),
         debug=dict(type='bool', default=False),
     )
