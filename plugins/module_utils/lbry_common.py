@@ -3,8 +3,16 @@ __metaclass__ = type
 # from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 # from ansible.module_utils.six.moves import configparser
 # from ansible.module_utils._text import to_native
+HAS_REQUESTS = None
+REQUESTS_IMP_ERR = None
 
-import requests
+import traceback
+try:
+    import requests
+    HAS_REQUESTS = True
+except ImportError:
+    HAS_REQUESTS = False
+    REQUESTS_IMP_ERR = traceback.format_exc()
 import json
 import socket
 
