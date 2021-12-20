@@ -33,7 +33,7 @@ def lbry_build_url(protocol, host, port):
 
 def lbry_request(url, payload, headers=None):
     if headers is None:
-        headers = {"Content-Type": "application/json"} # https://tinyurl.com/2af2rd5f
+        headers = {"Content-Type": "application/json"}  # https://tinyurl.com/2af2rd5f
     r = requests.post(url, data=json.dumps(payload), json=json.dumps(payload), headers=headers)
     if r.status_code == 200 and 'result' in r.json():
         return dict(r.json())
