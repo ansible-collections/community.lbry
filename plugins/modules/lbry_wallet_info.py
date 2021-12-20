@@ -24,6 +24,8 @@ options:
       - wallet file name
     type: str
     required: yes
+    aliases:
+      - name
   debug:
     description:
       - Show additional debug output.

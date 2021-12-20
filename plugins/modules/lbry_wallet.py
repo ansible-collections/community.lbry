@@ -10,10 +10,11 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: lbry_wallet_create
-short_description: Create a new wallet.
+module: lbry_wallet
+short_description: Manage LBRY Wallets.
 description:
-  - Create a new wallet.
+  - Manage LBRY Wallets.
+  - Create and delete LBRY Wallets.
 author: Rhys Campbell (@rhysmeister)
 version_added: "1.0.0"
 extends_documentation_fragment:
@@ -24,6 +25,8 @@ options:
       - wallet file name
     type: str
     required: yes
+    aliases:
+      - name
   skip_on_startup:
     description:
       - don't add wallet to daemon_settings.yml
@@ -49,6 +52,7 @@ options:
       - decrypted
       - loaded
       - unloaded
+    default: present
   password:
     description:
       - Password for encryping or decrypting wallets.

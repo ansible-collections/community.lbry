@@ -27,6 +27,7 @@ options:
   file_name:
     description:
       - specified name for the downloaded file, overrides the stream file name
+    type: str
   download_directory:
     description:
       - full path to the directory to download into

@@ -27,7 +27,7 @@ options:
   bid:
     description:
       - amount to back the claim.
-    type: float
+    type: str
   file_path:
     description:
       - path to file to be associated with name.
@@ -89,7 +89,7 @@ options:
       - Consisting of 2 letter `country` code and a `state`, `city` and a postal `code` along with a `latitude` and `longitude`
     type: list
     elements: dict
-    example: {'country': 'US', 'state': 'NH'}
+    example: "{'country': 'US', 'state': 'NH'}"
   license:
     description:
       - publication license
@@ -198,8 +198,8 @@ def main():
         bid=dict(type='str'),
         file_path=dict(type='str'),
         file_hash=dict(type='str'),
-        validate_file=dict(type='bool'),
-        optimize_file=dict(type='bool'),
+        validate_file=dict(type='bool', default=False),
+        optimize_file=dict(type='bool', default=False),
         fee_currency=dict(type='str'),
         fee_amount=dict(type='float'),
         fee_address=dict(type='str'),

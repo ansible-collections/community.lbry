@@ -29,6 +29,7 @@ options:
     description:
       - The name of the account
     type: str
+    required: true
   state:
     description:
       - The desired state of the account.
