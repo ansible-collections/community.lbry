@@ -11,19 +11,25 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 ---
 module: lbry_account
+
 short_description: Manage LBRY accounts.
+
 description:
   - Manage LBRY accounts.
   - Add and remove accounts.
+
 author: Rhys Campbell (@rhysmeister)
 version_added: "1.0.0"
+
 extends_documentation_fragment:
   - community.lbry.lbry_common_options
+
 options:
   name:
     description:
       - The name of the account
     type: str
+    required: true
   state:
     description:
       - The desired state of the account.
@@ -46,6 +52,7 @@ options:
       - Show additional debug output.
     type: bool
     default: false
+
 requirements:
   - requests
 '''
@@ -72,10 +79,14 @@ account_details:
   description: Details of the account as returned by the account action.
   returned: when account_details module parameter is true
   type: dict
-  sample: {"address_generator": {"change": {"gap": 6, "maximum_uses_per_address": 1}, "name": "deterministic-chain", "receiving": {"gap": 20, "maximum_uses_per_address": 1}}, "encrypted": false, "id": "bMPwucZGFEjFqTk7EcSVyzEyCCp6Vif9yf", "is_default": false, "ledger": "lbc_mainnet", "modified_on": 1632675624, "name": "rhys", "private_key": "myprivatekey", "public_key": "mypublickey", "seed": "shadow reject anchor chief stove sick fitness address hen pave give claw"}
+  sample: |
+    {"address_generator": {"change": {"gap": 6, "maximum_uses_per_address": 1}, "name": "deterministic-chain",
+     "receiving": {"gap": 20, "maximum_uses_per_address": 1}}, "encrypted": false, "id": "bMPwucZGFEjFqTk7EcSVyzEyCCp6Vif9yf",
+     "is_default": false, "ledger": "lbc_mainnet", "modified_on": 1632675624, "name": "rhys", "private_key": "myprivatekey",
+     "public_key": "mypublickey", "seed": "shadow reject anchor chief stove sick fitness address hen pave give claw"}
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible.module_utils._text import to_native
 from ansible.module_utils.six import iteritems
 from ansible_collections.community.lbry.plugins.module_utils.lbry_common import (
@@ -83,13 +94,16 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_request,
     lbry_build_url,
     lbry_add_param_when_not_none,
-    lbry_account_list
+    lbry_account_list,
+    HAS_REQUESTS,
+    REQUESTS_IMP_ERR,
 )
 import traceback
 
 # ================
 # Module execution
 #
+
 
 def main():
     argument_spec = lbry_common_argument_spec()
@@ -104,6 +118,10 @@ def main():
         argument_spec=argument_spec,
         supports_check_mode=True,
     )
+
+    if not HAS_REQUESTS:
+        module.fail_json(msg=missing_required_lib('requests'),
+                         exception=REQUESTS_IMP_ERR)
 
     protocol = module.params['protocol']
     host = module.params['host']
@@ -140,9 +158,8 @@ def main():
                     payload['params']['account_name'] = account_name
                     response = lbry_request(url, payload)
                     if "error" in response or "error" in response['result']:
-                        module.fail_json(msg=f'Error creating lbry account: {response}')
-                    if account_details:
-                        r['account_details'] = response['result']
+                        module.fail_json(msg='Error creating lbry account: {0}'.format(response))
+                    r['account_details'] = response['result']
                 changed = True
                 r['msg'] = "Account created"
             else:
@@ -155,14 +172,13 @@ def main():
                 url = lbry_build_url(protocol, host, port)
                 payload = {
                     "method": "account_remove",
-                    "params": { "account_id": account_id }
+                    "params": {"account_id": account_id}
                 }
                 if not module.check_mode:
                     response = lbry_request(url, payload)
                     if "error" in response or "error" in response['result']:
-                        module.fail_json(msg=f'Error removing lbry account: {response}')
-                    if account_details:
-                        r['account_details'] = response['result']
+                        module.fail_json(msg='Error removing lbry account: {0}'.format(response))
+                    r['account_details'] = response['result']
                 changed = True
                 r['msg'] = "Account removed"
     except Exception as e:
@@ -170,7 +186,6 @@ def main():
             module.fail_json(msg='Error running module: %s' % to_native(e))
         else:
             module.fail_json(msg='Error running module: {0}, response: {1}, payload {2}'.format(traceback.format_exc(), str(response), str(payload)))
-
 
     module.exit_json(changed=changed, **r)
 

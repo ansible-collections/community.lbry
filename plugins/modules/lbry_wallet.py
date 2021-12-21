@@ -10,10 +10,11 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: lbry_wallet_create
-short_description: Create a new wallet.
+module: lbry_wallet
+short_description: Manage LBRY Wallets.
 description:
-  - Create a new wallet.
+  - Manage LBRY Wallets.
+  - Create and delete LBRY Wallets.
 author: Rhys Campbell (@rhysmeister)
 version_added: "1.0.0"
 extends_documentation_fragment:
@@ -24,6 +25,8 @@ options:
       - wallet file name
     type: str
     required: yes
+    aliases:
+      - name
   skip_on_startup:
     description:
       - don't add wallet to daemon_settings.yml
@@ -49,6 +52,7 @@ options:
       - decrypted
       - loaded
       - unloaded
+    default: present
   password:
     description:
       - Password for encryping or decrypting wallets.
@@ -78,7 +82,7 @@ msg:
   sample: "Wallet created"
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible.module_utils._text import to_native
 from ansible.module_utils.six import iteritems
 from ansible_collections.community.lbry.plugins.module_utils.lbry_common import (
@@ -87,7 +91,9 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_build_url,
     lbry_add_param_when_not_none,
     lbry_wallet_list,
-    lbry_wallet_status
+    lbry_wallet_status,
+    HAS_REQUESTS,
+    REQUESTS_IMP_ERR,
 )
 import traceback
 
@@ -111,6 +117,10 @@ def main():
         argument_spec=argument_spec,
         supports_check_mode=True,
     )
+
+    if not HAS_REQUESTS:
+        module.fail_json(msg=missing_required_lib('requests'),
+                         exception=REQUESTS_IMP_ERR)
 
     protocol = module.params['protocol']
     host = module.params['host']
@@ -148,7 +158,7 @@ def main():
                     if debug:
                         r['response'] = str(response)
                     if "error" in response or "error" in response['result']:
-                        module.fail_json(msg=f'Error creating wallet: {response}')
+                        module.fail_json(msg='Error creating wallet: {0}'.format(response))
                 changed = True
                 r['msg'] = "Wallet created"
             else:
@@ -158,13 +168,13 @@ def main():
                 module.exit_json(changed=False, msg="Wallet does not exist")
             else:
                 payload['method'] = "wallet_remove"
-                payload["params"] = { "wallet_id": wallet_id }
+                payload["params"] = {"wallet_id": wallet_id}
                 if not module.check_mode:
                     response = lbry_request(url, payload)
                     if debug:
                         r['response'] = str(response)
                     if "error" in response or "error" in response['result']:
-                        module.fail_json(msg=f'Error removing wallet: {response}')
+                        module.fail_json(msg='Error removing wallet: {0}'.format(response))
                 changed = True
                 r['msg'] = 'Wallet removed'
         elif state == 'locked':  # TODO cannot locked an unencrypted wallet check this
@@ -177,13 +187,13 @@ def main():
                 else:
                     if wallet_status['result']['is_encrypted']:
                         payload['method'] = "wallet_lock"
-                        payload["params"] = { "wallet_id": wallet_id }
+                        payload["params"] = {"wallet_id": wallet_id}
                         if not module.check_mode:
                             response = lbry_request(url, payload)
                             if debug:
                                 r['response'] = str(response)
                             if "error" in response or "error" in response['result']:
-                                module.fail_json(msg=f'Error locking wallet: {response}')
+                                module.fail_json(msg='Error locking wallet: {0}'.format(response))
                         changed = True
                         r['msg'] = 'Wallet locked'
                     else:
@@ -198,13 +208,13 @@ def main():
                     module.exit_json(changed=False, msg="Wallet is already unlocked")
                 else:
                     payload['method'] = "wallet_unlock"
-                    payload["params"] = { "wallet_id": wallet_id }
+                    payload["params"] = {"wallet_id": wallet_id}
                     if not module.check_mode:
                         response = lbry_request(url, payload)
                         if debug:
                             r['response'] = str(response)
                         if "error" in response or "error" in response['result']:
-                            module.fail_json(msg=f'Error unlocking wallet: {response}')
+                            module.fail_json(msg='Error unlocking wallet: {0}'.format(response))
                     changed = True
                     r['msg'] = 'Wallet unlocked'
         elif state == 'encrypted':
@@ -216,13 +226,13 @@ def main():
                     module.exit_json(changed=False, msg="Wallet is already encrypted")
                 else:
                     payload["method"] = "wallet_encrypt"
-                    payload["params"] = {"wallet_id":wallet_id,"new_password":new_password}
+                    payload["params"] = {"wallet_id": wallet_id, "new_password": new_password}
                     if not module.check_mode:
                         response = lbry_request(url, payload)
                         if debug:
                             r['response'] = str(response)
                         if "error" in response or (isinstance(response['result'], dict) and "error" in response['result']):
-                            module.fail_json(msg=f'Error encrypting wallet: {response}')
+                            module.fail_json(msg='Error encrypting wallet: {0}'.format(response))
                     changed = True
                     r['msg'] = 'Wallet encrypted'
                     r['payload'] = str(payload)
@@ -237,13 +247,13 @@ def main():
                 else:
                     if not wallet_status['result']['is_locked']:
                         payload['method'] = "wallet_decrypt"
-                        payload["params"] = { "wallet_id": wallet_id, "new_password": new_password }
+                        payload["params"] = {"wallet_id": wallet_id, "new_password": new_password}
                         if not module.check_mode:
                             response = lbry_request(url, payload)
                             if debug:
                                 r['response'] = str(response)
                             if "error" in response or (isinstance(response['result'], dict) and "error" in response['result']):
-                                module.fail_json(msg=f'Error decrypting wallet: {response}')
+                                module.fail_json(msg='Error decrypting wallet: {0}'.format(response))
                         changed = True
                         r['msg'] = 'Wallet decrypted'
                     else:
@@ -258,13 +268,12 @@ def main():
             if not wallet_exists:
                 module.fail_json(msg="You cannot unload a wallet that does not exist")
             else:
-                 pass  # Need a way to check a wallet exists without loading/unloading it
+                pass  # Need a way to check a wallet exists without loading/unloading it
     except Exception as e:
         if not debug:
             module.fail_json(msg='Error running module: %s' % to_native(e))
         else:
             module.fail_json(msg='Error running module: {0}, response: {1}, payload {2}'.format(traceback.format_exc(), str(response), str(payload)))
-
 
     module.exit_json(changed=changed, **r)
 

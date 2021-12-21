@@ -31,13 +31,15 @@ EXAMPLES = r'''
 RETURN = r'''
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible.module_utils._text import to_native
 from ansible.module_utils.six import iteritems
 from ansible_collections.community.lbry.plugins.module_utils.lbry_common import (
     lbry_common_argument_spec,
     lbry_request,
-    lbry_build_url
+    lbry_build_url,
+    HAS_REQUESTS,
+    REQUESTS_IMP_ERR,
 )
 
 
@@ -51,6 +53,10 @@ def main():
         argument_spec=argument_spec,
         supports_check_mode=True,
     )
+
+    if not HAS_REQUESTS:
+        module.fail_json(msg=missing_required_lib('requests'),
+                         exception=REQUESTS_IMP_ERR)
 
     protocol = module.params['protocol']
     host = module.params['host']

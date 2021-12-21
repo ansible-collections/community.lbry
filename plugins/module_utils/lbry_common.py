@@ -1,18 +1,26 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
-#from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-#from ansible.module_utils.six.moves import configparser
-#from ansible.module_utils._text import to_native
+# from ansible.module_utils.basic import AnsibleModule, missing_required_lib
+# from ansible.module_utils.six.moves import configparser
+# from ansible.module_utils._text import to_native
+HAS_REQUESTS = None
+REQUESTS_IMP_ERR = None
 
-import requests
+import traceback
+try:
+    import requests
+    HAS_REQUESTS = True
+except ImportError:
+    HAS_REQUESTS = False
+    REQUESTS_IMP_ERR = traceback.format_exc()
 import json
 import socket
 
 
 def lbry_common_argument_spec():
     options = dict(
-        host=dict(type='str', default='127.0.0.1'),
-        port=dict(type='int', default=5279),
+        host=dict(type='str', default='127.0.0.1', aliases=['login_host']),
+        port=dict(type='int', default=5279, aliases=['login_port']),
         protocol=dict(type='str', default="http"),
         debug=dict(type='bool', default=False),
     )
@@ -20,10 +28,12 @@ def lbry_common_argument_spec():
 
 
 def lbry_build_url(protocol, host, port):
-    return f"{protocol}://{host}:{port}/".format(protocol, host, port)
+    return "{0}://{1}:{2}/".format(protocol, host, port)
 
 
-def lbry_request(url, payload, headers={"Content-Type": "application/json"}):
+def lbry_request(url, payload, headers=None):
+    if headers is None:
+        headers = {"Content-Type": "application/json"}  # https://tinyurl.com/2af2rd5f
     r = requests.post(url, data=json.dumps(payload), json=json.dumps(payload), headers=headers)
     if r.status_code == 200 and 'result' in r.json():
         return dict(r.json())
@@ -60,7 +70,7 @@ def lbry_wallet_list(url):
     payload = {
         "method": "wallet_list",
         "params": {}
-        }
+    }
     response = lbry_request(url, payload)
     return response['result']['items']
 
@@ -89,7 +99,7 @@ def lbry_wallet_status(url):
 def lbry_account_list(url):
     payload = {
         "method": "account_list",
-        "params": { "page_size": 99999 }
-        }
+        "params": {"page_size": 99999}
+    }
     response = lbry_request(url, payload)
     return response['result']['items']

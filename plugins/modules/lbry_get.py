@@ -27,6 +27,7 @@ options:
   file_name:
     description:
       - specified name for the downloaded file, overrides the stream file name
+    type: str
   download_directory:
     description:
       - full path to the directory to download into
@@ -58,7 +59,7 @@ EXAMPLES = r'''
 RETURN = r'''
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible.module_utils._text import to_native
 from ansible.module_utils.six import iteritems
 from ansible_collections.community.lbry.plugins.module_utils.lbry_common import (
@@ -66,11 +67,14 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_request,
     lbry_build_url,
     lbry_add_param_when_not_none,
+    HAS_REQUESTS,
+    REQUESTS_IMP_ERR,
 )
 
 # ================
 # Module execution
 #
+
 
 def main():
     argument_spec = lbry_common_argument_spec()
@@ -86,6 +90,10 @@ def main():
         argument_spec=argument_spec,
         supports_check_mode=False,
     )
+
+    if not HAS_REQUESTS:
+        module.fail_json(msg=missing_required_lib('requests'),
+                         exception=REQUESTS_IMP_ERR)
 
     protocol = module.params['protocol']
     host = module.params['host']
@@ -103,12 +111,12 @@ def main():
         for item in ['uri', 'file_name', 'download_directory', 'timeout', 'save_file', 'wallet_id']:
             payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
-        if "error" in r or "error" in r['result']:
-            module.fail_json(msg=f'Error getting file from lbrynet: {response}')
+        if "error" in response or "error" in response['result']:
+            module.fail_json(msg='Error getting file from lbrynet: {0}'.format(response))
     except Exception as e:
         module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
 
-    module.exit_json(changed=False, **r)
+    module.exit_json(changed=False, **response)
 
 
 if __name__ == '__main__':

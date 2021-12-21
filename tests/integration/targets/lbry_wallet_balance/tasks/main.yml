@@ -13,7 +13,7 @@
 
   - name: Create a wallet
     community.lbry.lbry_wallet:
-      wallet_id: mywallet
+      wallet_id: mywalletXXX
       state: present
     register: result
 
@@ -24,7 +24,7 @@
 
   - name: Get wallet balance
     community.lbry.lbry_wallet_balance:
-      wallet_id: mywallet
+      wallet_id: mywalletXXX
     register: result
 
   - assert:

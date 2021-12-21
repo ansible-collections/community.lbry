@@ -72,7 +72,7 @@ EXAMPLES = r'''
 RETURN = r'''
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible.module_utils._text import to_native
 from ansible.module_utils.six import iteritems
 from ansible_collections.community.lbry.plugins.module_utils.lbry_common import (
@@ -80,11 +80,14 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_request,
     lbry_build_url,
     lbry_add_param_when_not_none,
+    HAS_REQUESTS,
+    REQUESTS_IMP_ERR,
 )
 
 # ================
 # Module execution
 #
+
 
 def main():
     argument_spec = lbry_common_argument_spec()
@@ -103,6 +106,10 @@ def main():
         supports_check_mode=False,
     )
 
+    if not HAS_REQUESTS:
+        module.fail_json(msg=missing_required_lib('requests'),
+                         exception=REQUESTS_IMP_ERR)
+
     protocol = module.params['protocol']
     host = module.params['host']
     port = module.params['port']
@@ -116,9 +123,9 @@ def main():
             "params": {}
         }
         request_params = {}
-        for item in ['urls', 'wallet_id', 'new_sdk_server',  'include_purchase_receipt',
+        for item in ['urls', 'wallet_id', 'new_sdk_server', 'include_purchase_receipt',
                      'include_is_my_output', 'include_sent_supports', 'include_sent_tips',
-                        'include_received_tips']:
+                     'include_received_tips']:
             payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
         error_count = 0
@@ -126,7 +133,7 @@ def main():
             if "error" in response['result'][url]:
                 error_count += 1
             if error_count == len(module.params['urls']):
-                module.fail_json(msg=f'Error resolving file(s) from lbrynet: {response}')
+                module.fail_json(msg='Error resolving file(s) from lbrynet: {0}'.format(response))
     except Exception as e:
         module.fail_json(msg='Error resolving file from lbrynet: %s' % to_native(e))
 

@@ -27,7 +27,7 @@ options:
   bid:
     description:
       - amount to back the claim.
-    type: float
+    type: str
   file_path:
     description:
       - path to file to be associated with name.
@@ -68,7 +68,10 @@ options:
     type: str
   author:
     description:
-      - author of the publication. The usage for this field is not the same as for channels. The author field is used to credit an author who is not the publisher and is not represented by the channel. For example, a pdf file of 'The Odyssey' has an author of 'Homer' but may by published to a channel such as '@classics', or to no channel at all
+      - author of the publication.
+      - The usage for this field is not the same as for channels.
+      - The author field is used to credit an author who is not the publisher and is not represented by the channel.
+      - For example, a pdf file of 'The Odyssey' has an author of 'Homer' but may by published to a channel such as '@classics', or to no channel at all.
     type: str
   tags:
     description:
@@ -82,10 +85,10 @@ options:
     elements: str
   locations:
     description:
-      - locations relevant to the stream, consisting of 2 letter `country` code and a `state`, `city` and a postal `code` along with a `latitude` and `longitude`
+      - locations relevant to the stream.
+      - Consisting of 2 letter `country` code and a `state`, `city` and a postal `code` along with a `latitude` and `longitude`
     type: list
     elements: dict
-    example: {'country': 'US', 'state': 'NH'}
   license:
     description:
       - publication license
@@ -170,7 +173,7 @@ EXAMPLES = r'''
 RETURN = r'''
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible.module_utils._text import to_native
 from ansible.module_utils.six import iteritems
 from ansible_collections.community.lbry.plugins.module_utils.lbry_common import (
@@ -178,11 +181,14 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_request,
     lbry_build_url,
     lbry_add_param_when_not_none,
+    HAS_REQUESTS,
+    REQUESTS_IMP_ERR,
 )
 
 # ================
 # Module execution
 #
+
 
 def main():
     argument_spec = lbry_common_argument_spec()
@@ -191,8 +197,8 @@ def main():
         bid=dict(type='str'),
         file_path=dict(type='str'),
         file_hash=dict(type='str'),
-        validate_file=dict(type='bool'),
-        optimize_file=dict(type='bool'),
+        validate_file=dict(type='bool', default=False),
+        optimize_file=dict(type='bool', default=False),
         fee_currency=dict(type='str'),
         fee_amount=dict(type='float'),
         fee_address=dict(type='str'),
@@ -225,6 +231,10 @@ def main():
         supports_check_mode=False,
     )
 
+    if not HAS_REQUESTS:
+        module.fail_json(msg=missing_required_lib('requests'),
+                         exception=REQUESTS_IMP_ERR)
+
     protocol = module.params['protocol']
     host = module.params['host']
     port = module.params['port']
@@ -242,8 +252,8 @@ def main():
             if item not in ['host', 'port', 'protocol', 'debug']:
                 payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
-        if "error" in r or "error" in r['result']:
-            module.fail_json(msg=f'Error publishing file to lbrynet: {response}')
+        if "error" in response or "error" in response['result']:
+            module.fail_json(msg='Error publishing file to lbrynet: {0}'.format(response))
     except Exception as e:
         module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
 

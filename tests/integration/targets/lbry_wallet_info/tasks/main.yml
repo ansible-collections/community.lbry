@@ -13,7 +13,7 @@
 
   - name: Create a wallet
     community.lbry.lbry_wallet:
-      wallet_id: mywallet
+      wallet_id: mywalletXXX
       state: present
     register: result
 
@@ -24,13 +24,13 @@
 
   - name: Get wallet info
     community.lbry.lbry_wallet_info:
-      wallet_id: mywallet
+      wallet_id: mywalletXXX
     register: result
 
   - assert:
       that:
         - "result.changed == False"
-        - "result.wallet_id == 'mywallet'"
+        - "result.wallet_id == 'mywalletXXX'"
         - "result.is_encrypted == False"
         - "result.is_locked == False"
         - "result.is_syncing == False"

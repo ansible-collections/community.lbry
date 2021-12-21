@@ -24,7 +24,7 @@ options:
     description:
       - The LBRY SDK Server Protocol.
     type: str
-    default "http"
+    default: "http"
   debug:
     description:
       - Enable additional debug output.

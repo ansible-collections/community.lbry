@@ -10,11 +10,14 @@
         #- "result.result.which | length == 0"
         - "result.result.analyze_audio_volume"
 
+  # Module cannot be found... perhaps ansible version???
+  #- name: Install ffmpeg inside the docker container
+  #  community.docker.docker_container_exec:
+  #    container: lbrynet
+  #    command: /bin/bash -c "apt update -y && apt install ffmpeg -y"
+  #    user: root
   - name: Install ffmpeg inside the docker container
-    community.docker.docker_container_exec:
-      container: lbrynet
-      command: /bin/bash -c "apt update -y && apt install ffmpeg -y"
-      user: root
+    shell: docker exec --user root lbrynet /bin/bash -c "apt update -y && apt install ffmpeg -y"
 
   - name: Get ffmpeg info
     community.lbry.lbry_ffmpeg_find:

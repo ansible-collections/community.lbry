@@ -24,6 +24,8 @@ options:
       - wallet file name
     type: str
     required: yes
+    aliases:
+      - name
   debug:
     description:
       - Show additional debug output.
@@ -53,7 +55,7 @@ wallet_id:
   sample: mywallet
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible.module_utils._text import to_native
 from ansible.module_utils.six import iteritems
 from ansible_collections.community.lbry.plugins.module_utils.lbry_common import (
@@ -62,6 +64,8 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_build_url,
     lbry_add_param_when_not_none,
     lbry_wallet_list,
+    HAS_REQUESTS,
+    REQUESTS_IMP_ERR,
 )
 import traceback
 
@@ -80,6 +84,10 @@ def main():
         argument_spec=argument_spec,
         supports_check_mode=False,
     )
+
+    if not HAS_REQUESTS:
+        module.fail_json(msg=missing_required_lib('requests'),
+                         exception=REQUESTS_IMP_ERR)
 
     protocol = module.params['protocol']
     host = module.params['host']
@@ -100,10 +108,10 @@ def main():
 
         if wallet_exists:
             payload["method"] = "wallet_balance"
-            payload["params"] = { "wallet_id": wallet_id }
+            payload["params"] = {"wallet_id": wallet_id}
             response = lbry_request(url, payload)
             if "error" in response or "error" in response['result']:
-                module.fail_json(msg=f'Error getting wallet info: {response}')
+                module.fail_json(msg='Error getting wallet info: {0}'.format(response))
             else:
                 r['wallet_id'] = wallet_id
                 r['balance'] = response['result']
@@ -115,7 +123,6 @@ def main():
             module.fail_json(msg='Error running module: %s' % to_native(e))
         else:
             module.fail_json(msg='Error running module: {0}, response: {1}'.format(traceback.format_exc(), str(response)))
-
 
     module.exit_json(changed=False, **r)
 

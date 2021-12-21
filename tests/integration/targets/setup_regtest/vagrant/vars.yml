@@ -1,0 +1,20 @@
+---
+lbrycrd_release: "https://github.com/lbryio/lbrycrd/releases/download/v0.17.3.3/lbrycrd-linux-1733.zip"
+required_packages:
+  - apt-transport-https 
+  - ca-certificates 
+  - curl 
+  - software-properties-common
+  - gnupg
+  - lsb-release
+  - unzip
+  - zip
+  - net-tools
+  - python3-pip
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+pip_packages:
+  - docker
+  - requests
