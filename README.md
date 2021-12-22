@@ -3,7 +3,8 @@
 * This is a work in progress.
 * If you want to learn about LBRY start here [LBRY](https://lbry.tech).
 * Then please come back and help us out here.
-* As of October 2021 there are still a few show-stopping bugs to fix. This probably prevents any productive usage of the modules for the moment.
+* ~~As of October 2021 there are still a few show-stopping bugs to fix. This probably prevents any productive usage of the modules for the moment.~~
+* CI Working as of December 21.12.2021 in a regtest environment. Some productive use of the module should be possible but expect the experience to be rocky.
 
 # Build the Docker Image for LBRY
 
