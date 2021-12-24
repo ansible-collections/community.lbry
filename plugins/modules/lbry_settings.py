@@ -149,7 +149,8 @@ def main():
                     else:
                         payload = {
                             "method": "settings_set",
-                            "params": {parameter: value}
+                            "params": {"key": parameter,
+                                       "value": value}
                         }
                         response = lbry_request(url, payload)
                         if 'result' not in response:
