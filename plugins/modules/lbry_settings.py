@@ -101,7 +101,7 @@ def main():
     argument_spec = lbry_common_argument_spec()
     argument_spec.update(parameter=dict(type='str', required=True), aliases=['param'],
                          value=dict(type='raw', required=True),
-                         parameter_type='str', default='str', choices=['str', 'int', 'bool', 'float'])
+                         parameter_type=dict('str', default='str', choices=['str', 'int', 'bool', 'float']))
     module = AnsibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
