@@ -20,7 +20,7 @@ extends_documentation_fragment:
   - community.lbry.lbry_common_options
 options:
   parameter:
-    description: 
+    description:
       - The LBRY Daemon Parameter to set.
     type: str
     required: true
@@ -80,16 +80,17 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     REQUESTS_IMP_ERR,
 )
 
+
 def cast_param_value(param_value, param_type):
-  if param_type == 'str':
-    param_value = str(param_value)
-  elif param_type == 'bool':
-    param_value = bool(param_value)
-  elif param_type == 'int':
-      param_value = int(param_value)
-  elif param_type == 'float':
-      param_value = float(param_value)
-  return param_value
+    if param_type == 'str':
+        param_value = str(param_value)
+    elif param_type == 'bool':
+        param_value = bool(param_value)
+    elif param_type == 'int':
+        param_value = int(param_value)
+    elif param_type == 'float':
+        param_value = float(param_value)
+    return param_value
 
 
 # ================
@@ -100,9 +101,9 @@ def cast_param_value(param_value, param_type):
 def main():
     argument_spec = lbry_common_argument_spec()
     argument_spec.update(
-      parameter=dict(type='str', required=True, aliases=['param']),
-      value=dict(type='raw', required=True),
-      parameter_type=dict('str', default='str', choices=['str', 'int', 'bool', 'float']),
+        parameter=dict(type='str', required=True, aliases=['param']),
+        value=dict(type='raw', required=True),
+        parameter_type=dict(type='str', default='str', choices=['str', 'int', 'bool', 'float']),
     )
     module = AnsibleModule(
         argument_spec=argument_spec,
@@ -146,7 +147,6 @@ def main():
                         changed = True
                         result['msg'] = "{0} was set to {1}".format(parameter, value)
                     else:
-                        
                         payload = {
                             "method": "settings_set",
                             "params": {parameter: value}
