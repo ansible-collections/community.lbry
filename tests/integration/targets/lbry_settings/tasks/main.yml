@@ -61,10 +61,10 @@
         - "result.changed == False"
         - "result.msg == 'concurrent_blob_announcers is already set to 10'"
 
-  - name: Set announce_head_and_sd_only to false (bool) - no change
+  - name: Set announce_head_and_sd_only to True (bool) - no change
     community.lbry.lbry_settings:
       parameter: announce_head_and_sd_only
-      value: false
+      value: True
       type: bool
     register: result
 
