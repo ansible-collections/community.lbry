@@ -1,0 +1,99 @@
+---
+  - name: Set peer_connect_timeout on lbry server - check mode
+    community.lbry.lbry_settings:
+      parameter: peer_connect_timeout
+      value: 3.0
+      type: float
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'peer_connect_timeout is already set to 3.0'"
+
+  - name: Set peer_connect_timeout on lbry server - check mode
+    community.lbry.lbry_settings:
+      parameter: peer_connect_timeout
+      value: 5.0
+      type: float
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'peer_connect_timeout was set to 5.0'"
+
+  - name: Set peer_connect_timeout on lbry server - should change
+    community.lbry.lbry_settings:
+      parameter: peer_connect_timeout
+      value: 5.0
+      type: float
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'peer_connect_timeout was set to 5.0'"
+
+  - name: Set peer_connect_timeout on lbry server - should not change
+    community.lbry.lbry_settings:
+      parameter: peer_connect_timeout
+      value: 5.0
+      type: float
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'peer_connect_timeout is already set to 5.0'"
+
+  - name: Set blob_storage_limit to 0 (int) - no change
+    community.lbry.lbry_settings:
+      parameter: blob_storage_limit 
+      value: 0
+      type: int
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'blob_storage_limit is already set to 0'"
+
+  - name: Set announce_head_and_sd_only to false (bool) - no change
+    community.lbry.lbry_settings:
+      parameter:  announce_head_and_sd_only
+      value: false
+      type: bool
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'announce_head_and_sd_only is already set to false'"
+
+  - name: Set ffmpeg_path to empty string (str) - no change
+    community.lbry.lbry_settings:
+      parameter:  ffmpeg_path
+      value: ""
+      type: str
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'ffmpeg_path is already set to '"
+
+  - name: Set param name that does not exist - no change
+    community.lbry.lbry_settings:
+      parameter: idonotexist
+      value: ""
+      type: str
+    register: result
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "result.failed"
+        - "result.msg == 'parameter not found in lbry daemon settings'"
