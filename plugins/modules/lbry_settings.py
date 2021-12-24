@@ -103,7 +103,7 @@ def main():
     argument_spec.update(
         parameter=dict(type='str', required=True, aliases=['param']),
         value=dict(type='raw', required=True),
-        parameter_type=dict(type='str', default='str', choices=['str', 'int', 'bool', 'float']),
+        parameter_type=dict(type='str', default='str', choices=['str', 'int', 'bool', 'float'], aliases=['type']),
     )
     module = AnsibleModule(
         argument_spec=argument_spec,
