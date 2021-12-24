@@ -71,7 +71,7 @@
   - assert:
       that:
         - "result.changed == False"
-        - "result.msg == 'announce_head_and_sd_only is already set to false'"
+        - "result.msg == 'announce_head_and_sd_only is already set to True'"
 
   - name: Set ffmpeg_path to empty string (str) - no change
     community.lbry.lbry_settings:
