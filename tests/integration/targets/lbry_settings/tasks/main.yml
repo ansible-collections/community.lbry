@@ -49,21 +49,21 @@
         - "result.changed == False"
         - "result.msg == 'peer_connect_timeout is already set to 5.0'"
 
-  - name: Set blob_storage_limit to 0 (int) - no change
+  - name: Set concurrent_blob_announcers to 10 (int) - no change
     community.lbry.lbry_settings:
-      parameter: blob_storage_limit 
-      value: 0
+      parameter: concurrent_blob_announcers
+      value: 10
       type: int
     register: result
 
   - assert:
       that:
         - "result.changed == False"
-        - "result.msg == 'blob_storage_limit is already set to 0'"
+        - "result.msg == 'concurrent_blob_announcers is already set to 10'"
 
   - name: Set announce_head_and_sd_only to false (bool) - no change
     community.lbry.lbry_settings:
-      parameter:  announce_head_and_sd_only
+      parameter: announce_head_and_sd_only
       value: false
       type: bool
     register: result
@@ -75,7 +75,7 @@
 
   - name: Set ffmpeg_path to empty string (str) - no change
     community.lbry.lbry_settings:
-      parameter:  ffmpeg_path
+      parameter: ffmpeg_path
       value: ""
       type: str
     register: result
