@@ -49,19 +49,19 @@ requirements:
 
 EXAMPLES = r'''
 - name: Set peer_connect_timeout to 5.0
-  community.lbry.lbry_settings
+  community.lbry.lbry_settings:
     parameter: peer_connect_timeout
     value: 5.0
     parameter_type: float
 
 - name: Set use_upnp to false
-   community.lbry.lbry_settings
+   community.lbry.lbry_settings:
     parameter: use_upnp
     value: false
     type: bool
 
 - name: Set wallet_dir
-   community.lbry.lbry_settings
+   community.lbry.lbry_settings:
     parameter: wallet_dir
     value: "/tmp/tmpd_du30j6"
 '''
