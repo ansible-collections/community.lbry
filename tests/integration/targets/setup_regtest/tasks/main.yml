@@ -5,6 +5,7 @@
   with_items:
     - docker
     - six
+  retries: 5
 
 #- name: Ensure docker-compose is available
 #  package:
@@ -37,6 +38,7 @@
   shell: docker-compose -f {{ docker_compose_file | default('docker-compose.yml') }} up --detach
   args:
     chdir: "{{role_path}}/docker"
+  retries: 5
   notify: Clean up docker containers and volumes
 
 - name: Wait for lbrynet to become available
@@ -50,6 +52,7 @@
       - curl
       - net-tools
     state: present
+  retries: 5
 
 #- shell: docker ps
 
