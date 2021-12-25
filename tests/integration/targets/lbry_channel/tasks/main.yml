@@ -1,0 +1,82 @@
+---
+  - name: Create a new account
+    community.lbry.lbry_account:
+      name: rhys
+      state: present
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Account created'"
+
+  - name: Set account_id
+    set_fact:
+      account_id: result.account_details.id
+
+  - name: Create a channel - check mode
+    community.lbry.lbry_channel:
+      name: rhys
+      state: present
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Channel created'"
+
+  - name: Create a channel 
+    community.lbry.lbry_channel:
+      name: rhys
+      state: present
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Channel created'"
+
+  - name: Run module again - should not change
+    community.lbry.lbry_channel:
+      name: rhys
+      state: present
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'Channel already exists'"
+
+  - name: Abandon channel - check mode
+    community.lbry.lbry_channel:
+      name: rhys
+      state: absent
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Channel abandoned'"
+    
+  - name: Abandon channel
+    community.lbry.lbry_channel:
+      name: rhys
+      state: absent
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Channel abandoned'"
+
+  - name: Abandon channel - should not change
+    community.lbry.lbry_channel:
+      name: rhys
+      state: absent
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'Channel does not exist'"
