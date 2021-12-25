@@ -55,13 +55,13 @@ EXAMPLES = r'''
     parameter_type: float
 
 - name: Set use_upnp to false
-   community.lbry.lbry_settings:
+  community.lbry.lbry_settings:
     parameter: use_upnp
     value: false
     type: bool
 
 - name: Set wallet_dir
-   community.lbry.lbry_settings:
+  community.lbry.lbry_settings:
     parameter: wallet_dir
     value: "/tmp/tmpd_du30j6"
 '''
