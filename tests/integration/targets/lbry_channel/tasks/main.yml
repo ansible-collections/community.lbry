@@ -18,6 +18,7 @@
     community.lbry.lbry_channel:
       name: rhys
       state: present
+      bid: '0.01'
     check_mode: yes
     register: result
 
@@ -30,6 +31,8 @@
     community.lbry.lbry_channel:
       name: rhys
       state: present
+      bid: '0.01'
+    register: result
 
   - assert:
       that:
@@ -40,6 +43,7 @@
     community.lbry.lbry_channel:
       name: rhys
       state: present
+      bid: '0.01'
     register: result
 
   - assert:

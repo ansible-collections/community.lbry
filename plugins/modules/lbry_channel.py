@@ -46,7 +46,6 @@ options:
     description:
       - amount to back the claim.
     type: str
-    required: true
   title:
     description:
       - title of the publication.
@@ -192,6 +191,7 @@ def main():
     module = AnsibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
+        required_if=[("state", "present", ("bid"))]
     )
 
     if not HAS_REQUESTS:
