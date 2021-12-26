@@ -191,7 +191,7 @@ def main():
     module = AnsibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
-        required_if=[("state", "present", ("bid"))]
+        required_if=[('state', 'present', ('bid'))]
     )
 
     if not HAS_REQUESTS:
