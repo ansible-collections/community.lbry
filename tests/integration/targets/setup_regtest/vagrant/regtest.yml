@@ -1,6 +1,8 @@
 ---
 - name: Setup regtest environment
-  hosts: localhost
+  hosts: 
+    - all
+    - localhost
   vars_files:
     - ./vars.yml
 
