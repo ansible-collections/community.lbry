@@ -93,6 +93,10 @@ def main():
         argument_spec=argument_spec,
         supports_check_mode=False,
     )
+    argument_spec.update(
+        account_id=dict(type='str'),
+        wallet_id=dict(type='str'),
+    )
 
     if not HAS_REQUESTS:
         module.fail_json(msg=missing_required_lib('requests'),
