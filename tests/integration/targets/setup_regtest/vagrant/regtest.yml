@@ -190,7 +190,7 @@
       name: walletserver
       image: lbry/wallet-server:latest-release
       ports:
-        - "127.0.0.1:50001:50001/udp" # rpc port
+        - "127.0.0.1:50001:50001/tcp" # rpc port
         - "127.0.0.1:2112:2112"
       env:
         "DB_DIRECTORY": "/database"

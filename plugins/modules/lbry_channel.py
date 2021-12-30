@@ -17,7 +17,7 @@ short_description: Manage LBRY channels.
 description:
   - Manage LBRY channels.
   - Add and update channels.
-  - Abandon channels. 
+  - Abandon channels.
   - Channels are abandond by retreiving the claim_id from the matched channel name.
 
 author: Rhys Campbell (@rhysmeister)
@@ -177,15 +177,15 @@ def main():
         description=dict(type='str'),
         email=dict(type='str'),
         website_url=dict(type='str'),
-        featured=dict(type='list', elementsd='str'),
-        tags=dict(type='list', elementsd='str'),
-        languages=dict(type='list', elementsd='str'),
-        locations=dict(type='list', elementsd='dict'),
+        featured=dict(type='list', elements='str'),
+        tags=dict(type='list', elements='str'),
+        languages=dict(type='list', elements='str'),
+        locations=dict(type='list', elements='dict'),
         thumbnail_url=dict(type='str'),
         cover_url=dict(type='str'),
         account_id=dict(type='str'),
         wallet_id=dict(type='str'),
-        funding_account_ids=dict(type='list', elementsd='str'),
+        funding_account_ids=dict(type='list', elements='str'),
         debug=dict(type='bool', default=False),
     )
     module = AnsibleModule(
@@ -216,7 +216,7 @@ def main():
         r = {}
 
         for c in channels:
-            if c['name'] ==channel_name:
+            if c['name'] == channel_name:
                 channel_exists = True
                 claim_id = c['claim_id']
         # TODO No ability to update a channel yet
@@ -230,7 +230,7 @@ def main():
                     }
                     request_params = {}
                     for item in ['bid', 'title', 'description', 'email', 'website_url', 'featured',
-                                 'tags', 'languages', 'locations', 'thumbnail_url', 'cover_url', 
+                                 'tags', 'languages', 'locations', 'thumbnail_url', 'cover_url',
                                  'account_id', 'wallet_id', 'funding_account_ids']:
                         payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
                     payload['params']['name'] = channel_name
