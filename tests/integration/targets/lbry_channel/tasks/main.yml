@@ -1,5 +1,5 @@
 ---
-  - name: Create a new account
+  - name: Create a new account  # TODO This account is not actually used by the tests below - Rethink?
     community.lbry.lbry_account:
       name: rhys
       state: present
@@ -10,7 +10,22 @@
         - "result.changed"
         - "result.msg == 'Account created'"
 
-  - name: Set account_id
+  - name: Create a new address for the default account.
+    community.lbry.lbry_address_unused:
+    register: result
+
+  - name: Set the address variable
+    set_fact:
+      my_new_address: result.address
+
+  - name: Generate some coins to the address - module?
+    shell: |
+      ./lbrycrd-cli -regtest generatetoaddress 200 {{ my_new_address }}
+      ./lbrycrd-cli -regtest generatetoaddress 1 {{ my_new_address }}
+    args:
+      chdir: /home/lbry
+
+  - name: Set account_id  # TODO Not currently used... see above
     set_fact:
       account_id: result.account_details.id
 
