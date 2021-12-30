@@ -89,13 +89,13 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
 
 def main():
     argument_spec = lbry_common_argument_spec()
-    module = AnsibleModule(
-        argument_spec=argument_spec,
-        supports_check_mode=False,
-    )
     argument_spec.update(
         account_id=dict(type='str'),
         wallet_id=dict(type='str'),
+    )
+    module = AnsibleModule(
+        argument_spec=argument_spec,
+        supports_check_mode=False,
     )
 
     if not HAS_REQUESTS:
