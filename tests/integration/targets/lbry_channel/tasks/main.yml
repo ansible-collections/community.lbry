@@ -25,7 +25,7 @@
     args:
       chdir: /home/lbry
     become_user: lbry
-
+    become: yes
 
   - name: Set account_id  # TODO Not currently used... see above
     set_fact:
