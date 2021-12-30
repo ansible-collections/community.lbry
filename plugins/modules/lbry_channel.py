@@ -73,7 +73,7 @@ options:
     type: list
     elements: str
   languages:
-    descirption:
+    description:
       - languages used by the channel, using RFC 5646 format.
     type: list
     elements: str
