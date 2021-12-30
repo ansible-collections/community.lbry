@@ -118,7 +118,7 @@ def main():
         }
         request_params = {}
         for item in ['account_id', 'wallet_id']:
-            payload['params'] = lbry_add_param_when_not_none(request_params, module, item)  
+            payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
         if 'result' in response:
             result['address'] = response['result']
@@ -131,7 +131,7 @@ def main():
     except Exception as e:
         module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
 
-    module.exit_json(changed=False, **result)
+    module.exit_json(**result)
 
 
 if __name__ == '__main__':
