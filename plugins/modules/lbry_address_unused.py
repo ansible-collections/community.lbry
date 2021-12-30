@@ -53,8 +53,6 @@ EXAMPLES = r'''
 - name: Parse the resulting address into a variable
   set_fact:
     my_new_address: result.address
-  
-
 '''
 
 RETURN = r'''
