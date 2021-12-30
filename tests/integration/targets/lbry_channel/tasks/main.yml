@@ -20,10 +20,12 @@
 
   - name: Generate some coins to the address - module?
     shell: |
-      ./lbrycrd-cli -regtest -rpcuser lbry -rpcpassword lbry generatetoaddress 200 {{ my_new_address }}
-      ./lbrycrd-cli -regtest -rpcuser lbry -rpcpassword lbry generatetoaddress 1 {{ my_new_address }}
+      ./lbrycrd-cli -regtest generatetoaddress 200 {{ my_new_address }}
+      ./lbrycrd-cli -regtest generatetoaddress 1 {{ my_new_address }}
     args:
       chdir: /home/lbry
+    become_user: lbry
+
 
   - name: Set account_id  # TODO Not currently used... see above
     set_fact:
