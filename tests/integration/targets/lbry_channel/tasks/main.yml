@@ -16,7 +16,7 @@
 
   - name: Set the address variable
     set_fact:
-      my_new_address: result.address
+      my_new_address: "{{ result.address }}"
 
   - name: Generate some coins to the address - module?
     shell: |
