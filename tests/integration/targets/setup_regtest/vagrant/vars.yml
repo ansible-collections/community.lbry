@@ -18,3 +18,4 @@ docker_packages:
 pip_packages:
   - docker
   - requests
+  - coverage
