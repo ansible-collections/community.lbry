@@ -40,6 +40,14 @@ EXAMPLES = r'''
   community.lbry.lbry_wallet_balance:
     wallet_id: mywallet
   register: result
+
+- name: Wait for the available balance to hit an expected level
+  community.lbry.lbry_wallet_balance:
+    wallet_id: "default_wallet"
+  register: wallet
+  retries: 99
+  delay: 10
+  until: "wallet.balance.available == '200.0'"
 '''
 
 RETURN = r'''
