@@ -256,7 +256,7 @@ def main():
         if "error" in response or "error" in response['result']:
             module.fail_json(msg='Error publishing file to lbrynet: {0}'.format(response))
             changed = False
-        elif "outputs" in response['result']  # publish was successful
+        elif "outputs" in response['result']:  # publish was successful
             changed = True
         else:
             module.fail_json(msg="Some error happened: {0}".format(response))
