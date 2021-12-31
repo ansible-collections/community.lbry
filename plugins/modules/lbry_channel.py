@@ -99,6 +99,7 @@ options:
     description:
       - Restrict operation to specific wallet.
     type: str
+    default: default_wallet
   funding_account_ids:
     description:
       - ids of accounts to fund this transaction
@@ -184,7 +185,7 @@ def main():
         thumbnail_url=dict(type='str'),
         cover_url=dict(type='str'),
         account_id=dict(type='str'),
-        wallet_id=dict(type='str'),
+        wallet_id=dict(type='str', default='default_wallet'),
         funding_account_ids=dict(type='list', elements='str'),
         debug=dict(type='bool', default=False),
     )

@@ -297,7 +297,6 @@
 
   - name: Wait for wallet_balance to become available
     community.lbry.lbry_wallet_balance:
-      wallet_id: "default_wallet"
     register: wallet
     retries: 99
     delay: 10
@@ -309,4 +308,4 @@
   # TODO Find a better way of confirming when the balance is spendable
   - name: The "available" above does not seem to be spendable immediately 
     pause:
-      seconds: 300
+      seconds: 600
