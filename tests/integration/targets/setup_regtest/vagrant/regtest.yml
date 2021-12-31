@@ -284,7 +284,7 @@
   - name: Generate some coins to the address - module?
     shell: |
       ./lbrycrd-cli -regtest generatetoaddress 200 {{ my_new_address }}
-      ./lbrycrd-cli -regtest generate 1
+      ./lbrycrd-cli -regtest generate 100
     args:
       chdir: /home/lbry
     become_user: lbry
@@ -307,7 +307,7 @@
 
   - name: Generate another block
     shell: |
-      ./lbrycrd-cli -regtest generate 1
+      ./lbrycrd-cli -regtest generate 100
     args:
       chdir: /home/lbry
     become_user: lbry
