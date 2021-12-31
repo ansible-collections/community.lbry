@@ -51,6 +51,6 @@
   - assert:
       that:
         - "result.changed"
-        - "result.result.outputs.value.author == 'rhysmeister'"
-        - "result.result.outputs.value.stream_type == 'document'"
-        - "result.result.outputs.value.title == 'Lorem Ipsum Dolor Sit Amet'"
+        - "result.result.outputs.0.value.author == 'rhysmeister'"
+        - "result.result.outputs.0.value.stream_type == 'document'"
+        - "result.result.outputs.0.value.title == 'Lorem Ipsum Dolor Sit Amet'"
