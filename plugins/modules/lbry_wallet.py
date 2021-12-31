@@ -25,7 +25,6 @@ options:
       - wallet file name
     type: str
     default: default_wallet
-    required: yes
     aliases:
       - name
   skip_on_startup:

@@ -301,7 +301,7 @@
     register: wallet
     retries: 10
     delay: 10
-    until: wallet.balance.available == '200.0'
+    #until: wallet.balance.available == '200.0'
     ignore_errors: yes
 
   - debug:
