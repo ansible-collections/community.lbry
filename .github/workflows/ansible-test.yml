@@ -181,10 +181,9 @@ jobs:
         run: ansible-test integration -vvv --color --retry-on-error --continue-on-error --diff --python ${{ matrix.python }} --coverage ${{ matrix.lbry_module }}
         working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
-        # ansible-test support producing code coverage date
-      - name: Generate coverage report
-        run: ansible-test coverage xml -v --requirements --group-by command --group-by version
-        working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
+      # - name: Generate coverage report
+      #   run: ansible-test coverage xml -v --requirements --group-by command --group-by version
+      #   working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
       # See the reports at https://codecov.io/gh/GITHUBORG/REPONAME
       - uses: codecov/codecov-action@v1
