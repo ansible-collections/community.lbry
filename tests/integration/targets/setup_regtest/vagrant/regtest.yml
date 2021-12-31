@@ -291,6 +291,14 @@
     become: yes
 
   # We need to wait a little while for the balance to become available - We could do this with account_balance and/or wallet_balance methid - module?
-  - name: Pause to allow balance to become available
-    pause:
-      seconds: 60
+  # - name: Pause to allow balance to become available
+  #   pause:
+  #     seconds: 60
+
+  - name: Wait for wallet_balance to become available
+    community.lbry.lbry_wallet_balance:
+      wallet_id: "default_wallet"
+    register: wallet
+    retries: 10
+    delay: 10
+    until: wallet.balance.available == '200.0'

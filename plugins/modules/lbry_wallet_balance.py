@@ -23,6 +23,7 @@ options:
     description:
       - wallet file name
     type: str
+    default: default_wallet
     required: yes
     aliases:
       - name
@@ -77,7 +78,7 @@ import traceback
 def main():
     argument_spec = lbry_common_argument_spec()
     argument_spec.update(
-        wallet_id=dict(type='str', required=True, aliases=['name']),
+        wallet_id=dict(type='str', required=True, aliases=['name'], default='default_wallet'),
         debug=dict(type='bool', default=False)
     )
     module = AnsibleModule(
