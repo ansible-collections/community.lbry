@@ -299,9 +299,9 @@
     community.lbry.lbry_wallet_balance:
       wallet_id: "default_wallet"
     register: wallet
-    retries: 10
+    retries: 99
     delay: 10
-    #until: wallet.balance.available == '200.0'
+    until: "wallet.balance.available == '200.0'"
     ignore_errors: yes
 
   - debug:
