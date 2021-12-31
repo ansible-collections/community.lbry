@@ -305,3 +305,8 @@
 
   - debug:
       var: wallet
+
+  # TODO Find a better way of confirming when the balance is spendable
+  - name: The "available" above does not seem to be spendable immediately 
+    pause:
+      seconds: 300
