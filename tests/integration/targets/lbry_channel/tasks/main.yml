@@ -10,22 +10,22 @@
         - "result.changed"
         - "result.msg == 'Account created'"
 
-  - name: Create a new address for the default account.
-    community.lbry.lbry_address_unused:
-    register: result
+  # - name: Create a new address for the default account.
+  #   community.lbry.lbry_address_unused:
+  #   register: result
 
-  - name: Set the address variable
-    set_fact:
-      my_new_address: "{{ result.address }}"
+  # - name: Set the address variable
+  #   set_fact:
+  #     my_new_address: "{{ result.address }}"
 
-  - name: Generate some coins to the address - module?
-    shell: |
-      ./lbrycrd-cli -regtest generatetoaddress 200 {{ my_new_address }}
-      ./lbrycrd-cli -regtest generate 1
-    args:
-      chdir: /home/lbry
-    become_user: lbry
-    become: yes
+  # - name: Generate some coins to the address - module?
+  #   shell: |
+  #     ./lbrycrd-cli -regtest generatetoaddress 200 {{ my_new_address }}
+  #     ./lbrycrd-cli -regtest generate 1
+  #   args:
+  #     chdir: /home/lbry
+  #   become_user: lbry
+  #   become: yes
 
   - name: Set account_id  # TODO Not currently used... see above
     set_fact:
