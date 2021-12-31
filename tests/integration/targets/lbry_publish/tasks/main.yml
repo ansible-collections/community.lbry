@@ -23,13 +23,13 @@
         - "result.changed == False"
         - "'is a required argument for new publishes' in result.msg"
 
-  - name: Upload file to lbry - add bid no funds
+  - name: Upload file to lbry - add huge bid
     community.lbry.lbry_publish:
       name: lorem-ipsum
       file_path: /tmp/lorum_ipsum.txt
       title: Lorem Ipsum Dolor Sit Amet
       author: rhysmeister
-      bid: '0.01'
+      bid: '9999999999999.99999'
     register: result
     ignore_errors: yes
 
@@ -38,3 +38,19 @@
         - "result.failed"
         - "result.changed == False"
         - "'Not enough funds to cover this transaction' in result.msg"
+
+  - name: Upload file to lbry - reasonable in funds bid
+    community.lbry.lbry_publish:
+      name: lorem-ipsum
+      file_path: /tmp/lorum_ipsum.txt
+      title: Lorem Ipsum Dolor Sit Amet
+      author: rhysmeister
+      bid: '1.25'
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.result.outputs.value.author == 'rhysmeister'"
+        - "result.result.outputs.value.stream_type == 'document'"
+        - "result.result.outputs.value.title == 'Lorem Ipsum Dolor Sit Amet'"
