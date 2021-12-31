@@ -305,7 +305,15 @@
   - debug:
       var: wallet
 
-  # TODO Find a better way of confirming when the balance is spendable
-  - name: The "available" above does not seem to be spendable immediately 
-    pause:
-      seconds: 600
+  - name: Generate another block
+    shell: |
+      ./lbrycrd-cli -regtest generate 1
+    args:
+      chdir: /home/lbry
+    become_user: lbry
+    become: yes
+
+  # TODO Find a better way of confirming when the balance is spendable - Long pause does not work??
+  # - name: The "available" above does not seem to be spendable immediately 
+  #   pause:
+  #     seconds: 600
