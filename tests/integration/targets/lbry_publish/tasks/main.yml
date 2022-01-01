@@ -66,6 +66,7 @@
       file_path: /tmp/dog.jpg
       title: Image of a dog
       author: rhysmeister
+      bid: '1.50'
       tags:
         - dog
         - animal
