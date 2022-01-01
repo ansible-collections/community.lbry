@@ -134,4 +134,30 @@
         - "result.result.outputs.0.value.title == 'Video Upload'"
         - "result.result.outputs.0.value.video.duration == 56"
 
+  - name: Copy the markdown.md file to the lbry docker container
+    command: docker cp files/markdown.md lbrynet:/tmp/markdown.md
+    args:
+      chdir: "{{ role_path }}"
+
+  - name: Upload the markdown.md post to lbry
+    community.lbry.lbry_publish:
+      name: markdown-post
+      file_path: /tmp/markdown.md
+      title: "My Markdown Blog Post"
+      author: rhysmeister
+      bid: '2.0'
+      tags:
+        - markdown
+        - blog
+    register: result
+
+  - debug:
+      var: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.result.outputs.0.value.author == 'rhysmeister'"
+        - "result.result.outputs.0.value.stream_type == 'document'"
+        - "result.result.outputs.0.value.title == 'My Markdown Blog Post'"
   
