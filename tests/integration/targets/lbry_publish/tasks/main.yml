@@ -132,5 +132,6 @@
         - "result.result.outputs.0.value.author == 'rhysmeister'"
         - "result.result.outputs.0.value.stream_type == 'video'"
         - "result.result.outputs.0.value.title == 'Video Upload'"
+        - "result.result.outputs.0.value.source.hash == '901e1e7b3d46fc53b3a8d8c42e9f0cd030abdef68a95b12d8440ade2383691c0cf4ef69cf9799e53583b33fd44c0ba7d'"
 
   
