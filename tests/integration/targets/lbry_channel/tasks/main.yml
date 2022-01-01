@@ -1,0 +1,103 @@
+---
+  - name: Create a new account  # TODO This account is not actually used by the tests below - Rethink?
+    community.lbry.lbry_account:
+      name: rhys
+      state: present
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Account created'"
+
+  # - name: Create a new address for the default account.
+  #   community.lbry.lbry_address_unused:
+  #   register: result
+
+  # - name: Set the address variable
+  #   set_fact:
+  #     my_new_address: "{{ result.address }}"
+
+  # - name: Generate some coins to the address - module?
+  #   shell: |
+  #     ./lbrycrd-cli -regtest generatetoaddress 200 {{ my_new_address }}
+  #     ./lbrycrd-cli -regtest generate 1
+  #   args:
+  #     chdir: /home/lbry
+  #   become_user: lbry
+  #   become: yes
+
+  - name: Set account_id  # TODO Not currently used... see above
+    set_fact:
+      account_id: result.account_details.id
+
+  - name: Create a channel - check mode
+    community.lbry.lbry_channel:
+      name: rhys
+      state: present
+      bid: '0.01'
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Channel created'"
+
+  - name: Create a channel 
+    community.lbry.lbry_channel:
+      name: rhys
+      state: present
+      bid: '0.01'
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Channel created'"
+
+  - name: Run module again - should not change
+    community.lbry.lbry_channel:
+      name: rhys
+      state: present
+      bid: '0.01'
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'Channel already exists'"
+
+  - name: Abandon channel - check mode
+    community.lbry.lbry_channel:
+      name: rhys
+      state: absent
+    check_mode: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Channel abandoned'"
+    
+  - name: Abandon channel
+    community.lbry.lbry_channel:
+      name: rhys
+      state: absent
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.msg == 'Channel abandoned'"
+
+  - name: Abandon channel - should not change
+    community.lbry.lbry_channel:
+      name: rhys
+      state: absent
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.msg == 'Channel does not exist'"

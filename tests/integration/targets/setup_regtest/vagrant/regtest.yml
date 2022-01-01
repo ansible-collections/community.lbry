@@ -1,6 +1,8 @@
 ---
 - name: Setup regtest environment
-  hosts: localhost
+  hosts: 
+    - all
+    - localhost
   vars_files:
     - ./vars.yml
 
@@ -145,6 +147,8 @@
       port: 29245
 
   # TODO Need to pause of verify the server is ready here
+  - pause:
+      seconds: 5
 
   - name: Generate some coins
     shell: |
@@ -153,7 +157,7 @@
      creates: coins.success
      chdir: /home/lbry
     become: yes
-    when: False
+    #when: False
 
   - name: Start an elastic server in a container
     docker_container:
@@ -186,7 +190,7 @@
       name: walletserver
       image: lbry/wallet-server:latest-release
       ports:
-        - "127.0.0.1:50001:50001/udp" # rpc port
+        - "127.0.0.1:50001:50001/tcp" # rpc port
         - "127.0.0.1:2112:2112"
       env:
         "DB_DIRECTORY": "/database"
@@ -268,3 +272,48 @@
     until: "result.result.startup_status.values() is all"
     retries: 25
     delay: 10
+
+  - name: Create a new address for the default account.
+    community.lbry.lbry_address_unused:
+    register: result
+
+  - name: Set the address variable
+    set_fact:
+      my_new_address: "{{ result.address }}"
+
+  - name: Generate some coins to the address - module?
+    shell: |
+      ./lbrycrd-cli -regtest generatetoaddress 200 {{ my_new_address }}
+      ./lbrycrd-cli -regtest generate 100
+    args:
+      chdir: /home/lbry
+    become_user: lbry
+    become: yes
+
+  # We need to wait a little while for the balance to become available - We could do this with account_balance and/or wallet_balance methid - module?
+  # - name: Pause to allow balance to become available
+  #   pause:
+  #     seconds: 60
+
+  - name: Wait for wallet_balance to become available
+    community.lbry.lbry_wallet_balance:
+    register: wallet
+    retries: 99
+    delay: 10
+    until: "wallet.balance.available == '200.0'"
+
+  - debug:
+      var: wallet
+
+  - name: Generate another block
+    shell: |
+      ./lbrycrd-cli -regtest generate 100
+    args:
+      chdir: /home/lbry
+    become_user: lbry
+    become: yes
+
+  # TODO Find a better way of confirming when the balance is spendable - Long pause does not work??
+  # - name: The "available" above does not seem to be spendable immediately 
+  #   pause:
+  #     seconds: 600

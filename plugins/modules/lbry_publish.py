@@ -240,6 +240,7 @@ def main():
     port = module.params['port']
 
     response = {}
+    changed = False
 
     try:
         url = lbry_build_url(protocol, host, port)
@@ -254,10 +255,15 @@ def main():
         response = lbry_request(url, payload)
         if "error" in response or "error" in response['result']:
             module.fail_json(msg='Error publishing file to lbrynet: {0}'.format(response))
+            changed = False
+        elif "outputs" in response['result']:  # publish was successful
+            changed = True
+        else:
+            module.fail_json(msg="Some error happened: {0}".format(response))
     except Exception as e:
         module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
 
-    module.exit_json(changed=False, **response)
+    module.exit_json(changed=changed, **response)
 
 
 if __name__ == '__main__':

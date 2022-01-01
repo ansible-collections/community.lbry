@@ -103,3 +103,15 @@ def lbry_account_list(url):
     }
     response = lbry_request(url, payload)
     return response['result']['items']
+
+
+def lbry_channel_list(url):
+    '''
+    List all channels
+    '''
+    payload = {
+        "method": "channel_list",
+        "params": {"page_size": 99999}
+    }
+    response = lbry_request(url, payload)
+    return response['result']['items']

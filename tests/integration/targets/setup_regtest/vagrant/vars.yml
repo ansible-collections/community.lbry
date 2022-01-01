@@ -11,6 +11,7 @@ required_packages:
   - zip
   - net-tools
   - python3-pip
+  - acl
 docker_packages:
   - docker-ce
   - docker-ce-cli
@@ -18,3 +19,4 @@ docker_packages:
 pip_packages:
   - docker
   - requests
+  - coverage==4.5.4

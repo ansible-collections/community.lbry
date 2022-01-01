@@ -24,7 +24,7 @@ options:
     description:
       - wallet file name
     type: str
-    required: yes
+    default: default_wallet
     aliases:
       - name
   skip_on_startup:
@@ -105,7 +105,7 @@ import traceback
 def main():
     argument_spec = lbry_common_argument_spec()
     argument_spec.update(
-        wallet_id=dict(type='str', required=True, aliases=['name']),
+        wallet_id=dict(type='str', aliases=['name'], default='default_wallet'),
         skip_on_startup=dict(type='bool'),
         create_account=dict(type='bool'),
         single_key=dict(type='bool'),
