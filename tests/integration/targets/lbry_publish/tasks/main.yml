@@ -57,6 +57,8 @@
 
   - name: Copy file to the lbry docker container
     command: docker cp files/dog.jpg lbrynet:/tmp/dog.jpg
+    args:
+      chdir: "{{ role_path }}"
 
   - name: Upload an image to lbry
     community.lbry.lbry_publish:
