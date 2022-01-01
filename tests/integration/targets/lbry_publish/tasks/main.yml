@@ -54,3 +54,114 @@
         - "result.result.outputs.0.value.author == 'rhysmeister'"
         - "result.result.outputs.0.value.stream_type == 'document'"
         - "result.result.outputs.0.value.title == 'Lorem Ipsum Dolor Sit Amet'"
+        - "result.result.outputs.0.value.source.media_type == 'text/plain'"
+
+  - name: Copy the image file to the lbry docker container
+    command: docker cp files/dog.jpg lbrynet:/tmp/dog.jpg
+    args:
+      chdir: "{{ role_path }}"
+
+  - name: Upload an image to lbry
+    community.lbry.lbry_publish:
+      name: test-image
+      file_path: /tmp/dog.jpg
+      title: Image of a dog
+      author: rhysmeister
+      bid: '1.50'
+      tags:
+        - dog
+        - animal
+        - puppy
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.result.outputs.0.value.author == 'rhysmeister'"
+        - "result.result.outputs.0.value.stream_type == 'image'"
+        - "result.result.outputs.0.value.title == 'Image of a dog'"
+        - "result.result.outputs.0.value.source.media_type == 'image/jpeg'"
+
+  - name: Download a video to upload
+    command: wget --quiet {{ video_url }} -O files/video_upload.mp4
+    args:
+      chdir: "{{ role_path }}"
+
+  - name: Copy the video file to the lbry docker container
+    command: docker cp files/video_upload.mp4 lbrynet:/tmp/video_upload.mp4
+    args:
+      chdir: "{{ role_path }}"
+
+  - name: Upload the video to lbry - ffmpeg not installed
+    community.lbry.lbry_publish:
+      name: test-video
+      file_path: /tmp/video_upload.mp4
+      title: Video Upload
+      author: rhysmeister
+      bid: '3.25'
+      tags:
+        - video
+      optimize_file: yes
+    register: result
+    ignore_errors: yes
+
+  - debug:
+      var: result
+
+  - assert:
+      that:
+        - "result.failed"
+        - "'Unable to locate ffmpeg executable' in result.msg"
+
+  - name: Install ffmpeg inside the docker container
+    shell: docker exec --user root lbrynet /bin/bash -c "apt update -y && apt install ffmpeg -y"
+
+  - name: Upload the video to lbry
+    community.lbry.lbry_publish:
+      name: test-video
+      file_path: /tmp/video_upload.mp4
+      title: Video Upload
+      author: rhysmeister
+      bid: '3.25'
+      tags:
+        - video
+      optimize_file: yes
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.result.outputs.0.value.author == 'rhysmeister'"
+        - "result.result.outputs.0.value.stream_type == 'video'"
+        - "result.result.outputs.0.value.title == 'Video Upload'"
+        - "result.result.outputs.0.value.video.duration == 56"
+        - "result.result.outputs.0.value.source.media_type == 'video/mp4'"
+
+  - name: Copy the markdown.md file to the lbry docker container
+    command: docker cp files/markdown.md lbrynet:/tmp/markdown.md
+    args:
+      chdir: "{{ role_path }}"
+
+  - name: Upload the markdown.md post to lbry
+    community.lbry.lbry_publish:
+      name: markdown-post
+      file_path: /tmp/markdown.md
+      title: "My Markdown Blog Post"
+      author: rhysmeister
+      bid: '2.0'
+      tags:
+        - markdown
+        - blog
+    register: result
+
+  - debug:
+      var: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.result.outputs.0.value.author == 'rhysmeister'"
+        - "result.result.outputs.0.value.stream_type == 'document'"
+        - "result.result.outputs.0.value.title == 'My Markdown Blog Post'"
+        - "result.result.outputs.0.value.source.media_type == 'text/markdown'"
+  
