@@ -54,6 +54,7 @@
         - "result.result.outputs.0.value.author == 'rhysmeister'"
         - "result.result.outputs.0.value.stream_type == 'document'"
         - "result.result.outputs.0.value.title == 'Lorem Ipsum Dolor Sit Amet'"
+        - "result.result.outputs.0.value.source.media_type == 'text/plain'"
 
   - name: Copy the image file to the lbry docker container
     command: docker cp files/dog.jpg lbrynet:/tmp/dog.jpg
@@ -79,6 +80,7 @@
         - "result.result.outputs.0.value.author == 'rhysmeister'"
         - "result.result.outputs.0.value.stream_type == 'image'"
         - "result.result.outputs.0.value.title == 'Image of a dog'"
+        - "result.result.outputs.0.value.source.media_type == 'image/jpeg'"
 
   - name: Download a video to upload
     command: wget --quiet {{ video_url }} -O files/video_upload.mp4
@@ -133,6 +135,7 @@
         - "result.result.outputs.0.value.stream_type == 'video'"
         - "result.result.outputs.0.value.title == 'Video Upload'"
         - "result.result.outputs.0.value.video.duration == 56"
+        - "result.result.outputs.0.value.source.media_type == 'video/mp4'"
 
   - name: Copy the markdown.md file to the lbry docker container
     command: docker cp files/markdown.md lbrynet:/tmp/markdown.md
@@ -160,4 +163,5 @@
         - "result.result.outputs.0.value.author == 'rhysmeister'"
         - "result.result.outputs.0.value.stream_type == 'document'"
         - "result.result.outputs.0.value.title == 'My Markdown Blog Post'"
+        - "result.result.outputs.0.value.source.media_type == 'text/markdown'"
   
