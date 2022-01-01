@@ -54,3 +54,21 @@
         - "result.result.outputs.0.value.author == 'rhysmeister'"
         - "result.result.outputs.0.value.stream_type == 'document'"
         - "result.result.outputs.0.value.title == 'Lorem Ipsum Dolor Sit Amet'"
+
+  - name: Copy file to the lbry docker container
+    command: docker cp files/dog.jpg lbrynet:/tmp/dog.jpg
+
+  - name: Upload an image to lbry
+    community.lbry.lbry_publish:
+      name: test-image
+      file_path: /tmp/dog.jpg
+      title: Image of a dog
+      author: rhysmeister
+      tags:
+        - dog
+        - animal
+        - puppy
+    register: result
+
+  - debug:
+      var: result
