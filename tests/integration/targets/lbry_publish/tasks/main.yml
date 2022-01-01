@@ -90,7 +90,7 @@
     args:
       chdir: "{{ role_path }}"
 
-  - name: Upload the video to lbry - ffmpeg installed
+  - name: Upload the video to lbry - ffmpeg not installed
     community.lbry.lbry_publish:
       name: test-video
       file_path: /tmp/video_upload.mp4
@@ -132,6 +132,6 @@
         - "result.result.outputs.0.value.author == 'rhysmeister'"
         - "result.result.outputs.0.value.stream_type == 'video'"
         - "result.result.outputs.0.value.title == 'Video Upload'"
-        - "result.result.outputs.0.value.source.hash == '901e1e7b3d46fc53b3a8d8c42e9f0cd030abdef68a95b12d8440ade2383691c0cf4ef69cf9799e53583b33fd44c0ba7d'"
+        - "result.result.outputs.0.value.video.duration == 56"
 
   
