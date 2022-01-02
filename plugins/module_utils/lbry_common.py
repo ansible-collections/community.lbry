@@ -52,9 +52,10 @@ def lbry_error_response(r):
         on the LBRY side.
     """
     is_lbry_error = False
-    if r.status_code == 200 and 'error' in r.json():
+    response_dict = dict(r.json())
+    if r.status_code == 200 and 'error' in response_dict:
         is_lbry_error = True
-    elif r.status_code == 200 and 'result' in r.json() and 'error' in r.json['result']:
+    elif r.status_code == 200 and 'result' in response_dict and 'error' in response_dict['result']:
         is_lbry_error = True
     return is_lbry_error
 
@@ -68,7 +69,7 @@ def lbry_extract_error_message(r):
         if 'message' in r.json()['error']:
             msg = r.json()['error']['message']
     elif 'result' in r.json() and 'error' in r.json['result']:
-        msg = msg = r.json()['result']['error']
+        msg = r.json()['result']['error']
     return msg
 
 
