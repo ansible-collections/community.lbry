@@ -21,7 +21,7 @@
       that:
         - "result.failed"
         - "result.changed == False"
-        - "result.msg == '''bid'' is a required argument for new publishes.'"
+        - "'is a required argument for new publishes.' in result.msg"
 
   - name: Upload file to lbry - add huge bid
     community.lbry.lbry_publish:
