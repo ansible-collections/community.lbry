@@ -65,11 +65,12 @@ def lbry_extract_error_message(r):
         Extracts the error from the lbry response
     """
     msg = None
-    if 'error' in r.json():
-        if 'message' in r.json()['error']:
-            msg = r.json()['error']['message']
-    elif 'result' in r.json() and 'error' in r.json()['result']:
-        msg = r.json()['result']['error']
+    r = dict(r.json())
+    if 'error' in r:
+        if 'message' in r['error']:
+            msg = r['error']['message']
+    elif 'result' in r and 'error' in r['result']:
+        msg = r['result']['error']
     return msg
 
 
