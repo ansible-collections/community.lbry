@@ -128,6 +128,7 @@ def main():
                      'include_received_tips']:
             payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
+        response = response.json()
         error_count = 0
         for url in module.params['urls']:  # we fail when all files fail to resolve
             if "error" in response['result'][url]:

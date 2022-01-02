@@ -155,6 +155,7 @@ def main():
                     payload['method'] = "wallet_create"
                     payload['params'] = request_params
                     response = lbry_request(url, payload)
+                    response = response.json()
                     if debug:
                         r['response'] = str(response)
                     if "error" in response or "error" in response['result']:
@@ -171,6 +172,7 @@ def main():
                 payload["params"] = {"wallet_id": wallet_id}
                 if not module.check_mode:
                     response = lbry_request(url, payload)
+                    response = response.json()
                     if debug:
                         r['response'] = str(response)
                     if "error" in response or "error" in response['result']:
@@ -190,6 +192,7 @@ def main():
                         payload["params"] = {"wallet_id": wallet_id}
                         if not module.check_mode:
                             response = lbry_request(url, payload)
+                            response = response.json()
                             if debug:
                                 r['response'] = str(response)
                             if "error" in response or "error" in response['result']:
@@ -211,6 +214,7 @@ def main():
                     payload["params"] = {"wallet_id": wallet_id}
                     if not module.check_mode:
                         response = lbry_request(url, payload)
+                        response = response.json()
                         if debug:
                             r['response'] = str(response)
                         if "error" in response or "error" in response['result']:
@@ -229,6 +233,7 @@ def main():
                     payload["params"] = {"wallet_id": wallet_id, "new_password": new_password}
                     if not module.check_mode:
                         response = lbry_request(url, payload)
+                        response = response.json()
                         if debug:
                             r['response'] = str(response)
                         if "error" in response or (isinstance(response['result'], dict) and "error" in response['result']):
@@ -250,6 +255,7 @@ def main():
                         payload["params"] = {"wallet_id": wallet_id, "new_password": new_password}
                         if not module.check_mode:
                             response = lbry_request(url, payload)
+                            response = response.json()
                             if debug:
                                 r['response'] = str(response)
                             if "error" in response or (isinstance(response['result'], dict) and "error" in response['result']):
