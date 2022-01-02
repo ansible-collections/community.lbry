@@ -42,7 +42,7 @@ def lbry_valid_response(r):
     """ Does the given response look successful?
     """
     is_valid = False
-    if r.status_code == 200 and 'result' in r.json():
+    if r.status_code == 200 and 'result' in r.json() and 'error' not in r.json():
         is_valid = True
     return is_valid
 
