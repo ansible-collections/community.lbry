@@ -68,7 +68,7 @@ def lbry_extract_error_message(r):
     if 'error' in r.json():
         if 'message' in r.json()['error']:
             msg = r.json()['error']['message']
-    elif 'result' in r.json() and 'error' in r.json['result']:
+    elif 'result' in r.json() and 'error' in r.json()['result']:
         msg = r.json()['result']['error']
     return msg
 
@@ -126,6 +126,7 @@ def lbry_wallet_list(url):
         "params": {}
     }
     response = lbry_request(url, payload)
+    response = dict(response.json())
     return response['result']['items']
 
 
@@ -147,6 +148,7 @@ def lbry_wallet_status(url):
         "params": {}
     }
     response = lbry_request(url, payload)
+    response = dict(response.json())
     return response
 
 
@@ -156,6 +158,7 @@ def lbry_account_list(url):
         "params": {"page_size": 99999}
     }
     response = lbry_request(url, payload)
+    response = dict(response.json())
     return response['result']['items']
 
 
@@ -168,4 +171,5 @@ def lbry_channel_list(url):
         "params": {"page_size": 99999}
     }
     response = lbry_request(url, payload)
+    response = dict(response.json())
     return response['result']['items']
