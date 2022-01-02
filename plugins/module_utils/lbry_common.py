@@ -37,10 +37,11 @@ def lbry_request(url, payload, headers=None):
     r = requests.post(url, data=json.dumps(payload), json=json.dumps(payload), headers=headers)
     return r
 
+
 def lbry_valid_response(r):
     """ Does the given response look successful?
     """
-    is_valid == False
+    is_valid = False
     if r.status_code == 200 and 'result' in r.json():
         is_valid = True
     return is_valid
@@ -60,7 +61,7 @@ def lbry_error_response(r):
 
 def lbry_extract_error_message(r):
     """
-        Extracts the error from the lbry response 
+        Extracts the error from the lbry response
     """
     msg = None
     if 'error' in r.json():
@@ -78,7 +79,7 @@ def lbry_process_request(module, url, payload):
         @payload - JSON DIct Payload for the request
 
         This fucntion essentially makes and process the lbry request
-        and should exit the module successful or otherwise. 
+        and should exit the module successful or otherwise.
 
         This function is really only good for module were we don't
         do much with the return data... other that returning it.
@@ -94,9 +95,10 @@ def lbry_process_request(module, url, payload):
             module.fail_json(msg=msg)
         else:
             if module.params['debug']:
-                module.fail_json(msg="Some lbry error occurred: {0".format(response))
+                module.fail_json(msg="Some lbry error occurred: {0}".format(response))
             else:
                 module.fail_json(msg="Some lbry error occurred")
+
 
 def lbry_port_open(host, port):
     open = False
