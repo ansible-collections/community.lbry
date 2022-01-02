@@ -300,6 +300,7 @@
     retries: 99
     delay: 10
     until: "wallet.balance.available == '200.0'"
+    ignore_errors: yes
 
   - debug:
       var: wallet
