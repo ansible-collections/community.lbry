@@ -76,7 +76,7 @@ def main():
         if lbry_port_open(host, port):
             if not module.check_mode:
                 response = lbry_request(url, payload)
-                response = response.json()
+                response = dict(response.json())
             else:
                 response['result'] = "Shutting down"
             changed = True

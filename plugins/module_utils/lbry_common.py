@@ -82,7 +82,7 @@ def lbry_process_request(module, response):
         further processing
     """
     if lbry_valid_response(response):
-        return response.json()
+        return dict(response.json())
     else:
         if lbry_error_response(response):
             msg = lbry_extract_error_message(response)

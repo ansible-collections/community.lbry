@@ -133,7 +133,7 @@ def main():
             "params": {}
         }
         response = lbry_request(url, payload)
-        response = response.json()
+        response = dict(response.json())
         if 'result' not in response:
             module.fail_json(msg="Failed getting lbry daemon settings")
         else:
@@ -154,7 +154,7 @@ def main():
                                        "value": value}
                         }
                         response = lbry_request(url, payload)
-                        response = response.json()
+                        response = dict(response.json())
                         if 'result' not in response:
                             module.fail_json(msg="Failed getting lbry daemon settings")
                         if parameter not in response['result']:
