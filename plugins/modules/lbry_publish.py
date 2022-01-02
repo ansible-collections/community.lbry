@@ -183,6 +183,7 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_add_param_when_not_none,
     HAS_REQUESTS,
     REQUESTS_IMP_ERR,
+    lbry_process_request,
 )
 
 # ================
@@ -241,27 +242,26 @@ def main():
 
     response = {}
     changed = False
+    msg = None
 
+    url = lbry_build_url(protocol, host, port)
+    payload = {
+        "method": "publish",
+        "params": {}
+    }
+    request_params = {}
+    for item in module.params:
+        if item not in ['host', 'port', 'protocol', 'debug']:
+            payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
     try:
-        url = lbry_build_url(protocol, host, port)
-        payload = {
-            "method": "publish",
-            "params": {}
-        }
-        request_params = {}
-        for item in module.params:
-            if item not in ['host', 'port', 'protocol', 'debug']:
-                payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
-        if "error" in response or "error" in response['result']:
+        response = lbry_process_request(module, response)
+        changed = True
+    except Exception as excep:
+        if module.params['debug']:
             module.fail_json(msg='Error publishing file to lbrynet: {0}'.format(response))
-            changed = False
-        elif "outputs" in response['result']:  # publish was successful
-            changed = True
         else:
-            module.fail_json(msg="Some error happened: {0}".format(response))
-    except Exception as e:
-        module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
+            module.fail_json(msg="Error publishing file to lbrynet")
 
     module.exit_json(changed=changed, **response)
 

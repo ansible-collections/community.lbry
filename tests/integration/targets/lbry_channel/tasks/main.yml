@@ -3,6 +3,7 @@
     community.lbry.lbry_account:
       name: rhys
       state: present
+      debug: yes
     register: result
 
   - assert:

@@ -35,10 +35,66 @@ def lbry_request(url, payload, headers=None):
     if headers is None:
         headers = {"Content-Type": "application/json"}  # https://tinyurl.com/2af2rd5f
     r = requests.post(url, data=json.dumps(payload), json=json.dumps(payload), headers=headers)
-    if r.status_code == 200 and 'result' in r.json():
-        return dict(r.json())
+    return r
+
+
+def lbry_valid_response(r):
+    """ Does the given response look successful?
+    """
+    is_valid = False
+    response_dict = dict(r.json())
+    if r.status_code == 200 and 'result' in response_dict and 'error' not in response_dict['result']:
+        is_valid = True
+    return is_valid
+
+
+def lbry_error_response(r):
+    """ Http request worked but there was some form of error
+        on the LBRY side.
+    """
+    is_lbry_error = False
+    response_dict = dict(r.json())
+    if r.status_code == 200 and 'error' in response_dict:
+        is_lbry_error = True
+    elif r.status_code == 200 and 'result' in response_dict and 'error' in response_dict['result']:
+        is_lbry_error = True
+    return is_lbry_error
+
+
+def lbry_extract_error_message(r):
+    """
+        Extracts the error from the lbry response
+    """
+    msg = None
+    r = dict(r.json())
+    if 'error' in r:
+        if 'message' in r['error']:
+            msg = r['error']['message']
+    elif 'result' in r and 'error' in r['result']:
+        msg = r['result']['error']
+    return msg
+
+
+def lbry_process_request(module, response):
+    """
+        @module - The Ansible module object
+        @response - The response object from the lbrynet server
+
+        This function essentially makes and process the lbry request
+        and should exit the module or return the response for
+        further processing
+    """
+    if lbry_valid_response(response):
+        return dict(response.json())
     else:
-        raise Exception("Invalid response received. status code: {0}, Response: {1}".format(r.status_code, r.text))
+        if lbry_error_response(response):
+            msg = lbry_extract_error_message(response)
+            module.fail_json(msg=msg)
+        else:
+            if module.params['debug']:
+                module.fail_json(msg="Some lbry error occurred: {0}".format(response))
+            else:
+                module.fail_json(msg="Some lbry error occurred")
 
 
 def lbry_port_open(host, port):
@@ -72,6 +128,7 @@ def lbry_wallet_list(url):
         "params": {}
     }
     response = lbry_request(url, payload)
+    response = dict(response.json())
     return response['result']['items']
 
 
@@ -93,6 +150,7 @@ def lbry_wallet_status(url):
         "params": {}
     }
     response = lbry_request(url, payload)
+    response = dict(response.json())
     return response
 
 
@@ -102,6 +160,7 @@ def lbry_account_list(url):
         "params": {"page_size": 99999}
     }
     response = lbry_request(url, payload)
+    response = dict(response.json())
     return response['result']['items']
 
 
@@ -114,4 +173,5 @@ def lbry_channel_list(url):
         "params": {"page_size": 99999}
     }
     response = lbry_request(url, payload)
+    response = dict(response.json())
     return response['result']['items']

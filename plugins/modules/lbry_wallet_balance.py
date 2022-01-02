@@ -118,6 +118,7 @@ def main():
             payload["method"] = "wallet_balance"
             payload["params"] = {"wallet_id": wallet_id}
             response = lbry_request(url, payload)
+            response = dict(response.json())
             if "error" in response or "error" in response['result']:
                 module.fail_json(msg='Error getting wallet info: {0}'.format(response))
             else:

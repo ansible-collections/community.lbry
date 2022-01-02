@@ -78,6 +78,7 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_add_param_when_not_none,
     HAS_REQUESTS,
     REQUESTS_IMP_ERR,
+    lbry_process_request,
 )
 
 # ================
@@ -118,6 +119,7 @@ def main():
         for item in ['account_id', 'wallet_id']:
             payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
+        response = lbry_process_request(module, response)
         if 'result' in response:
             result['address'] = response['result']
             result['msg'] = "A new address was generated"

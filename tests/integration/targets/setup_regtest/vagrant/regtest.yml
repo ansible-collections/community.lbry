@@ -272,6 +272,10 @@
     until: "result.result.startup_status.values() is all"
     retries: 25
     delay: 10
+    #ignore_errors: yes
+
+  #- debug:
+  #    var: result
 
   - name: Create a new address for the default account.
     community.lbry.lbry_address_unused:
@@ -290,17 +294,13 @@
     become_user: lbry
     become: yes
 
-  # We need to wait a little while for the balance to become available - We could do this with account_balance and/or wallet_balance methid - module?
-  # - name: Pause to allow balance to become available
-  #   pause:
-  #     seconds: 60
-
   - name: Wait for wallet_balance to become available
     community.lbry.lbry_wallet_balance:
     register: wallet
     retries: 99
     delay: 10
     until: "wallet.balance.available == '200.0'"
+    ignore_errors: yes
 
   - debug:
       var: wallet

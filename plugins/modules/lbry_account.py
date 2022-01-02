@@ -157,6 +157,7 @@ def main():
                         payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
                     payload['params']['account_name'] = account_name
                     response = lbry_request(url, payload)
+                    response = dict(response.json())
                     if "error" in response or "error" in response['result']:
                         module.fail_json(msg='Error creating lbry account: {0}'.format(response))
                     r['account_details'] = response['result']
@@ -176,6 +177,7 @@ def main():
                 }
                 if not module.check_mode:
                     response = lbry_request(url, payload)
+                    response = dict(response.json())
                     if "error" in response or "error" in response['result']:
                         module.fail_json(msg='Error removing lbry account: {0}'.format(response))
                     r['account_details'] = response['result']

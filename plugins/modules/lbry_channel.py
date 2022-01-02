@@ -236,6 +236,7 @@ def main():
                         payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
                     payload['params']['name'] = channel_name
                     response = lbry_request(url, payload)
+                    response = dict(response.json())
                     if "error" in response or "error" in response['result']:
                         module.fail_json(msg='Error creating lbry channel: {0}'.format(response))
                     r['channel_details'] = response['result']
@@ -255,6 +256,7 @@ def main():
                 }
                 if not module.check_mode:
                     response = lbry_request(url, payload)
+                    response = dict(response.json())
                     if "error" in response or "error" in response['result']:
                         module.fail_json(msg='Error abandoning lbry channel {0}'.format(response))
                     r['channel_details'] = response['result']

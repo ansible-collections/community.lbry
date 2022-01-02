@@ -40,7 +40,7 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_build_url,
     lbry_port_open,
     HAS_REQUESTS,
-    REQUESTS_IMP_ERR
+    REQUESTS_IMP_ERR,
 )
 
 
@@ -76,6 +76,7 @@ def main():
         if lbry_port_open(host, port):
             if not module.check_mode:
                 response = lbry_request(url, payload)
+                response = dict(response.json())
             else:
                 response['result'] = "Shutting down"
             changed = True
