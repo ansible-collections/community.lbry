@@ -25,7 +25,7 @@
         - "transfer.changed"
         - "transfer.result.inputs | length > 100"
         - "transfer.result.inputs.0.amount == '1.0'"
-        - "transfer.result.total_inpuit = '200.0'"
+        - "transfer.result.total_input == '200.0'"
 
   - debug:
       var: transfer
