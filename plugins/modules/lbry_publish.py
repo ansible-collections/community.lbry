@@ -255,7 +255,7 @@ def main():
             payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
     try:
         response = lbry_request(url, payload)
-        lbry_process_request(module, response)
+        response = lbry_process_request(module, response)
         changed = True
     except Exception as excep:
         if module.params['debug']:

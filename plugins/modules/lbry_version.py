@@ -72,7 +72,7 @@ def main():
             "params": {}
         }
         response = lbry_request(url, payload)
-        lbry_process_request(module, response)
+        response = lbry_process_request(module, response)
     except Exception as e:
         module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
 
