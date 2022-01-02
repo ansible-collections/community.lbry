@@ -35,11 +35,68 @@ def lbry_request(url, payload, headers=None):
     if headers is None:
         headers = {"Content-Type": "application/json"}  # https://tinyurl.com/2af2rd5f
     r = requests.post(url, data=json.dumps(payload), json=json.dumps(payload), headers=headers)
-    if r.status_code == 200 and 'result' in r.json():
-        return dict(r.json())
-    else:
-        raise Exception("Invalid response received. status code: {0}, Response: {1}".format(r.status_code, r.text))
+    return r
 
+def lbry_valid_response(r):
+    """ Does the given response look successful?
+    """
+    is_valid == False
+    if r.status_code == 200 and 'result' in r.json():
+        is_valid = True
+    return is_valid
+
+
+def lbry_error_response(r):
+    """ Http request worked but there was some form of error
+        on the LBRY side
+    """
+    is_lbry_error = False
+    if r.statude_code == 200 and 'error' in r.json():
+        is_lbry_error = True
+    elif r.statude_code == 200 and 'result' in r.json() and 'error' in r.json['result']:
+        is_lbry_error = True
+    return is_lbry_error
+
+
+def lbry_extract_error_message(r):
+    """
+        Extracts the error from the lbry response 
+    """
+    msg = None
+    if 'error' in r.json():
+        if 'message' in r.json()['error']:
+            msg = r.json()['error']['message']
+    elif 'result' in r.json() and 'error' in r.json['result']:
+        msg = msg = r.json()['result']['error']
+    return msg
+
+
+def lbry_process_request(module, url, payload):
+    """
+        @module - The Ansible module object
+        @url - The lbrynet server url
+        @payload - JSON DIct Payload for the request
+
+        This fucntion essentially makes and process the lbry request
+        and should exit the module successful or otherwise. 
+
+        This function is really only good for module were we don't
+        do much with the return data... other that returning it.
+        We basically just check the response look ok and then return
+        the data provided by lbry
+    """
+    response = lbry_request(url, payload)
+    if lbry_valid_response(response):
+        module.exit_json(changed=True, msg="File published to lbry" **response)
+    else:
+        if lbry_error_response(response):
+            msg = lbry_extract_error_message(response)
+            module.fail_json(msg=msg)
+        else:
+            if module.params['debug']:
+                module.fail_json(msg="Some lbry error occurred: {0".format(response))
+            else:
+                module.fail_json(msg="Some lbry error occurred")
 
 def lbry_port_open(host, port):
     open = False

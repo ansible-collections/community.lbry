@@ -69,6 +69,7 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_add_param_when_not_none,
     HAS_REQUESTS,
     REQUESTS_IMP_ERR,
+    lbry_process_request,
 )
 
 # ================
@@ -110,9 +111,7 @@ def main():
         request_params = {}
         for item in ['uri', 'file_name', 'download_directory', 'timeout', 'save_file', 'wallet_id']:
             payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
-        response = lbry_request(url, payload)
-        if "error" in response or "error" in response['result']:
-            module.fail_json(msg='Error getting file from lbrynet: {0}'.format(response))
+        lbry_process_request(module, url, payload)
     except Exception as e:
         module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
 

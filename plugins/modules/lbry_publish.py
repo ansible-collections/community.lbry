@@ -183,6 +183,7 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_add_param_when_not_none,
     HAS_REQUESTS,
     REQUESTS_IMP_ERR,
+    lbry_process_request,
 )
 
 # ================
@@ -238,45 +239,27 @@ def main():
     protocol = module.params['protocol']
     host = module.params['host']
     port = module.params['port']
-    debug = module.params['debug']
 
     response = {}
     changed = False
     msg = None
 
+    url = lbry_build_url(protocol, host, port)
+    payload = {
+        "method": "publish",
+        "params": {}
+    }
+    request_params = {}
+    for item in module.params:
+        if item not in ['host', 'port', 'protocol', 'debug']:
+            payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
     try:
-        url = lbry_build_url(protocol, host, port)
-        payload = {
-            "method": "publish",
-            "params": {}
-        }
-        request_params = {}
-        for item in module.params:
-            if item not in ['host', 'port', 'protocol', 'debug']:
-                payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
-        try:
-            response = lbry_request(url, payload)
-        except Exception as excep:
-            if isinstance(response, dict):
-                if "error" in response or "error" in response['result']:
-                    if "message" in response:
-                        msg = response['message']
-                    elif "message" in response['result']:
-                        msg = response['result']['message']  # is this ever provided??? Check
-                    if not debug:
-                        module.fail_json(msg=msg)
-                    else:
-                        module.fail_json(msg='Error publishing file to lbrynet: {0}'.format(response))
-            else:
-                raise excep
-        if "outputs" in response['result']:  # publish was successful
-            changed = True
+        lbry_process_request(module, url, payload)
+    except Exception as excep:
+        if module.params['debug']:
+            module.fail_json(msg='Error publishing file to lbrynet: {0}'.format(response))
         else:
-            module.fail_json(msg="Some error happened: {0}".format(response))
-    except Exception as e:
-        module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
-
-    module.exit_json(changed=changed, **response)
+            module.fail_json(msg="Error publishing file to lbrynet")
 
 
 if __name__ == '__main__':

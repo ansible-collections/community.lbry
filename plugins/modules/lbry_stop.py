@@ -40,7 +40,7 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_build_url,
     lbry_port_open,
     HAS_REQUESTS,
-    REQUESTS_IMP_ERR
+    REQUESTS_IMP_ERR,
 )
 
 

@@ -40,6 +40,7 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_build_url,
     HAS_REQUESTS,
     REQUESTS_IMP_ERR,
+    lbry_process_request,
 )
 
 # ================
@@ -70,7 +71,7 @@ def main():
             "method": "status",
             "params": {}
         }
-        response = lbry_request(url, payload)
+        lbry_process_request(module, url, payload)
     except Exception as e:
         module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
 
