@@ -238,9 +238,11 @@ def main():
     protocol = module.params['protocol']
     host = module.params['host']
     port = module.params['port']
+    debug = module.params['debug']
 
     response = {}
     changed = False
+    msg = None
 
     try:
         url = lbry_build_url(protocol, host, port)
@@ -254,8 +256,14 @@ def main():
                 payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
         if "error" in response or "error" in response['result']:
-            module.fail_json(msg='Error publishing file to lbrynet: {0}'.format(response))
-            changed = False
+            if "message" in response:
+                msg = response['message']
+            elif "message" in response['result']:
+                msg = response['result']['message']  # is this ever provided??? Check
+            if not debug:
+                module.fail_json(msg=msg)
+            else:
+                module.fail_json(msg='Error publishing file to lbrynet: {0}'.format(response))
         elif "outputs" in response['result']:  # publish was successful
             changed = True
         else:
