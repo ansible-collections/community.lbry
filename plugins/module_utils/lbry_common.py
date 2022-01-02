@@ -88,7 +88,7 @@ def lbry_process_request(module, url, payload):
     """
     response = lbry_request(url, payload)
     if lbry_valid_response(response):
-        module.exit_json(changed=True, msg="File published to lbry" **response)
+        module.exit_json(changed=True, msg="File published to lbry", **response)
     else:
         if lbry_error_response(response):
             msg = lbry_extract_error_message(response)
