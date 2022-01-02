@@ -254,17 +254,22 @@ def main():
         for item in module.params:
             if item not in ['host', 'port', 'protocol', 'debug']:
                 payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
-        response = lbry_request(url, payload)
-        if "error" in response or "error" in response['result']:
-            if "message" in response:
-                msg = response['message']
-            elif "message" in response['result']:
-                msg = response['result']['message']  # is this ever provided??? Check
-            if not debug:
-                module.fail_json(msg=msg)
+        try:
+            response = lbry_request(url, payload)
+        except Exception as excep:
+            if isinstance(response, dict):
+                if "error" in response or "error" in response['result']:
+                    if "message" in response:
+                        msg = response['message']
+                    elif "message" in response['result']:
+                        msg = response['result']['message']  # is this ever provided??? Check
+                    if not debug:
+                        module.fail_json(msg=msg)
+                    else:
+                        module.fail_json(msg='Error publishing file to lbrynet: {0}'.format(response))
             else:
-                module.fail_json(msg='Error publishing file to lbrynet: {0}'.format(response))
-        elif "outputs" in response['result']:  # publish was successful
+                raise excep
+        if "outputs" in response['result']:  # publish was successful
             changed = True
         else:
             module.fail_json(msg="Some error happened: {0}".format(response))
