@@ -52,9 +52,9 @@ def lbry_error_response(r):
         on the LBRY side.
     """
     is_lbry_error = False
-    if r.statude_code == 200 and 'error' in r.json():
+    if r.status_code == 200 and 'error' in r.json():
         is_lbry_error = True
-    elif r.statude_code == 200 and 'result' in r.json() and 'error' in r.json['result']:
+    elif r.status_code == 200 and 'result' in r.json() and 'error' in r.json['result']:
         is_lbry_error = True
     return is_lbry_error
 
@@ -72,23 +72,17 @@ def lbry_extract_error_message(r):
     return msg
 
 
-def lbry_process_request(module, url, payload):
+def lbry_process_request(module, response):
     """
         @module - The Ansible module object
-        @url - The lbrynet server url
-        @payload - JSON DIct Payload for the request
+        @response - The response object from the lbrynet server
 
-        This fucntion essentially makes and process the lbry request
-        and should exit the module successful or otherwise.
-
-        This function is really only good for module were we don't
-        do much with the return data... other that returning it.
-        We basically just check the response look ok and then return
-        the data provided by lbry
+        This function essentially makes and process the lbry request
+        and should exit the module or rteurn the response for
+        further processing
     """
-    response = lbry_request(url, payload)
     if lbry_valid_response(response):
-        module.exit_json(changed=True, msg="File published to lbry", **response)
+        return response
     else:
         if lbry_error_response(response):
             msg = lbry_extract_error_message(response)

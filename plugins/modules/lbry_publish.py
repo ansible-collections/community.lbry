@@ -254,13 +254,16 @@ def main():
         if item not in ['host', 'port', 'protocol', 'debug']:
             payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
     try:
-        lbry_process_request(module, url, payload)
+        response = lbry_request(url, payload)
+        lbry_process_request(module, response)
+        changed = True
     except Exception as excep:
         if module.params['debug']:
             module.fail_json(msg='Error publishing file to lbrynet: {0}'.format(response))
         else:
             module.fail_json(msg="Error publishing file to lbrynet")
 
+    module.exit_json(changed=changed, **response)
 
 if __name__ == '__main__':
     main()

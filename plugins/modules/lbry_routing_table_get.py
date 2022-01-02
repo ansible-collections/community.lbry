@@ -71,7 +71,8 @@ def main():
             "method": "routing_table_get",
             "params": {}
         }
-        lbry_process_request(module, url, payload)
+        response = lbry_request(url, payload)
+        lbry_process_request(module, response)
     except Exception as e:
         module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
 

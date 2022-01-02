@@ -111,7 +111,8 @@ def main():
         request_params = {}
         for item in ['uri', 'file_name', 'download_directory', 'timeout', 'save_file', 'wallet_id']:
             payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
-        lbry_process_request(module, url, payload)
+        response = lbry_request(url, payload)
+        lbry_process_request(module, response)
     except Exception as e:
         module.fail_json(msg='Error connecting to lbry server: %s' % to_native(e))
 
