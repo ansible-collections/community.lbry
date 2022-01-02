@@ -78,11 +78,11 @@ def lbry_process_request(module, response):
         @response - The response object from the lbrynet server
 
         This function essentially makes and process the lbry request
-        and should exit the module or rteurn the response for
+        and should exit the module or return the response for
         further processing
     """
     if lbry_valid_response(response):
-        return response
+        return response.json()
     else:
         if lbry_error_response(response):
             msg = lbry_extract_error_message(response)
