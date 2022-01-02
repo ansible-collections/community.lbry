@@ -1,4 +1,5 @@
 ---
+  # -name: Transfer to unknown account "msg": "Couldn't find account: new_account.account_details.id."
   - name: Create a new account 
     community.lbry.lbry_account:
       name: account_to_transfer_to
@@ -11,7 +12,7 @@
 
   - name: Set account_id 
     set_fact:
-      new_account_id: new_account.account_details.id  # TODO DO I actually need an address for the account? Probably
+      new_account_id: "{{ new_account.account_details.id }}"  # TODO DO I actually need an address for the account? Probably
 
   - name: Transfer everything from the default account
     community.lbry.lbry_account_fund:
