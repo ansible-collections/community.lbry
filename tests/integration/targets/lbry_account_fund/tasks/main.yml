@@ -9,7 +9,7 @@
   - assert:
       that:
         - "idonotexist.failed"
-        - "idonotexist.msg == 'Couldn''t find account: idonotexist.'"
+        - "idonotexist.msg == 'Couldn\\'t find account: idonotexist.'"
   
   - name: Create a new account 
     community.lbry.lbry_account:
