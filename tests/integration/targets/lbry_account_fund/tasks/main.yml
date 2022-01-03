@@ -9,7 +9,7 @@
   - assert:
       that:
         - "idonotexist.failed"
-        - "'find account: idonotexist.' in idonotexist.msg"
+        - "'idonotexist.msg == 'Couldn\\'t find account: idonotexist.'"
 
   - name: Create a new account 
     community.lbry.lbry_account:
@@ -25,16 +25,16 @@
     community.lbry.lbry_account_balance:
     register: default_account_balance
 
-  - debug:
-      var: default_account_balance
+  # - debug:
+  #     var: default_account_balance
 
   - name: Check account balance - new_account
     community.lbry.lbry_account_balance:
       account_id: "{{ new_account.account_details.id }}"
     register: new_account_balance
 
-  - debug:
-      var: new_account_balance
+  # - debug:
+  #     var: new_account_balance
 
   - name: Transfer everything from the default account
     community.lbry.lbry_account_fund:
@@ -49,13 +49,13 @@
         - "transfer.result.inputs.0.amount == '1.0'"
         - "transfer.result.total_input == '200.0'"
 
-  - debug:
-      var: transfer
+  # - debug:
+  #     var: transfer
 
   - name: Generate some more blocks
     shell: |
-      ./lbrycrd-cli -regtest generate 100
-      ./lbrycrd-cli -regtest generate 1
+      ./lbrycrd-cli -regtest generate 100 > /dev/null 2>&1
+      ./lbrycrd-cli -regtest generate 1 > /dev/null 2>&1
     args:
       chdir: /home/lbry
     become_user: lbry
@@ -74,6 +74,6 @@
     register: new_account_balance
 
   - debug:
-      var: new_account_balance
+      var: new_account_balance  # TODO Balance does not get there... why???
 
   
