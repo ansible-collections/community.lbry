@@ -21,8 +21,9 @@ extends_documentation_fragment:
 options:
   account_id:
     description:
-      - If provided only the balance for this account will be given. 
+      - If provided only the balance for this account will be given.
       - Otherwise default account is assumed.
+    type: str
     aliases:
       - name
   wallet_id:
@@ -86,7 +87,7 @@ import traceback
 def main():
     argument_spec = lbry_common_argument_spec()
     argument_spec.update(
-        account_id=dict(type='str'),
+        account_id=dict(type='str', aliases=['name']),
         wallet_id=dict(type='str'),
         confirmations=dict(type='int'),
         debug=dict(type='bool', default=False)
