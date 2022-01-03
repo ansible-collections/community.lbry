@@ -1,5 +1,16 @@
 ---
-  # -name: Transfer to unknown account "msg": "Couldn't find account: new_account.account_details.id."
+  - name: Transfer to an unknown account
+    community.lbry.lbry_account_fund:
+    to_account: idonotexist
+    everything: yes
+    register: idonotexist
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "idonotexist.failed"
+        - "idonotexist.msg == 'Couldn''t find account: new_account.account_details.id.'"
+
   - name: Create a new account 
     community.lbry.lbry_account:
       name: account_to_transfer_to
@@ -9,13 +20,7 @@
 
   - name: Set account_id 
     set_fact:
-      new_account_id: "{{ new_account.account_details.id }}"  # TODO DO I actually need an address for the account? Probably
-
-  - name: Get address from default wallet/account
-    community.lbry.lbry_address_unused:
-      account_id: "{{ new_account_id }}" 
-    register: result
-
+      new_account_id: "{{ new_account.account_details.id }}" 
   - name: Check account balance - default account
     community.lbry.lbry_account_balance:
     register: default_account_balance
@@ -33,8 +38,7 @@
 
   - name: Transfer everything from the default account
     community.lbry.lbry_account_fund:
-      #to_account: "{{ new_account_id }}"
-      to_account: "{{ result.address }}"  # need to generate an address for the account? wording is unclear
+      to_account: "{{ new_account_id }}"
       everything: yes
     register: transfer
 
