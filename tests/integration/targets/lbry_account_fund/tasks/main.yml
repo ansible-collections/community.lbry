@@ -7,12 +7,24 @@
       debug: yes
     register: new_account
 
-  #- name: Check account balance - default account - TODO new module?
-  #- name: Check account balance - new_account - TODO new module?
-
   - name: Set account_id 
     set_fact:
       new_account_id: "{{ new_account.account_details.id }}"  # TODO DO I actually need an address for the account? Probably
+
+  - name: Check account balance - default account
+    community.lbry.lbry_account_balance:
+    register: default_account_balance
+
+  - debug:
+      var: default_account_balance
+
+  - name: Check account balance - new_account
+    community.lbry.lbry_account_balance:
+      account_id: "{{ new_account.account_details.id }}"
+    register: new_account_balance
+
+  - debug:
+      var: new_account_balance
 
   - name: Transfer everything from the default account
     community.lbry.lbry_account_fund:
@@ -30,7 +42,19 @@
   - debug:
       var: transfer
 
-  #- name: Check account balance - default account - TODO new module?
-  #- name: Check account balance - new_account - TODO new module?
+  - name: Check account balance - default account
+    community.lbry.lbry_account_balance:
+    register: default_account_balance
+
+  - debug:
+      var: default_account_balance
+
+  - name: Check account balance - new_account
+    community.lbry.lbry_account_balance:
+      account_id: "{{ new_account.account_details.id }}"
+    register: new_account_balance
+
+  - debug:
+      var: new_account_balance
 
   
