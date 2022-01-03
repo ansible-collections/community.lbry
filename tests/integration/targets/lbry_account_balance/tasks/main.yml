@@ -1,0 +1,16 @@
+---
+  - name: Get default balance
+    community.lbry.lbry_wallet_balance:
+    register: result
+
+  - assert:
+      that:
+        - "result.changed == False"
+        - "result.balance.available == '200.0'"
+        - "result.balance.reserved == '0.0'"
+        - "result.balance.reserved_subtotals.claims == '0.0'"
+        - "result.balance.reserved_subtotals.supports== '0.0'"
+        - "result.balance.reserved_subtotals.tips == '0.0'"
+        - "result.balance.total == '200.0'"
+
+# TODO Missing account id, specific account test etc
