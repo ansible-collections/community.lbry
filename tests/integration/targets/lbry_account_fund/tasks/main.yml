@@ -42,6 +42,14 @@
   - debug:
       var: transfer
 
+  - name: Generate some more blocks
+    shell: |
+      ./lbrycrd-cli -regtest generate 100
+    args:
+      chdir: /home/lbry
+    become_user: lbry
+    become: yes
+
   - name: Check account balance - default account
     community.lbry.lbry_account_balance:
     register: default_account_balance

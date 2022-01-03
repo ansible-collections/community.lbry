@@ -305,7 +305,7 @@
   - debug:
       var: wallet
 
-  - name: Generate another block
+  - name: Generate some more blocks
     shell: |
       ./lbrycrd-cli -regtest generate 100
     args:
