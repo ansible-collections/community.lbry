@@ -1,8 +1,8 @@
 ---
   - name: Transfer to an unknown account
     community.lbry.lbry_account_fund:
-    to_account: idonotexist
-    everything: yes
+      to_account: idonotexist
+      everything: yes
     register: idonotexist
     ignore_errors: yes
 
