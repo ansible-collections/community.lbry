@@ -11,6 +11,11 @@
     set_fact:
       new_account_id: "{{ new_account.account_details.id }}"  # TODO DO I actually need an address for the account? Probably
 
+  - name: Get address from default wallet/account
+    community.lbry.lbry_address_unused:
+      account_id: "{{ new_account_id }}" 
+    register: result
+
   - name: Check account balance - default account
     community.lbry.lbry_account_balance:
     register: default_account_balance
@@ -28,7 +33,8 @@
 
   - name: Transfer everything from the default account
     community.lbry.lbry_account_fund:
-      to_account: "{{ new_account_id }}"
+      #to_account: "{{ new_account_id }}"
+      to_account: "{{ result.address }}"  # need to generate an address for the account? wording is unclear
       everything: yes
     register: transfer
 
