@@ -33,6 +33,6 @@
       that:
         - "{{ accounts.accounts | length }} == 2"
         - "accounts.accounts.1.ledger == 'lbc_regtest'"
-        - "accounts.accounts.1.name == 'new_account"
+        - "accounts.accounts.1.name == 'new_account'"
         - "accounts.accounts.0.coins == 0.0"
   
