@@ -1,6 +1,6 @@
 ---
   - name: Transfer to an unknown address
-    community.lbry.lbry_account_fund:
+    community.lbry.lbry_account_send:
       address: idonotexist
       amount: '2.0'
     register: idonotexist
@@ -34,23 +34,38 @@
       amount: '2.0'
     register: transfer
 
-  - debug:
-      var: transfer
+  - assert:
+      that:
+        - "transfer.changed"
+        - "transfer.result.outputs.0.amount = '2.0'"
+
+  # - debug:
+  #     var: transfer
 
   - name: Get default account balance
     community.lbry.lbry_account_balance:
     register: default_balance
+
+  - assert:
+      that:
+        - "new_balance.changed == False"
+        - "new_balance.balance.available | float > 197.0"
 
   - name: Get balance of new account
     community.lbry.lbry_account_balance:
       account_id: "{{ new_account_id }}"
     register: new_balance
 
-  - debug:
-      var: default_balance
+  - assert:
+      that:
+        - "new_balance.changed == False"
+        - "new_balance.balance.available = '2.0'"
 
-  - debug:
-      var: new_balance
+  # - debug:
+  #     var: default_balance
+
+  # - debug:
+  #     var: new_balance
  
 
   
