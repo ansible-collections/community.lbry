@@ -1,0 +1,85 @@
+---
+  - name: Transfer to an unknown address
+    community.lbry.lbry_account_send:
+      address: idonotexist
+      amount: '2.0'
+    register: idonotexist
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "idonotexist.failed"
+        - "idonotexist.msg == '\\'idonotexist\\' is not a valid address'"
+
+  - name: Get default account balance
+    community.lbry.lbry_account_balance:
+    register: default_balance
+
+  - name: Verify starting balance
+    assert:
+      that:
+        - "default_balance.changed == False"
+        - "default_balance.balance.available | float == 200"
+
+  - name: Create a new account 
+    community.lbry.lbry_account:
+      name: account_to_send_to
+      state: present
+      debug: yes
+    register: new_account
+
+  - name: Set account_id 
+    set_fact:
+      new_account_id: "{{ new_account.account_details.id }}" 
+
+  - name: Get address from the new account
+    community.lbry.lbry_address_unused:
+      account_id: "{{ new_account_id }}"
+    register: result
+
+  - name: Transfer an amount to the new address
+    community.lbry.lbry_account_send:
+      addresses: 
+        - "{{ result.address }}"
+      amount: '2.0'
+    register: transfer
+
+  - name: Verifiy that 2.0 LBC is in the new account
+    assert:
+      that:
+        - "transfer.changed"
+        - "transfer.result.outputs.0.amount == '2.0'"
+
+  # - debug:
+  #     var: transfer
+
+  - name: Get default account balance
+    community.lbry.lbry_account_balance:
+    register: default_balance
+
+  - name: Verify that the LBC ammount has deduced
+    assert:
+      that:
+        - "default_balance.changed == False"
+        - "default_balance.balance.available | float > 197.0"
+        - "default_balance.balance.available | float < 199.9"
+
+  - name: Get balance of new account
+    community.lbry.lbry_account_balance:
+      account_id: "{{ new_account_id }}"
+    register: new_balance
+
+  - name: Assert that new account has received the 2.0 LBC
+    assert:
+      that:
+        - "new_balance.changed == False"
+        - "new_balance.balance.available == '2.0'"
+
+  # - debug:
+  #     var: default_balance
+
+  # - debug:
+  #     var: new_balance
+ 
+
+  

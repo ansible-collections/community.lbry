@@ -10,12 +10,10 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: lbry_account_fund
-short_description: Transfer LBC from one account to another.
+module: lbry_account_send
+short_description: Send the same number of credits to multiple addresses from a specific account (or default account).
 description:
-  - Transfer LBC from one account to another.
-  - Transfer some amount (or --everything) to an account from another account (can be the same account).
-  - Amounts are interpreted as LBC.
+  - Send the same number of credits to multiple addresses from a specific account (or default account).
   - This module is not idempotent.
 author: Rhys Campbell (@rhysmeister)
 version_added: "1.0.0"
@@ -23,74 +21,67 @@ extends_documentation_fragment:
   - community.lbry.lbry_common_options
 
 options:
-  to_account:
+  addresses:
     description:
-      - send to this account.
-    type: str
-  from_account:
-    description:
-      - spend from this account.
-    type: str
+      - Address to send credits to.
+    type: list
+    elements: str
+    required: yes
+    aliases:
+      - address
   amount:
     description:
-      - the amount to transfer lbc.
+      - Amount of credits to send.
+      - Note that the total amount sent will be amount * number of addresses.
     type: str
-  everything:
+  account_id:
     description:
-      - transfer everything (excluding claims).
-    type: bool
-    default: false
-  outputs:
-    description:
-      - split payment across many outputs.
-    type: int
-    default: 1
+      - account to fund the send.
+      - default account will be used if none specified.
+    type: str
   wallet_id:
     description:
       - Restrict operation to specific wallet.
     type: str
-  broadcast:
+  preview:
     description:
-      - actually broadcast the transaction.
+      - do not broadcast the transaction.
     type: bool
-    default: false
+  blocking:
+    description:
+      - wait until tx has synced
+    type: bool
 
 requirements:
   - requests
 '''
 
 EXAMPLES = r'''
-- name: Create a new address for the default account.
-  community.lbry.lbry_address_unused:
-  register: result
+  - name: Transfer 2.0 LBC to a new address
+    community.lbry.lbry_account_send:
+      addresses:
+        - address1
+      amount: '2.0'
 
-- name: Create a new address using a specific account
-  community.lbry.lbry_address_unused:
-    account_id: mitfZTqgeHFGKPTPVUVNFV2e6TqiZEN8x3
-  register: result
-
-- name: Create a new address using a specific account & wallet
-  community.lbry.lbry_address_unused:
-    account_id: mitfZTqgeHFGKPTPVUVNFV2e6TqiZEN8x3
-    wallet_id: 1ExAmpLe0FaBiTco1NADr3sSV5tsGaMF6hd
-  register: result
-
-- name: Parse the resulting address into a variable
-  set_fact:
-    my_new_address: result.address
+  - name: Transfer 2.0L LBC to each address - 6.0 total
+    community.lbry.lbry_account_send:
+      addresses:
+        - address1
+        - address2
+        - address3
+      amount: '2.0'
 '''
 
 RETURN = r'''
-address:
-  description: An address that can be used to send lbry credits to.
-  type: str
-  returned: on success
-  sample: mnTXc8Neq7uhhQJyXDMPfi99QN54PpusFs
 msg:
   description: A short message describing what happened.
   type: str
   returned: always
   sample: "A new address was generated"
+result:
+  description: Return dictionary from lbrynet givign details of the transaction.
+  type: dict
+  returned: on success
 '''
 
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
@@ -114,13 +105,12 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
 def main():
     argument_spec = lbry_common_argument_spec()
     argument_spec.update(
-        to_account=dict(type='str'),
-        from_account=dict(type='str'),
+        addresses=dict(type='list', elements='str', required=True, aliases=['address']),
         amount=dict(type='str'),
-        everything=dict(type='bool', default=False),
-        outputs=dict(type='int', default=1),
+        account_id=dict(type='str'),
         wallet_id=dict(type='str'),
-        broadcast=dict(type='bool', default=False)
+        preview=dict(type='bool'),
+        blocking=dict(type='bool')
     )
     module = AnsibleModule(
         argument_spec=argument_spec,
@@ -142,11 +132,11 @@ def main():
     try:
         url = lbry_build_url(protocol, host, port)
         payload = {
-            "method": "account_fund",
+            "method": "account_send",
             "params": {}
         }
         request_params = {}
-        for item in ['to_account', 'from_account', 'amount', 'everything', 'outputs', 'wallet_id', 'broadcast']:
+        for item in ['addresses', 'amount', 'account_id', 'wallet_id', 'preview', 'blocking']:
             payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
         response = lbry_process_request(module, response)
