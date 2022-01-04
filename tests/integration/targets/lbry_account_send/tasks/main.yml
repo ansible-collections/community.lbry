@@ -13,7 +13,7 @@
   
   - name: Create a new account 
     community.lbry.lbry_account:
-      name: account_to_transfer_to
+      name: account_to_send_to
       state: present
       debug: yes
     register: new_account
@@ -29,7 +29,8 @@
 
   - name: Transfer an amount to the new address
     community.lbry.lbry_account_send:
-      address: "{{ result.address }}"
+      addresses: 
+        - "{{ result.address }}"
       amount: '2.0'
     register: transfer
 

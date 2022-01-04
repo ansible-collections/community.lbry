@@ -32,7 +32,8 @@ options:
   amount:
     description:
       - Amount of credits to send.
-      - Note that the total send will be amount * number of addresses.
+      - Note that the total amount sent will be amount * number of addresses.
+    type: str
   account_id:
     description:
       - account to fund the send.
@@ -89,7 +90,7 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
 def main():
     argument_spec = lbry_common_argument_spec()
     argument_spec.update(
-        addresses=dict(type='list', elements='str', required=True),
+        addresses=dict(type='list', elements='str', required=True, aliases=['address']),
         amount=dict(type='str'),
         account_id=dict(type='str'),
         wallet_id=dict(type='str'),
