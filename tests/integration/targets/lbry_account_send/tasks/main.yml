@@ -1,0 +1,41 @@
+---
+  - name: Transfer to an unknown address
+    community.lbry.lbry_account_fund:
+      address: idonotexist
+      amount: '2.0'
+    register: idonotexist
+    ignore_errors: yes
+
+  - assert:
+      that:
+        - "idonotexist.failed"
+       # - "idonotexist.msg == 'Couldn\\'t find account: idonotexist.'"
+  
+  - name: Create a new account 
+    community.lbry.lbry_account:
+      name: account_to_transfer_to
+      state: present
+      debug: yes
+    register: new_account
+
+  - name: Set account_id 
+    set_fact:
+      new_account_id: "{{ new_account.account_details.id }}" 
+
+  - name: Get address from the new account
+    community.lbry.lbry_address_unused:
+      account_id: "{{ new_account_id }}"
+    register: result
+
+  - name: Transfer an amount to the new address
+    community.lbry.lbry_account_send:
+      address: "{{ result.address }}"
+      amount: '2.0'
+    register: transfer
+
+  - debug:
+      var: transfer
+
+
+
+  
