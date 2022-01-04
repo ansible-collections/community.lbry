@@ -48,8 +48,8 @@
 
   - assert:
       that:
-        - "new_balance.changed == False"
-        - "new_balance.balance.available | float > 197.0"
+        - "default_balance.changed == False"
+        - "default_balance.balance.available | float > 197.0"
 
   - name: Get balance of new account
     community.lbry.lbry_account_balance:
