@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2021, Rhys Campbell (@rhysmeister) <rhyscampbell@bluewin.ch>
+# Copyright: (c) 2022, Rhys Campbell (@rhysmeister) <rhyscampbell@bluewin.ch>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -10,22 +10,26 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: lbry_wallet_balance
-short_description: Return the balance of a wallet.
+module: lbry_account_balance
+short_description: Return the balance of an account.
 description:
-  - Return the balance of a wallet.
+  - Return the balance of an account.
 author: Rhys Campbell (@rhysmeister)
 version_added: "1.0.0"
 extends_documentation_fragment:
   - community.lbry.lbry_common_options
 options:
+  account_id:
+    description:
+      - If provided only the balance for this account will be given.
+      - Otherwise default account is assumed.
+    type: str
+    aliases:
+      - name
   wallet_id:
     description:
       - wallet file name
     type: str
-    default: default_wallet
-    aliases:
-      - name
   confirmations:
     description:
       - Only include transactions with this many confirmed blocks.
@@ -40,31 +44,25 @@ requirements:
 '''
 
 EXAMPLES = r'''
-- name: Get balance for a wallet
-  community.lbry.lbry_wallet_balance:
-    wallet_id: mywallet
+- name: Get balance for an account
+  community.lbry.lbry_account_balance:
+    account_id: myaccount
   register: result
 
 - name: Wait for the available balance to hit an expected level
-  community.lbry.lbry_wallet_balance:
-    wallet_id: "default_wallet"
-  register: wallet
+  community.lbry.lbry_account_balance:
+  register: account
   retries: 99
   delay: 10
-  until: "wallet.balance.available == '200.0'"
+  until: "account.balance.available == '200.0'"
 '''
 
 RETURN = r'''
 balance:
-  description: Wallet balance info.
+  description: Account balance info.
   returned: always
   type: dict
   sample: {"available": "0.0", "reserved": "0.0", "reserved_subtotals": {"claims": "0.0", "supports": "0.0", "tips": "0.0"}, "total": "0.0"}
-wallet_id:
-  description: The wallet id
-  returned: always
-  type: str
-  sample: mywallet
 '''
 
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
@@ -75,9 +73,9 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_request,
     lbry_build_url,
     lbry_add_param_when_not_none,
-    lbry_wallet_list,
     HAS_REQUESTS,
     REQUESTS_IMP_ERR,
+    lbry_process_request,
 )
 import traceback
 
@@ -89,7 +87,8 @@ import traceback
 def main():
     argument_spec = lbry_common_argument_spec()
     argument_spec.update(
-        wallet_id=dict(type='str', aliases=['name'], default='default_wallet'),
+        account_id=dict(type='str', aliases=['name']),
+        wallet_id=dict(type='str'),
         confirmations=dict(type='int'),
         debug=dict(type='bool', default=False)
     )
@@ -105,40 +104,28 @@ def main():
     protocol = module.params['protocol']
     host = module.params['host']
     port = module.params['port']
-    wallet_id = module.params['wallet_id']
     debug = module.params['debug']
-
-    r = {}
-    payload = {}
+    result = {}
 
     try:
         url = lbry_build_url(protocol, host, port)
-        wallets = lbry_wallet_list(url)
-        wallet_exists = False
-        for w in wallets:
-            if w['id'] == module.params['wallet_id']:
-                wallet_exists = True
-
-        if wallet_exists:
-            payload["method"] = "wallet_balance"
-            payload["params"] = {"wallet_id": wallet_id}
-            response = lbry_request(url, payload)
-            response = dict(response.json())
-            if "error" in response or "error" in response['result']:
-                module.fail_json(msg='Error getting wallet info: {0}'.format(response))
-            else:
-                r['wallet_id'] = wallet_id
-                r['balance'] = response['result']
-        else:
-            module.fail_json(msg="Wallet does not exist")
-
+        payload = {
+            "method": "account_balance",
+            "params": {}
+        }
+        request_params = {}
+        for item in ['account_id', 'wallet_id', 'confirmations']:
+            payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
+        response = lbry_request(url, payload)
+        response = lbry_process_request(module, response)
+        result['balance'] = response['result']
     except Exception as e:
         if not debug:
             module.fail_json(msg='Error running module: %s' % to_native(e))
         else:
             module.fail_json(msg='Error running module: {0}, response: {1}'.format(traceback.format_exc(), str(response)))
 
-    module.exit_json(changed=False, **r)
+    module.exit_json(changed=False, **result)
 
 
 if __name__ == '__main__':

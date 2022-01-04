@@ -21,7 +21,7 @@
       that:
         - "result.failed"
         - "result.changed == False"
-        - "'is a required argument for new publishes' in result.msg"
+        - "'is a required argument for new publishes.' in result.msg"
 
   - name: Upload file to lbry - add huge bid
     community.lbry.lbry_publish:
@@ -37,7 +37,7 @@
       that:
         - "result.failed"
         - "result.changed == False"
-        - "'Not enough funds to cover this transaction' in result.msg"
+        - "result.msg == 'Not enough funds to cover this transaction.'"
 
   - name: Upload file to lbry - reasonable in funds bid
     community.lbry.lbry_publish:
