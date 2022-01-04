@@ -16,7 +16,7 @@ description:
   - Transfer LBC from one account to another.
   - Transfer some amount (or --everything) to an account from another account (can be the same account).
   - Amounts are interpreted as LBC.
-  - THis module is not idempotent.
+  - This module is not idempotent.
 author: Rhys Campbell (@rhysmeister)
 version_added: "1.0.0"
 extends_documentation_fragment:
