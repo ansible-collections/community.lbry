@@ -18,6 +18,8 @@ author: Rhys Campbell (@rhysmeister)
 version_added: "1.0.0"
 extends_documentation_fragment:
   - community.lbry.lbry_common_options
+
+options:
   debug:
     description:
       - Show additional debug output.
@@ -29,7 +31,7 @@ requirements:
 
 EXAMPLES = r'''
 - name: List all the accounts
-  community.lbry.lbry_account_list
+  community.lbry.lbry_account_list:
   register: result
 '''
 
@@ -59,9 +61,9 @@ from ansible.module_utils._text import to_native
 from ansible.module_utils.six import iteritems
 from ansible_collections.community.lbry.plugins.module_utils.lbry_common import (
     lbry_common_argument_spec,
-    #lbry_request,
+    # lbry_request,
     lbry_build_url,
-    #lbry_add_param_when_not_none,
+    # lbry_add_param_when_not_none,
     lbry_account_list,
     HAS_REQUESTS,
     REQUESTS_IMP_ERR,
@@ -90,7 +92,6 @@ def main():
     protocol = module.params['protocol']
     host = module.params['host']
     port = module.params['port']
-    wallet_id = module.params['wallet_id']
     debug = module.params['debug']
     r = {}
 
@@ -100,7 +101,7 @@ def main():
         if len(accounts) == 0:
             module.fail_json(msg="Error getting accounts list. Server responded with a zero-length list.")
         else:
-          r['accounts'] = accounts
+            r['accounts'] = accounts
     except Exception as e:
         if not debug:
             module.fail_json(msg='Error running module: %s' % to_native(e))
