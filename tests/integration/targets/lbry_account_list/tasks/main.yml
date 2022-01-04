@@ -1,0 +1,38 @@
+---
+  - name: Get the list of accounts
+    community.lbry.lbry_account_list:
+    register: accounts
+
+  - name: We should only have the one default account
+    assert:
+      that:
+        - "{{ accounts.accounts | length }} == 1"
+        - "accounts.accounts.0.id is defined"
+        - "accounts.accounts.0.is_default is defined"
+        - "accounts.accounts.0.ledger is defined"
+        - "accounts.accounts.0.name is defined"
+        - "accounts.accounts.0.seed is defined"
+        - "accounts.accounts.0.encrypted is defined"
+        - "accounts.accounts.0.private_key is defined"
+        - "accounts.accounts.0.public_key is defined"
+        - "accounts.accounts.0.address_generator is defined"
+        - "accounts.accounts.0.modified_on is defined"
+
+  - name: Create another account
+    community.lbry.lbry_account:
+      name: new_account
+      state: present
+      debug: yes
+    register: new_account
+
+  - name: Get the list of accounts
+    community.lbry.lbry_account_list:
+    register: accounts
+
+  - name: Valid that the new account looks good
+    assert:
+      that:
+        - "{{ accounts.accounts | length }} == 2"
+        - "accounts.accounts.1.ledger == 'regtest'"
+        - "accounts.accounts.1.name == 'new_account"
+  
