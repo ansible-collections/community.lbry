@@ -46,12 +46,12 @@ accounts:
             "is_default": "this account is used by default",
             "ledger": "name of crypto currency and network",
             "name": "optional account name",
-            "seed": "human friendly words from which account can be recreated",
             "encrypted": "if account is encrypted",
-            "private_key": "extended private key",
             "public_key": "extended public key",
             "address_generator": "settings for generating addresses",
-            "modified_on": "date of last modification to account settings"
+            "certificates": 0,
+            "coins": 0,
+            "satoshis": 0
         }
     ]
 '''
