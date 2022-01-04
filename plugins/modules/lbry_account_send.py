@@ -59,13 +59,13 @@ requirements:
 EXAMPLES = r'''
   - name: Transfer 2.0 LBC to a new address
     community.lbry.lbry_account_send:
-      addresses: 
+      addresses:
         - address1
       amount: '2.0'
 
   - name: Transfer 2.0L LBC to each address - 6.0 total
     community.lbry.lbry_account_send:
-      addresses: 
+      addresses:
         - address1
         - address2
         - address3
