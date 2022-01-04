@@ -9,7 +9,7 @@
   - assert:
       that:
         - "idonotexist.failed"
-       # - "idonotexist.msg == 'Couldn\\'t find account: idonotexist.'"
+        - "idonotexist.msg == '\\'idonotexist\\' is not a valid address'"
   
   - name: Create a new account 
     community.lbry.lbry_account:
@@ -37,7 +37,7 @@
   - assert:
       that:
         - "transfer.changed"
-        - "transfer.result.outputs.0.amount = '2.0'"
+        - "transfer.result.outputs.0.amount == '2.0'"
 
   # - debug:
   #     var: transfer
@@ -59,7 +59,7 @@
   - assert:
       that:
         - "new_balance.changed == False"
-        - "new_balance.balance.available = '2.0'"
+        - "new_balance.balance.available == '2.0'"
 
   # - debug:
   #     var: default_balance
