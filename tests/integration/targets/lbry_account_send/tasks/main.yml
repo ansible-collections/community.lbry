@@ -37,6 +37,20 @@
   - debug:
       var: transfer
 
+  - name: Get default balance
+    community.lbry.lbry_wallet_balance:
+    register: default_balance
 
+  - name: Get balance of new account
+    community.lbry.lbry_wallet_balance:
+      account_id: "{{ new_account_id }}"
+    register: new_balance
+
+  - debug:
+      var: default_balance
+
+  - debug:
+      var: new_balance
+ 
 
   
