@@ -69,7 +69,8 @@
       account_id: "{{ new_account_id }}"
     register: new_balance
 
-  - assert:
+  - name: Assert that new account has received the 2.0 LBC
+    assert:
       that:
         - "new_balance.changed == False"
         - "new_balance.balance.available == '2.0'"

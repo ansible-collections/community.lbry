@@ -14,7 +14,7 @@ module: lbry_account_send
 short_description: Send the same number of credits to multiple addresses from a specific account (or default account).
 description:
   - Send the same number of credits to multiple addresses from a specific account (or default account).
-  - THis module is not idempotent.
+  - This module is not idempotent.
 author: Rhys Campbell (@rhysmeister)
 version_added: "1.0.0"
 extends_documentation_fragment:
@@ -57,16 +57,31 @@ requirements:
 '''
 
 EXAMPLES = r'''
-TODO
+  - name: Transfer 2.0 LBC to a new address
+    community.lbry.lbry_account_send:
+      addresses: 
+        - address1
+      amount: '2.0'
+
+  - name: Transfer 2.0L LBC to each address - 6.0 total
+    community.lbry.lbry_account_send:
+      addresses: 
+        - address1
+        - address2
+        - address3
+      amount: '2.0'
 '''
 
 RETURN = r'''
-TODO:
 msg:
   description: A short message describing what happened.
   type: str
   returned: always
   sample: "A new address was generated"
+result:
+  description: Return dictionary from lbrynet givign details of the transaction.
+  type: dict
+  returned: on success
 '''
 
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
