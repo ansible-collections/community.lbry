@@ -10,7 +10,17 @@
       that:
         - "idonotexist.failed"
         - "idonotexist.msg == '\\'idonotexist\\' is not a valid address'"
-  
+
+  - name: Get default account balance
+    community.lbry.lbry_account_balance:
+    register: default_balance
+
+  - name: Verify starting balance
+    assert:
+      that:
+        - "default_balance.changed == False"
+        - "default_balance.balance.available | float == 200"
+
   - name: Create a new account 
     community.lbry.lbry_account:
       name: account_to_send_to
@@ -34,7 +44,8 @@
       amount: '2.0'
     register: transfer
 
-  - assert:
+  - name: Verifiy that 2.0 LBC is in the new account
+    assert:
       that:
         - "transfer.changed"
         - "transfer.result.outputs.0.amount == '2.0'"
@@ -46,10 +57,12 @@
     community.lbry.lbry_account_balance:
     register: default_balance
 
-  - assert:
+  - name: Verify that the LBC ammount has deduced
+    assert:
       that:
         - "default_balance.changed == False"
         - "default_balance.balance.available | float > 197.0"
+        - "default_balance.balance.available | float < 199.9"
 
   - name: Get balance of new account
     community.lbry.lbry_account_balance:
