@@ -95,7 +95,7 @@ def main():
         if len(addresses) == 0:
             module.fail_json(msg="Error getting address list. Server responded with a zero-length list.")
         else:
-            r['adresses'] = addresses
+            r['addresses'] = addresses
     except Exception as e:
         if not debug:
             module.fail_json(msg='Error running module: %s' % to_native(e))
