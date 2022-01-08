@@ -17,7 +17,7 @@
   - assert:
       that:
         - "mine.changed == False"
-        - "mine.is_mine == True"
+        - "mine.is_mine"
 
   - name: Check an address that isn't mine
     community.lbry.lbry_address_is_mine:

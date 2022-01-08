@@ -55,7 +55,7 @@ def lbry_valid_response(r):
 
 def lbry_error_response(r):
     """ Http request worked but there was some form of error
-        on the LBRY side.
+        on the LBRY side
     """
     is_lbry_error = False
     response_dict = dict(r.json())
