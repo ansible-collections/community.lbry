@@ -1,0 +1,25 @@
+---
+  - name: Create the first address
+    community.lbry.lbry_address_unused:
+
+  - name: Get all addresses
+    community.lbry.lbry_address_list:
+    register: addresses
+
+  - name: We should only have the one address
+    assert:
+      that:
+        - "{{ addresses.addresses | length }} == 1"
+
+  - name: Create another address
+    community.lbry.lbry_address_unused:
+
+  - name: Get the list of addresses
+    community.lbry.lbry_address_list:
+    register: addresses
+
+  - name: Valid that the new account looks good
+    assert:
+      that:
+        - "{{ addresses.addresses | length }} == 2"
+  
