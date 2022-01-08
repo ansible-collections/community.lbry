@@ -115,11 +115,10 @@ def main():
           if item not in ['host', 'port', 'protocol', 'debug']:
               payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
-        response = lbry_process_request(module, response)
-        if isinstance(response['result'], bool):  # good result
+        if 'result' in response and isinstance(response['result'], bool):  # good result
             is_mine = response['result']
         else:
-            module.fail_json(msg="The module returned an invalid result of type {0}".format(type(response['result'])))
+            module.fail_json(msg="The module returned an unexpected result: {0}".format(response))
     except Exception as e:
         if not debug:
             module.fail_json(msg='Error running module: %s' % to_native(e))
