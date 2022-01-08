@@ -22,7 +22,7 @@
   - name: Valid that the new address has been added
     assert:
       that:
-        - "{{ addresses.addresses | length }} == {{ addresses.addresses | length + 1 }}"
+        - "{{ addresses.addresses | length }} == {{ addresses.addresses | length | int + 1 }}"
         - "addresses.addresses.0.account is defined"
         - "addresses.addresses.0.address is defined"
         - "addresses.addresses.0.pubkey is defined"
