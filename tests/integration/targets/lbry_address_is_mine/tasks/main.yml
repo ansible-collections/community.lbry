@@ -14,3 +14,7 @@
       address: "{{ result.address }}"
     register: mine
 
+  - assert:
+      that:
+        - "mine.changed == False"
+        - "mine.is_mine == True"

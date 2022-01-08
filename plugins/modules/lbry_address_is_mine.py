@@ -56,7 +56,7 @@ is_mine:
   returned: on success
   sample: true
 msg:
-  description. what went wrong.
+  description: what went wrong.
   type: str
   returned: on error
   sample: "The module returned an invalid result of type str"
