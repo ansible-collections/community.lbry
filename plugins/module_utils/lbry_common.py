@@ -45,10 +45,10 @@ def lbry_valid_response(r):
     response_dict = dict(r.json())
     if r.status_code == 200 and 'result' in response_dict \
             and not isinstance(response_dict['result'], bool) \
-                and 'error' not in response_dict['result']:  # for cases where result is a dict
+            and 'error' not in response_dict['result']:  # for cases where result is a dict
         is_valid = True
     elif r.status_code == 200 and 'result' in response_dict \
-            and isinstance(response_dict['result'], bool):  # For cases where result is a bool 
+            and isinstance(response_dict['result'], bool):  # For cases where result is a bool
         is_valid = True
     return is_valid
 

@@ -107,13 +107,13 @@ def main():
     try:
         url = lbry_build_url(protocol, host, port)
         payload = {
-          "method": "address_is_mine",
-          "params": {}
+            "method": "address_is_mine",
+            "params": {}
         }
         request_params = {}
         for item in module.params:
-          if item not in ['host', 'port', 'protocol', 'debug']:
-              payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
+            if item not in ['host', 'port', 'protocol', 'debug']:
+                payload['params'] = lbry_add_param_when_not_none(request_params, module, item)
         response = lbry_request(url, payload)
         response = lbry_process_request(module, response)
         if 'result' in response and isinstance(response['result'], bool):  # good result
