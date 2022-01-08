@@ -1,0 +1,16 @@
+---
+  - name: Get address from default wallet/account
+    community.lbry.lbry_address_unused:
+    register: result
+
+  - assert:
+      that:
+        - "result.changed"
+        - "result.address | length > 20"
+        - "result.msg == 'A new address was generated'"
+
+  - name: Valid that this address "is mine"
+    community.lbry.lbry_address_is_mine:
+      address: "{{ result.address }}"
+    register: mine
+
