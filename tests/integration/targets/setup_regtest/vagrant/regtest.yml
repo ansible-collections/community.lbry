@@ -89,6 +89,7 @@
       remote_src: yes
       owner: lbry
       group: lbry
+    retries: 3
 
   - name: Create directories
     file:
@@ -177,6 +178,7 @@
         - es01:/usr/share/elasticsearch/data
       networks:
         - name: "lbry"
+    retries: 3
     register: elastic
 
   - name: Wait for the elastic container to become active
@@ -214,6 +216,7 @@
         - "wallet_server:/database"
       networks:
         - name: "lbry"
+    retries: 3
     register: walletserver
   
   #- name: Wait for the walletserver to become active
@@ -251,6 +254,7 @@
         - "/home/lbry/etc:/etc/lbry:Z" #Put your daemon_settings.yml here
       networks:
         - name: lbry
+    retries: 3
   
   - name: Wait for the lbrynet server to become active
     wait_for:
@@ -261,6 +265,7 @@
     docker_container:
       name: "{{ item }}"
       state: "started"
+    retries: 3
     loop:
       - "lbrynet"
       - "walletserver"

@@ -175,3 +175,13 @@ def lbry_channel_list(url):
     response = lbry_request(url, payload)
     response = dict(response.json())
     return response['result']['items']
+
+
+def lbry_address_list(url):
+    payload = {
+        "method": "address_list",
+        "params": {"page_size": 99999}
+    }
+    response = lbry_request(url, payload)
+    response = dict(response.json())
+    return response['result']['items']
