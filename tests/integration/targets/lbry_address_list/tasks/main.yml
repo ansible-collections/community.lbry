@@ -1,8 +1,5 @@
 ---
-  - name: Create the first address
-    community.lbry.lbry_address_unused:
-
-  - name: Get all addresses
+  - name: Get all addresses - should only be one form regtest.yml setup
     community.lbry.lbry_address_list:
     register: addresses
 
