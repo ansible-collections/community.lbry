@@ -20,3 +20,7 @@ pip_packages:
   - docker
   - requests
   - coverage==4.5.4
+# block generation upon setup
+generate1: 200  # This amount goes to the default account
+generate2: 100  # This just here to progress the blockchain
+generate3: 100  # This just here to progress the blockchain
