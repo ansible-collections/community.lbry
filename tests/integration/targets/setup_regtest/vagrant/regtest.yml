@@ -292,8 +292,8 @@
 
   - name: Generate some coins to the address - module?
     shell: |
-      ./lbrycrd-cli -regtest generatetoaddress 200 {{ my_new_address }}
-      ./lbrycrd-cli -regtest generate 100
+      ./lbrycrd-cli -regtest generatetoaddress {{ generate1 | default(200) }} {{ my_new_address }}
+      ./lbrycrd-cli -regtest generate {{ generate1 | default(100) }}
     args:
       chdir: /home/lbry
     become_user: lbry
@@ -304,7 +304,7 @@
     register: wallet
     retries: 99
     delay: 10
-    until: "wallet.balance.available == '200.0'"
+    until: "wallet.balance.available == '{{ generate1 | default(200) }}.0'"
     ignore_errors: yes
 
   - debug:
@@ -312,7 +312,7 @@
 
   - name: Generate some more blocks
     shell: |
-      ./lbrycrd-cli -regtest generate 100
+      ./lbrycrd-cli -regtest generate {{ generate3 | default(100) }} 
     args:
       chdir: /home/lbry
     become_user: lbry
