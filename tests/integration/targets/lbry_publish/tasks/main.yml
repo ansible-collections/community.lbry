@@ -165,3 +165,17 @@
         - "result.result.outputs.0.value.title == 'My Markdown Blog Post'"
         - "result.result.outputs.0.value.source.media_type == 'text/markdown'"
   
+  - name: Upload the markdown.md post to lbry - Run again!
+    community.lbry.lbry_publish:
+      name: markdown-post
+      file_path: /tmp/markdown.md
+      title: "My Markdown Blog Post"
+      author: rhysmeister
+      bid: '2.0'
+      tags:
+        - markdown
+        - blog
+    register: result
+
+  - debug:
+      var: result
