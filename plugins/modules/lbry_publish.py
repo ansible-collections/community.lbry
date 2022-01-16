@@ -186,6 +186,23 @@ from ansible_collections.community.lbry.plugins.module_utils.lbry_common import 
     lbry_process_request,
 )
 
+
+def file_is_published(response):
+    """
+    We return true if the publish looks valid.
+    @response - Response dict from the publish api method
+    """
+    is_published = False
+    if isinstance(response, dict):
+        if 'result' in response:
+            if 'outputs' in response['result']:
+                if len(response['result']['outputs']) > 0:
+                    if 'permanent_url' in response['result']['outputs'][0]:
+                        if response['result']['outputs'][0]['permanent_url'].startswith("lbry://"):
+                            is_published = True
+    return is_published
+
+
 # ================
 # Module execution
 #
@@ -256,10 +273,13 @@ def main():
     try:
         response = lbry_request(url, payload)
         response = lbry_process_request(module, response)
-        changed = True
+        if file_is_published(response):
+            changed = True
+        else:
+            module.fail_json(msg="The file does not seem to have been published", **response)
     except Exception as excep:
         if module.params['debug']:
-            module.fail_json(msg='Error publishing file to lbrynet: {0}'.format(response))
+            module.fail_json(msg='Error publishing file to lbrynet: {0} | {1}'.format(response, excep))
         else:
             module.fail_json(msg="Error publishing file to lbrynet")
 
