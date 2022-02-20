@@ -1,1 +1,70 @@
-releases: {}
+releases:
+  0.1.0:
+    changes:
+      release_summary: |
+        Initial release of the LBRY Ansible Collection.
+      modules:
+        - name: lbry_account
+          description: Manage LBRY accounts.
+          namespace: community
+        - name: lbry_account_balance
+          description: Return the balance of an account.
+          namespace: community
+        - name: lbry_account_fund
+          description: Transfer LBC from one account to another.
+          namespace: community
+        - name: lbry_account_list
+          description: List details of all of the accounts.
+          namespace: community
+        - name: lbry_account_send
+          description: Send the same number of credits to multiple addresses from a specific account (or default account).
+          namespace: community
+        - name: lbry_address_is_mine
+          description: Checks if an address is associated with the current wallet.
+          namespace: community
+        - name: lbry_address_list
+          description: List account addresses.
+          namespace: community
+        - name: lbry_address_unused
+          description: Return an address containing no balance.
+          namespace: community
+        - name: lbry_channel
+          description: Manage LBRY channels.
+          namespace: community
+        - name: lbry_ffmpeg_find
+          description: Get ffmpeg installation information.
+          namespace: community
+        - name: lbry_get
+          description: Download stream from a LBRY name.
+          namespace: community
+        - name: lbry_publish
+          description: Create or replace a stream claim at a given name.
+          namespace: community
+        - name: lbry_resolve
+          description: Get the claim that a URL refers to.
+          namespace: community
+        - name: lbry_routing_table_get
+          description: Get lbry  DHT routing information.
+          namespace: community
+        - name: lbry_settings
+          description: Get and set lbry daemon settings.
+          namespace: community
+        - name: lbry_status
+          description: Get lbry daemon status.
+          namespace: community
+        - name: lbry_stop
+          description: Stop the lbry daemon.
+          namespace: community
+        - name: lbry_version
+          description: Get lbry version info.
+          namespace: community
+        - name: lbry_wallet
+          description: Manage LBRY Wallets.
+          namespace: community
+        - name: lbry_wallet_balance
+          description: Return the balance of a wallet.
+          namespace: community
+        - name: lbry_wallet_info
+          description: Get wallet status info.
+          namespace: community
+    release_date: '2022-02-20'
