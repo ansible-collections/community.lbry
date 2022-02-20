@@ -35,7 +35,7 @@ jobs:
       - name: Upload community-lbry-latest.tar.gz as an artifact
         uses: actions/upload-artifact@v1
         with:
-          name: community-mongodb-latest
+          name: community-lbry-latest
           path: ansible_collections/community/lbry/community-lbry-latest.tar.gz
 
       # Moving the tag leaves an orphan artifact. Just changing the artifact doesn't move the tag.
