@@ -1,5 +1,5 @@
 releases:
-  0.1.0:
+  0.1.1:
     changes:
       release_summary: |
         Initial release of the LBRY Ansible Collection.
@@ -68,3 +68,4 @@ releases:
           description: Get wallet status info.
           namespace: community
     release_date: '2022-02-20'
+  

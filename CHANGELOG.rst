@@ -4,7 +4,7 @@ Community.MongoDB Release Notes
 
 .. contents:: Topics
 
-v0.1.0
+v0.1.1
 =======
 
 Release Summary
