@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include lbry_wallet"
+      include_role:
+        name: "lbry_wallet"

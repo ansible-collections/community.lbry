@@ -1,0 +1,43 @@
+---
+required_packages:
+  - automake
+  - autotools-dev
+  - bsdmainutils
+  - build-essential
+  - ca-certificates
+  - curl
+  - git
+  #- ibdb4.8-dev
+  #- ibdb5.3-dev
+  - libdb-dev
+  - libtool
+  #- libdb4.8++-dev
+  #- libdb5.3++-dev
+  - libicu-dev
+  - libssl-dev
+  - libevent-dev
+  - libboost-system-dev
+  - libboost-filesystem-dev
+  - libboost-chrono-dev
+  - libboost-test-dev
+  - libboost-thread-dev
+  - libboost-dev
+  - libboost-all-dev
+  - libminiupnpc-dev
+  - libzmq3-dev
+  - pkg-config
+  #- python3.7
+  #- python3.7-dev
+  #- python3.7-venv
+  - python-protobuf
+  - python-pyparsing
+  - unzip
+  - zip
+lbry_group: lbry
+lbry_user: lbry
+lbrycrd_release: https://github.com/lbryio/lbrycrd/archive/refs/tags/v0.17.3.3.tar.gz
+lbrycrd_build_home: "/home/{{lbry_user }}/{{ lbrycrd_release | basename | split('.') | first }}"
+lbrycrd_build_cmd: ./build.sh
+lbrycrd_artifact_location: /usr/bin/
+
+lbrynet_git_repo: https://github.com/lbryio/lbry-sdk.git

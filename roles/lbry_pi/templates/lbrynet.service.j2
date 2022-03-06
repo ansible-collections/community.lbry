@@ -1,0 +1,14 @@
+[Unit]
+Description="LBRYnet daemon"
+After=network.target
+
+[Service]
+Environment="HOME=/home/{{ lbry_user }}"
+ExecStart=/usr/bin/lbrynet start
+User={{ lbry_user }}
+Group={{ lbry_user }}
+Restart=on-failure
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

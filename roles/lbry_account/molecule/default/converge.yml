@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include lbry_account"
+      include_role:
+        name: "lbry_account"

@@ -1,0 +1,38 @@
+---
+  - name: Compile lbrynet from source
+    block:
+      - name: Checkout lbrynet
+        git:
+          repo: ”{{ lbrynet_git_repo }}"
+          dest: "/home/{{ lbry_user }}"
+        become_user: "{{ lbry_user }}"
+
+      - name: Install lbrynet packages
+        command: make install
+        args:
+          chdir: "/home/{{ lbry_user }}/lbry-sdk"
+          creates: /usr/bin/lbrynet
+
+  - name: LBRYnet systemd setup
+    block:
+      - name: Copy lbrnet systemd template
+        template:
+          src: lbrynet.service.j2
+          dest: /etc/systemd/system/lbrynet.service
+        register: lbrynet_systemd
+
+      - name: Reload systemd if needed
+        systemd:
+          daemon_reload: yes
+        when: lbrynet_systemd.changed
+
+      - name: Ensure systemd service is running
+        systemd:
+          name: lbrynet
+          state: started
+          enabled: yes
+
+
+   
+      
+  

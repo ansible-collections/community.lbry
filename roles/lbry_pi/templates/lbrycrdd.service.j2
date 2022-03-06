@@ -1,0 +1,21 @@
+[Unit]
+Description="LBRYcrd daemon"
+After=network.target
+
+[Service]
+ExecStart="{{ lbrycrd_artifact_location }}/lbrycrdd" -datadir="/home/{{ lbry_user }}/.lbrycrd" -pid="/run/lbrycrdd/lbrycrdd.pid"
+# Creates /run/lbrycrdd
+RuntimeDirectory=lbrycrdd
+Type=Forking
+PIDFile=/run/lbrycrdd/lbrycrdd.pid
+Restart=on-failure
+
+# hardening
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+PrivateDevices=true
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target
