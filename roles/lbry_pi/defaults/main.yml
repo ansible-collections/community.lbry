@@ -29,14 +29,14 @@ required_packages:
   #- python3.7
   #- python3.7-dev
   #- python3.7-venv
-  - python-protobuf
-  - python-pyparsing
+  #- python-protobuf
+  #- python-pyparsing
   - unzip
   - zip
 lbry_group: lbry
 lbry_user: lbry
 lbrycrd_release: https://github.com/lbryio/lbrycrd/archive/refs/tags/v0.17.3.3.tar.gz
-lbrycrd_build_home: "/home/{{lbry_user }}/{{ lbrycrd_release | basename | split('.') | first }}"
+lbrycrd_build_home: "/home/{{lbry_user }}/lbrycrd-{{ lbrycrd_release | basename | replace('.tar.gz', '') | replace('v', '') }}"
 lbrycrd_build_cmd: ./build.sh
 lbrycrd_artifact_location: /usr/bin/
 

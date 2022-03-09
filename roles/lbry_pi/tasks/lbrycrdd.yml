@@ -5,11 +5,12 @@
       unarchive:
         src: "{{ lbrycrd_release }}"
         dest: "/home/{{ lbry_user }}"
+        remote_src: yes
         creates: "{{ lbrycrd_build_home }}"
         owner: "{{ lbry_user }}"
         group: "{{ lbry_group }}"
 
-    - name: Build lbry
+    - name: Build lbrycrd
       command: "{{ lbrycrd_build_cmd }}"
       args:
         creates: "{{ lbrycrd_build_home }}/src/lbrycrdd"
