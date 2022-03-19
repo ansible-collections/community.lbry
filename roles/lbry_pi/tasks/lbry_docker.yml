@@ -5,7 +5,9 @@
 
     - name: Install with get-docker.sh
       script:
-        src: get-docker.sh
+        cmd: get-docker.sh
+      args:
+        creates: /usr/bin/docker
 
     - name: Ensure the lbry user can use docker
       user:
@@ -15,6 +17,10 @@
 
 - name: Start docker containers
   block:
+
+      - name: Create lbry network for docker
+        docker_network:
+          name: lbry
 
       - name: Start an elastic server in a container
         docker_container:

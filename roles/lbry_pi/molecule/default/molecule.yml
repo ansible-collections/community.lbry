@@ -6,8 +6,11 @@ driver:
   provider:
     name: virtualbox
 platforms:
-  - name: debian
-    box: debian/bullseye64
+  #- name: debian
+  #  box: debian/bullseye64
+  - name: focal
+    box: ubuntu/focal64
+    memory: 4096
 provisioner:
   name: ansible
 verifier:

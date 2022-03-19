@@ -9,9 +9,10 @@ required_packages:
   - git
   #- ibdb4.8-dev
   #- ibdb5.3-dev
-  - libdb-dev
+  #- libdb-dev
   - libtool
-  #- libdb4.8++-dev
+  - libdb4.8-dev
+  - libdb4.8++-dev
   #- libdb5.3++-dev
   - libicu-dev
   - libssl-dev
@@ -29,10 +30,13 @@ required_packages:
   #- python3.7
   #- python3.7-dev
   #- python3.7-venv
+  - python3-docker
   #- python-protobuf
   #- python-pyparsing
   - unzip
   - zip
+pip_packages:
+  - docker
 lbry_group: lbry
 lbry_user: lbry
 lbrycrd_release: https://github.com/lbryio/lbrycrd/archive/refs/tags/v0.17.3.3.tar.gz

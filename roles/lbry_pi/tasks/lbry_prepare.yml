@@ -6,10 +6,10 @@
     state: absent
 
 # Contains a few tasks to preapre the OS for lbry
-#- name: Add bitcoin apt repository
-#  apt_repository:
-#    #repo: ppa:bitcoin/bitcoin
-#    repo: ppa:luke-jr/bitcoincore
+- name: Add bitcoin apt repository
+  apt_repository:
+    #repo: ppa:bitcoin/bitcoin
+    repo: ppa:luke-jr/bitcoincore
 
 - name: Update apt-get repo and cache
   apt: 
@@ -29,7 +29,7 @@
   group:
     name: "{{ lbry_group }}"
 
-- name: ENsure lbry user exists
+- name: Ensure lbry user exists
   user:
     name: "{{ lbry_user }}"
     group: "{{ lbry_group }}"
@@ -39,3 +39,7 @@
   script: install_python37.sh
   args:
     creates: /usr/local/bin/python3.7
+
+- name: Install pip packages for default python
+  pip:
+    name: "{{ pip_packages }}"

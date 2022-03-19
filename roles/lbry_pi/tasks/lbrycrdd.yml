@@ -10,6 +10,9 @@
         owner: "{{ lbry_user }}"
         group: "{{ lbry_group }}"
 
+    - name: Fix permissions on lbrycrd dir
+      command: chown -R lbry:lbry "{{ lbrycrd_build_home }}"
+
     - name: Build lbrycrd
       command: "{{ lbrycrd_build_cmd }}"
       args:
@@ -20,7 +23,7 @@
       command: cp {{ item }} {{ lbrycrd_artifact_location }} 
       args:
         chdir: "{{ lbrycrd_build_home }}/src/"
-        creates: "{{ lbrycrd_artifact_location }}/lbrycrdd"
+        creates: "{{ lbrycrd_artifact_location }}/lbrycrd-tx"
       loop:
         - lbrycrdd
         - lbrycrd-cli
