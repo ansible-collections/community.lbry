@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Environment="HOME=/home/{{ lbry_user }}"
-ExecStart=/usr/bin/lbrynet start
+ExecStart=/usr/local/bin/lbrynet start
 User={{ lbry_user }}
 Group={{ lbry_user }}
 Restart=on-failure

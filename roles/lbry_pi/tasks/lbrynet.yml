@@ -1,16 +1,20 @@
 ---
   - name: Compile lbrynet from source
     block:
+      # No closing quotation ValueError
+      #- name: Checkout lbrynet
+      #  git:
+      #    repo: ”{{ lbrynet_git_repo }}"
+      #    dest: "/home/{{ lbry_user }}"
       - name: Checkout lbrynet
-        git:
-          repo: ”{{ lbrynet_git_repo }}"
-          dest: "/home/{{ lbry_user }}"
-        become_user: "{{ lbry_user }}"
+        command: git clone {{ lbrynet_git_repo }} /home/{{ lbry_user }}/lbrynet
+        args:
+          creates: /home/{{ lbry_user }}/lbrynet
 
       - name: Install lbrynet packages
         command: make install
         args:
-          chdir: "/home/{{ lbry_user }}/lbry-sdk"
+          chdir: "/home/{{ lbry_user }}/lbrynet"
           creates: /usr/bin/lbrynet
 
   - name: LBRYnet systemd setup

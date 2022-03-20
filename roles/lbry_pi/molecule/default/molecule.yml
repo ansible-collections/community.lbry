@@ -11,6 +11,7 @@ platforms:
   - name: focal
     box: ubuntu/focal64
     memory: 4096
+    cpus: 2
 provisioner:
   name: ansible
 verifier:
