@@ -15,7 +15,7 @@
         command: make install
         args:
           chdir: "/home/{{ lbry_user }}/lbrynet"
-          creates: /usr/bin/lbrynet
+          creates: /usr/local/bin/lbrynet
 
   - name: LBRYnet systemd setup
     block:

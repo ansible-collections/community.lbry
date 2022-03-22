@@ -11,7 +11,11 @@
         group: "{{ lbry_group }}"
 
     - name: Fix permissions on lbrycrd dir
-      command: chown -R lbry:lbry "{{ lbrycrd_build_home }}"
+      file:
+        path: "{{ lbrycrd_build_home }}"
+        owner: "{{ lbry_user }}"
+        group: "{{ lbry_group }}"
+        recurse: yes
 
     - name: Build lbrycrd
       command: "{{ lbrycrd_build_cmd }}"

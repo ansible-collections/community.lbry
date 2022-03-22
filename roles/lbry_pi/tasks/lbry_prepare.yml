@@ -1,9 +1,9 @@
 ---
 # https://askubuntu.com/questions/1136480/initramfs-error-when-installing-updating
-- name: Remove package causing upgrade problem
-  package:
-    name: initramfs-tools
-    state: absent
+#- name: Remove package causing upgrade problem
+#  package:
+#    name: initramfs-tools
+#    state: absent
 
 # Contains a few tasks to preapre the OS for lbry
 - name: Add bitcoin apt repository

@@ -10,9 +10,22 @@ platforms:
   #  box: debian/bullseye64
   - name: focal
     box: ubuntu/focal64
-    memory: 4096
+    memory: 8192
     cpus: 2
 provisioner:
   name: ansible
 verifier:
   name: testinfra
+scenario:
+  test_sequence:
+      - lint
+      - destroy
+      - dependency
+      - syntax
+      - create
+      - prepare
+      - converge
+      #- idempotence
+      - side_effect
+      - verify
+      - destroy
