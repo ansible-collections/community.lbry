@@ -33,6 +33,7 @@
     name: "{{ item }}"
     state: absent
   with_items: "{{ docker_containers }}"
+  retries: 5
 
 - name: Run docker-compose file
   shell: docker-compose -f {{ docker_compose_file | default('docker-compose.yml') }} up --detach

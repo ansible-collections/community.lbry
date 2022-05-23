@@ -11,21 +11,25 @@
   - name: Run apt-get update
     apt:
       update_cache: yes
+    retries: 5
 
   - name: Install required packages
     package:
       name: "{{ required_packages }}"
       state: present
+    retries: 5
 
   - name: Install pip packages
     pip:
       name: "{{ pip_packages }}"
       state: present
+    retries: 5
 
   - name: Add dockers gpg key
     shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
     args:
       creates: /usr/share/keyrings/docker-archive-keyring.gpg
+    retries: 5
 
   - name: Add the stable docker repo 
     shell: |
@@ -34,14 +38,17 @@
       $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     args:
       creates: /etc/apt/sources.list.d/docker.list
+    retries: 5
 
   - name: Apt update
     shell: apt update -y
+    retries: 5
 
   - name: Install docker
     package:
       name: "{{ docker_packages }}"
       state: present
+    retries: 5
 
   - name: Ensure the docker service is started 
     service:
@@ -89,7 +96,7 @@
       remote_src: yes
       owner: lbry
       group: lbry
-    retries: 3
+    retries: 5
 
   - name: Create directories
     file:
@@ -178,7 +185,7 @@
         - es01:/usr/share/elasticsearch/data
       networks:
         - name: "lbry"
-    retries: 3
+    retries: 5
     register: elastic
 
   - name: Wait for the elastic container to become active
@@ -216,7 +223,7 @@
         - "wallet_server:/database"
       networks:
         - name: "lbry"
-    retries: 3
+    retries: 5
     register: walletserver
   
   #- name: Wait for the walletserver to become active
@@ -254,7 +261,7 @@
         - "/home/lbry/etc:/etc/lbry:Z" #Put your daemon_settings.yml here
       networks:
         - name: lbry
-    retries: 3
+    retries: 5
   
   - name: Wait for the lbrynet server to become active
     wait_for:
@@ -265,7 +272,7 @@
     docker_container:
       name: "{{ item }}"
       state: "started"
-    retries: 3
+    retries: 5
     loop:
       - "lbrynet"
       - "walletserver"
