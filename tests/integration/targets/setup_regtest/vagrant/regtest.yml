@@ -312,7 +312,7 @@
     retries: 99
     delay: 10
     until: "wallet.balance.available == '{{ generate1 | default(200) }}.0'"
-    ignore_errors: yes
+    #ignore_errors: yes
 
   - debug:
       var: wallet
