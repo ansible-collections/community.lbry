@@ -1,5 +1,7 @@
 # UNDER CONSTRUCTION
 
+[![CI](https://github.com/ansible-collections/community.lbry/actions/workflows/ansible-test.yml/badge.svg)](https://github.com/ansible-collections/community.lbry/actions/workflows/ansible-test.yml)
+
 * This is a work in progress.
 * If you want to learn about LBRY start here [LBRY](https://lbry.tech).
 * Then please come back and help us out here.
