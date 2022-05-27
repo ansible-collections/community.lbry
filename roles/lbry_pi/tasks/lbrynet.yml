@@ -4,7 +4,7 @@
       # No closing quotation ValueError
       #- name: Checkout lbrynet
       #  git:
-      #    repo: ”{{ lbrynet_git_repo }}"
+      #    repo: "{{ lbrynet_git_repo }}"
       #    dest: "/home/{{ lbry_user }}"
       - name: Checkout lbrynet
         command: git clone {{ lbrynet_git_repo }} /home/{{ lbry_user }}/lbrynet

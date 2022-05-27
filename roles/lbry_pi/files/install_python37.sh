@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 set -e;
 
 # Install Python 3.7
