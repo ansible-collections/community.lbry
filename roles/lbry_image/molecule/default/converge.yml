@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include lbry_image"
+      include_role:
+        name: "lbry_image"

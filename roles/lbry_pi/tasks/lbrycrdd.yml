@@ -1,0 +1,82 @@
+---
+- name: Install lbrycrdd
+  block:
+    - name: Download and unarchive a lbrycrd release
+      unarchive:
+        src: "{{ lbrycrd_release }}"
+        dest: "/home/{{ lbry_user }}"
+        remote_src: yes
+        creates: "{{ lbrycrd_build_home }}"
+        owner: "{{ lbry_user }}"
+        group: "{{ lbry_group }}"
+
+    - name: Fix permissions on lbrycrd dir
+      file:
+        path: "{{ lbrycrd_build_home }}"
+        owner: "{{ lbry_user }}"
+        group: "{{ lbry_group }}"
+        recurse: yes
+
+    - name: Build lbrycrd
+      command: "{{ lbrycrd_build_cmd }}"
+      args:
+        creates: "{{ lbrycrd_build_home }}/src/lbrycrdd"
+        chdir: "{{ lbrycrd_build_home }}"
+
+    - name: Copy build artifacts to system location
+      command: cp {{ item }} {{ lbrycrd_artifact_location }} 
+      args:
+        chdir: "{{ lbrycrd_build_home }}/src/"
+        creates: "{{ lbrycrd_artifact_location }}/lbrycrd-tx"
+      loop:
+        - lbrycrdd
+        - lbrycrd-cli
+        - lbrycrd-tx
+
+    - name: Create directories
+      file:
+        name: "{{ item }}"
+        state: directory
+        owner: "{{ lbry_user }}"
+        group: "{{ lbry_group }}"
+      with_items:
+        - /home/lbry/.lbrycrd
+
+    - name: Create lbrycrd.conf 
+      copy:
+        content: |
+          txindex=1
+          server=1
+          daemon=1
+          rpcuser=lbry
+          rpcpassword=lbry
+          dustrelayfee=0.00000001
+          rpcport=29245
+          rpcbind=0.0.0.0
+          rpcallowip=0.0.0.0/0
+        dest: /home/lbry/.lbrycrd/lbrycrd.conf
+        owner: "{{ lbry_user }}"
+        group: "{{ lbry_group }}"
+
+- name: Configure lbrycrdd systemd service
+  block:
+    - name: Ensure systemd file for lbrycrdd exists
+      template:
+        src: lbrycrdd.service.j2
+        dest: /etc/systemd/system/lbrycrdd.service
+      register: lbrycrdd_systemd
+
+    - name: Reload systemd if needed
+      systemd:
+        daemon_reload: yes
+      when: lbrycrdd_systemd.changed
+
+    - name: Ensure systemd service is running
+      systemd:
+        name: lbrycrdd
+        state: started
+        enabled: yes
+
+    - name: Ensure the lbrycrdd service is listening 
+      wait_for:
+        port: 29245

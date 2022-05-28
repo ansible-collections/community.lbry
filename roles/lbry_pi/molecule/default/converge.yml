@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  become: yes
+  tasks:
+    - name: "Include lbry_pi"
+      include_role:
+        name: "lbry_pi"

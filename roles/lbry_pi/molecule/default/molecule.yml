@@ -1,0 +1,31 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+platforms:
+  #- name: debian
+  #  box: debian/bullseye64
+  - name: focal
+    box: ubuntu/focal64
+    memory: 8192
+    cpus: 2
+provisioner:
+  name: ansible
+verifier:
+  name: testinfra
+scenario:
+  test_sequence:
+      - lint
+      - destroy
+      - dependency
+      - syntax
+      - create
+      - prepare
+      - converge
+      #- idempotence
+      - side_effect
+      - verify
+      - destroy

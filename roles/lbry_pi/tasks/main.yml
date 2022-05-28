@@ -1,0 +1,20 @@
+---
+  - import_tasks: lbry_prepare.yml
+    tags:
+      - prepare
+
+  - import_tasks: lbrycrdd.yml
+    tags:
+      - lbrycrdd
+
+  - import_tasks: lbry_docker.yml
+    tags:
+      - docker
+
+  - import_tasks: lbry_snapshots.yml
+    tags:
+      - snapshots
+
+  - import_tasks: lbrynet.yml
+    tags:
+      - lbrynet

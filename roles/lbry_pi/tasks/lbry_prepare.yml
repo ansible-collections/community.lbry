@@ -1,0 +1,45 @@
+---
+# https://askubuntu.com/questions/1136480/initramfs-error-when-installing-updating
+#- name: Remove package causing upgrade problem
+#  package:
+#    name: initramfs-tools
+#    state: absent
+
+# Contains a few tasks to preapre the OS for lbry
+- name: Add bitcoin apt repository
+  apt_repository:
+    #repo: ppa:bitcoin/bitcoin
+    repo: ppa:luke-jr/bitcoincore
+
+- name: Update apt-get repo and cache
+  apt: 
+    update_cache: yes 
+    force_apt_get: yes 
+    cache_valid_time: 3600
+
+- name: Upgrade all packages
+  apt:
+    upgrade: dist
+
+- name: Ensure required tools are installed
+  package:
+    name: "{{ required_packages }}"
+
+- name: Ensure lbry group exists
+  group:
+    name: "{{ lbry_group }}"
+
+- name: Ensure lbry user exists
+  user:
+    name: "{{ lbry_user }}"
+    group: "{{ lbry_group }}"
+    comment: "User for the LBRY daemon"
+
+- name: Ensure Python 3.7 is available
+  script: install_python37.sh
+  args:
+    creates: /usr/local/bin/python3.7
+
+- name: Install pip packages for default python
+  pip:
+    name: "{{ pip_packages }}"

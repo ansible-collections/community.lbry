@@ -1,0 +1,42 @@
+---
+  - name: Compile lbrynet from source
+    block:
+      # No closing quotation ValueError
+      #- name: Checkout lbrynet
+      #  git:
+      #    repo: "{{ lbrynet_git_repo }}"
+      #    dest: "/home/{{ lbry_user }}"
+      - name: Checkout lbrynet
+        command: git clone {{ lbrynet_git_repo }} /home/{{ lbry_user }}/lbrynet
+        args:
+          creates: /home/{{ lbry_user }}/lbrynet
+
+      - name: Install lbrynet packages
+        command: make install
+        args:
+          chdir: "/home/{{ lbry_user }}/lbrynet"
+          creates: /usr/local/bin/lbrynet
+
+  - name: LBRYnet systemd setup
+    block:
+      - name: Copy lbrnet systemd template
+        template:
+          src: lbrynet.service.j2
+          dest: /etc/systemd/system/lbrynet.service
+        register: lbrynet_systemd
+
+      - name: Reload systemd if needed
+        systemd:
+          daemon_reload: yes
+        when: lbrynet_systemd.changed
+
+      - name: Ensure systemd service is running
+        systemd:
+          name: lbrynet
+          state: started
+          enabled: yes
+
+
+   
+      
+  
