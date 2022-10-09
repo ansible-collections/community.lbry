@@ -197,7 +197,7 @@
   - name: Start a wallet server in a container
     docker_container:
       name: walletserver
-      image: lbry/wallet-server:v0.106.0
+      image: lbry/wallet-server:v0.110.0
       ports:
         - "127.0.0.1:50001:50001/tcp" # rpc port
         - "127.0.0.1:2112:2112"
