@@ -10,6 +10,7 @@
   apt_repository:
     #repo: ppa:bitcoin/bitcoin
     repo: ppa:luke-jr/bitcoincore
+    #codename: jammy
 
 - name: Update apt-get repo and cache
   apt: 

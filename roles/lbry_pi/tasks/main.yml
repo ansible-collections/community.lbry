@@ -3,18 +3,23 @@
     tags:
       - prepare
 
-  - import_tasks: lbrycrdd.yml
+  #- import_tasks: lbrycrdd.yml
+  #  tags:
+  #    - lbrycrdd
+
+  - import_tasks: lbry_arm64_binaries.yml
     tags:
       - lbrycrdd
+      - lbrynet
 
   - import_tasks: lbry_docker.yml
     tags:
       - docker
 
-  - import_tasks: lbry_snapshots.yml
-    tags:
-      - snapshots
+  #- import_tasks: lbry_snapshots.yml
+  #  tags:
+  #    - snapshots
 
-  - import_tasks: lbrynet.yml
-    tags:
-      - lbrynet
+  #- import_tasks: lbrynet.yml
+  #  tags:
+  #    - lbrynet

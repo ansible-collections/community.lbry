@@ -1,0 +1,26 @@
+---
+- hosts: all
+
+  tasks:
+
+    # https://github.com/ansible/ansible/pull/32788
+    - name: Download file from source
+      get_url:
+        url: http://nas33e824:8080/share.cgi?ssid=031431e567a64bc786c834e159259d95&fid=031431e567a64bc786c834e159259d95&filename=lbcd_snapshot_1199527_v0.22.105_2022-07-27.tar.zst&openfolder=forcedownload&ep=
+        dest: /tmp/lbcd_snapshot_1199527_v0.22.105_2022-07-27.tar.zst
+        timeout: 7200
+
+    - name: Unarchive a lbrycrd snapshot
+      unarchive:
+        #src: https://snapshots.lbry.com/blockchain/lbrycrd_snapshot_1194102_v0.17.3.3_2022-07-17.tar.zst
+        #src: http://nas33e824:8080/share.cgi?ssid=0027607a9c90446da232b68b2ab7d82b&fid=0027607a9c90446da232b68b2ab7d82b&filename=wallet_server_snapshot_1072108.tar.gz&openfolder=forcedownload&ep=
+        src: /tmp/lbcd_snapshot_1199527_v0.22.105_2022-07-27.tar.zst
+        remote_src: yes
+        dest: /home/lbry/.lbrycrd
+        owner: lbry
+        group: lbry
+
+    - name: Ensure the temp file is deleted
+      file:
+        path: /tmp/lbcd_snapshot_1199527_v0.22.105_2022-07-27.tar.zst
+        state: absent

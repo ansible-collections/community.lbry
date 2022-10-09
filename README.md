@@ -288,3 +288,8 @@ GNU General Public License v3.0 or later.
 
 See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.
 >>>>>>> c85fc108c8d3fe0e039a6e4aa73b14180a58590e
+
+# Ansible Playbooks
+
+ansible-playbook -l all -i inventory.tmp --become -u rhys --ask-become-pass playbooks/pi4.yml --timeout 3600
+ansible-playbook -l all -i inventory.tmp --become -u rhys --ask-become-pass playbooks/restore_lbrycrd_snapshot.yml --timeout 3600

@@ -10,6 +10,7 @@ The following resources were consulted when creating this role:
 * https://odysee.com/@LBRYarm:5/LBRY-ARM-Guide--1---LBRYcrd:5
 * https://github.com/lbryio/lbry-sdk/blob/master/INSTALL.md
 * https://gitlab.melroy.org/melroy/lbry-bot/-/blob/master/lbrynet.service
+* https://odysee.com/@LBRYarm:5/LBRY-ARM64-Pack1:0
 
 Requirements
 ------------

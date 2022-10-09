@@ -1,0 +1,99 @@
+---
+- name: Download and unarchive the prebuilt lbry binaries
+  unarchive:
+    src: "{{ lbry_arm64_bundle }}"
+    remote_src: yes
+    dest: "/home/{{ lbry_user }}"
+    creates: "/home/{{ lbry_user }}/LBRY-ARM64-Pack"
+    owner: "{{ lbry_user }}"
+    group: "{{ lbry_group }}"
+
+- name: Fix permissions on lbrycrd dir
+  file:
+    path: "/home/{{ lbry_user }}"
+    owner: "{{ lbry_user }}"
+    group: "{{ lbry_group }}"
+    recurse: yes
+
+- name: Copy build executable to correct location
+  command: cp {{ item }} {{ lbrycrd_artifact_location }} 
+  args:
+    chdir: "/home/{{ lbry_user }}/LBRYcrd"
+    creates: "{{ lbrycrd_artifact_location }}/lbrycrd-tx"
+  loop:
+    - lbrycrdd
+    - lbrycrd-cli
+    - lbrycrd-tx
+
+- name: Create directories
+  file:
+    name: "{{ item }}"
+    state: directory
+    owner: "{{ lbry_user }}"
+    group: "{{ lbry_group }}"
+  with_items:
+    - /home/{{ lbry_user }}/.lbrycrd
+
+- name: Create lbrycrd.conf 
+  copy:
+    content: |
+      txindex=1
+      server=1
+      daemon=1
+      rpcuser=lbry
+      rpcpassword=lbry
+      dustrelayfee=0.00000001
+      rpcport=29245
+      rpcbind=0.0.0.0
+      rpcallowip=0.0.0.0/0
+    dest: /home/lbry/.lbrycrd/lbrycrd.conf
+    owner: "{{ lbry_user }}"
+    group: "{{ lbry_group }}"
+
+- name: Configure lbrycrdd systemd service
+  block:
+    - name: Ensure systemd file for lbrycrdd exists
+      template:
+        src: lbrycrdd.service.j2
+        dest: /etc/systemd/system/lbrycrdd.service
+      register: lbrycrdd_systemd
+
+    - name: Reload systemd if needed
+      systemd:
+        daemon_reload: yes
+      when: lbrycrdd_systemd.changed
+
+    - name: Ensure systemd service is running
+      systemd:
+        name: lbrycrdd
+        state: started
+        enabled: yes
+
+    - name: Ensure the lbrycrdd service is listening 
+      wait_for:
+        port: 29245
+
+- name: Setup LBRYNet 
+  block:
+  - name: COpy lbrynet exec to location
+    command: cp lbrynet /usr/local/bin/
+    args:
+      chdir: "/home/{{ lbry_user }}/SDK"
+      creates: /usr/local/bin/lbrynet
+
+  - name: Copy lbrynet systemd template
+    template:
+      src: lbrynet.service.j2
+      dest: /etc/systemd/system/lbrynet.service
+    register: lbrynet_systemd
+
+  - name: Reload systemd if needed
+    systemd:
+      daemon_reload: yes
+    when: lbrynet_systemd.changed
+
+  - name: Ensure systemd service is running
+    systemd:
+      name: lbrynet
+      state: started
+      enabled: yes
