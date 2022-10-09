@@ -21,7 +21,8 @@ jobs:
         ansible:
           - stable-2.12
           - stable-2.13
-          - devel
+          - stable-2.14
+          #- devel
     runs-on: ubuntu-latest
     steps:
 
@@ -133,20 +134,10 @@ jobs:
         ansible:
           - stable-2.12
           - stable-2.13
-          - devel
+          - stable-2.14
         python:
-          #- 2.6
-          #- 2.7
-          #- 3.5
-          #- 3.6
-          #- 3.7
           - 3.8
-          #- 3.9
         lbry_module: ${{ fromJson(needs.integration_matrix.outputs.matrix) }}
-        exclude:
-          # Because ansible-test doesn't support python3.9 for Ansible 2.9
-          - ansible: stable-2.9
-            python: 3.9
 
     steps:
       - name: Check out code

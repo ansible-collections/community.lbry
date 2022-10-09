@@ -18,13 +18,14 @@ jobs:
         with:
           path: ansible_collections/community/lbry
 
-      - name: Set up Python 3.9
+      - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
-          python-version: 3.9
+          python-version: 3.8
 
-      - name: Install ansible-base (devel)
-        run: pip install https://github.com/ansible/ansible/archive/devel.tar.gz --disable-pip-version-check
+      # As of 09.10.2022 devel requires Python 3.9 which we can't support
+      - name: Install ansible-base (stable-2.14)
+        run: pip install https://github.com/ansible/ansible/archive/stable-2.14.tar.gz --disable-pip-version-check
 
       - name: Build the collection
         run: ansible-galaxy collection build
