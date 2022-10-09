@@ -279,6 +279,10 @@
       - "es01"
 
   - shell: sleep 60 && python --version && docker ps
+    register: debug
+
+  - debug:
+      var: debug
 
   - name: Ensure lbrynet server components are fully loaded
     community.lbry.lbry_status:
