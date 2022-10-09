@@ -278,7 +278,7 @@
       - "walletserver"
       - "es01"
 
-  - shell: sleep 60 && python --version && docker ps
+  - shell: sleep 60 && python --version && docker ps && docker container logs walletserver
     register: debug
 
   - debug:
