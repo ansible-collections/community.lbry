@@ -24,8 +24,8 @@ jobs:
           python-version: 3.8
 
       # As of 09.10.2022 devel requires Python 3.9 which we can't support
-      - name: Install ansible-base (stable-2.14)
-        run: pip install https://github.com/ansible/ansible/archive/stable-2.14.tar.gz --disable-pip-version-check
+      - name: Install ansible-base (stable-2.13)
+        run: pip install https://github.com/ansible/ansible/archive/stable-2.13.tar.gz --disable-pip-version-check
 
       - name: Build the collection
         run: ansible-galaxy collection build
