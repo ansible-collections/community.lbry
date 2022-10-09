@@ -24,7 +24,7 @@ jobs:
           python-version: 3.8
 
       - name: Install ansible-base (devel)
-        run: pip install https://github.com/ansible/ansible/archive/devel.tar.gz --disable-pip-version-check
+        run: pip install https://github.com/ansible/ansible/archive/stable-2.14.tar.gz --disable-pip-version-check
 
       - name: Build the collection
         run: ansible-galaxy collection build
