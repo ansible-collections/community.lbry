@@ -145,6 +145,13 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
+      - name: Rejig python
+        run: |
+          unlink python3 && unlink pip3;
+          cd /opt/hostedtoolcache/Python/3.7.15/x64/bin/
+          link python /opt/hostedtoolcache/Python/3.7.15/x64/bin/python3
+          link pip3 /opt/hostedtoolcache/Python/3.7.15/x64/bin/pip3
+
       - name: Install pip packages
         run: pip install docker requests --user
 
