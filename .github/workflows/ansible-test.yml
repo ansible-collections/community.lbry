@@ -145,21 +145,21 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Rejig python
-        run: |
-          unlink python3 && unlink pip3 || true;
-          cd /opt/hostedtoolcache/Python/3.7.15/x64/bin/
-          link ./python3 python3
-          link ./pip3 pip3
+      #- name: Rejig python
+      #  run: |
+      #    unlink python3 && unlink pip3 || true;
+      #    cd /opt/hostedtoolcache/Python/3.7.15/x64/bin/
+      #    link ./python3 python3
+      #    link ./pip3 pip3
 
       - name: Install pip packages
-        run: pip install docker requests --user
+        run: pip3 install docker requests --user
 
       - name: Install coverage
-        run: pip install coverage --user
+        run: pip3 install coverage --user
 
       - name: Install ansible-base (${{ matrix.ansible }})
-        run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
+        run: pip3 install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
 
       - name: Build and install collection
         run: ansible-galaxy collection build && ansible-galaxy collection install community-lbry-*.tar.gz
