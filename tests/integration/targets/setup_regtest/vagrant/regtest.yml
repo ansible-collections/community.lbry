@@ -19,11 +19,11 @@
       state: present
     retries: 5
 
-  #- name: Install pip packages
-  #  pip:
-  #    name: "{{ pip_packages }}"
-  #    state: present
-  #  retries: 5
+  - name: Install pip packages
+    pip:
+      name: "{{ pip_packages }}"
+      state: present
+    retries: 5
 
   - name: Debug
     debug:
