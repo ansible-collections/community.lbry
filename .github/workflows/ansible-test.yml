@@ -33,7 +33,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: Install ansible-base (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
@@ -73,7 +73,7 @@ jobs:
 #        with:
           # it is just required to run that once as "ansible-test units" in the docker image
           # will run on all python versions it supports.
-#          python-version: 3.8
+#          python-version: 3.9
 
 #      - name: Install ansible-base (${{ matrix.ansible }})
 #        run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
@@ -140,13 +140,9 @@ jobs:
           #- 3.5
           #- 3.6
           #- 3.7
-          - 3.8
-          #- 3.9
+          #- 3.8
+          - 3.9
         lbry_module: ${{ fromJson(needs.integration_matrix.outputs.matrix) }}
-        exclude:
-          # Because ansible-test doesn't support python3.9 for Ansible 2.9
-          - ansible: stable-2.9
-            python: 3.9
 
     steps:
       - name: Check out code
