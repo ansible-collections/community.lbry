@@ -140,9 +140,8 @@ jobs:
         with:
           path: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
-      - name: Build and install collection
-        run: ansible-galaxy collection build && ansible-galaxy collection install community-lbry-*.tar.gz
-        working-directory: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
+      - name: Clean up
+        run: apt remove -y python3 ansible
 
       - name: Set up Python - ${{ matrix.python }}
         uses: actions/setup-python@v2
@@ -157,6 +156,10 @@ jobs:
 
       - name: Install ansible-base (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
+
+      - name: Build and install collection
+        run: ansible-galaxy collection build && ansible-galaxy collection install community-lbry-*.tar.gz
+        working-directory: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
       - name: Install community.docker
         run: ansible-galaxy collection install community.docker -p /home/runner/.ansible/collections
