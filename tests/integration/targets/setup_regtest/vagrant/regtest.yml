@@ -285,6 +285,13 @@
       - "walletserver"
       - "es01"
 
+  - name: CHeck container status
+    shell: docker logs {{ item  }}
+    loop:
+      - "lbrynet"
+      - "walletserver"
+      - "es01"
+
   - name: Ensure lbrynet server components are fully loaded
     community.lbry.lbry_status:
     register: result
