@@ -141,7 +141,7 @@ jobs:
           path: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
       - name: Clean up
-        run: apt remove -y python3 ansible
+        run: sudo apt remove -y python3 ansible
 
       - name: Set up Python - ${{ matrix.python }}
         uses: actions/setup-python@v2
