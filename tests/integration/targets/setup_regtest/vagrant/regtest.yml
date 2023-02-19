@@ -25,6 +25,10 @@
       state: present
     retries: 5
 
+  - name: Debug
+    debug:
+      var: ansible_python_interpreter
+
   - name: Add dockers gpg key
     shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
     args:
