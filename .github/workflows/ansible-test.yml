@@ -147,10 +147,10 @@ jobs:
 
       - name: Rejig python
         run: |
-          unlink python3 && unlink pip3;
+          unlink python3 && unlink pip3 || true;
           cd /opt/hostedtoolcache/Python/3.7.15/x64/bin/
-          link /opt/hostedtoolcache/Python/3.7.15/x64/bin/python3 python3
-          link /opt/hostedtoolcache/Python/3.7.15/x64/bin/pip3 pip3
+          link ./python3 python3
+          link ./pip3 pip3
 
       - name: Install pip packages
         run: pip install docker requests --user
