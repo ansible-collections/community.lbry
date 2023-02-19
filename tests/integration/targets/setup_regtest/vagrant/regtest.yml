@@ -25,7 +25,7 @@
     pip:
       name: "{{ pip_packages }}"
       state: present
-      #executable: /opt/hostedtoolcache/Python/3.7.15/x64/bin/pip3
+      executable: /opt/hostedtoolcache/Python/3.7.15/x64/bin/pip3
     retries: 5
 
   - name: Debug
