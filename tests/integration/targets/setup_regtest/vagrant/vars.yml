@@ -10,7 +10,7 @@ required_packages:
   - unzip
   - zip
   - net-tools
-  - python3-pip
+  #- python3-pip
   - acl
 docker_packages:
   - docker-ce
