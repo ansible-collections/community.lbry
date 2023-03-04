@@ -214,7 +214,7 @@
     shell: tail -n 100 /home/lbry/.lbrycrd/regtest/debug.log
     ignore_errors: true
 
-  - shell: ping -c 3 8.8.8.8 && ping -c 3 google.com
+  - shell: wget http://lbry:lbry@172.17.0.1:29245
 
   - name: Start a wallet server in a container
     docker_container:
