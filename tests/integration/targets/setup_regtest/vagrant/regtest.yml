@@ -210,7 +210,7 @@
     ignore_errors: true
 
   - name: debug - read lbrycrdd log
-    shell: ls -lh /home/lbry/
+    shell: find /home/lbry -name '*.log'
     ignore_errors: true    
 
   - name: Start a wallet server in a container
