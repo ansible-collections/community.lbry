@@ -210,8 +210,9 @@
     ignore_errors: true
 
   - name: debug - read lbrycrdd log
-    shell: find /home/lbry -name '*.log'
-    ignore_errors: true    
+    #shell: find /home/lbry -name '*.log'
+    shell: tail -n 100 /home/lbry/.lbrycrd/regtest/debug.log
+    ignore_errors: true
 
   - name: Start a wallet server in a container
     docker_container:
@@ -250,7 +251,7 @@
     ignore_errors: true
 
   - name: debug - read lbrycrdd log
-    shell: tail -n 100 -f /home/lbry/.lbrycrd/debug.log
+    shell: tail -n 100 /home/lbry/.lbrycrd/regtest/debug.log
     ignore_errors: true
 
   #- name: Wait for the walletserver to become active
