@@ -256,7 +256,7 @@
     shell: tail -n 100 /home/lbry/.lbrycrd/regtest/debug.log
     ignore_errors: true
 
-  - shell: curl --data-binary '{"jsonrpc":"1.0","id":"curltext","method":"getinfo","params":[]}' -H 'content-type:text/plain;' http://lbry:lbry@172.17.0.1:29245
+  - shell: curl --data-binary '{"jsonrpc":"1.0","id":"curltext","method":"getblockchaininfo","params":[]}' -H 'content-type:text/plain;' http://lbry:lbry@172.17.0.1:29245
     ignore_errors: true
 
   #- name: Wait for the walletserver to become active
@@ -318,7 +318,8 @@
       - "walletserver"
       - "es01"
 
-  - shell: sleep 10 && docker ps
+  - shell: docker exec -ti wallterserver curl --data-binary '{"jsonrpc":"1.0","id":"curltext","method":"getblockchaininfo","params":[]}' -H 'content-type:text/plain;' http://lbry:lbry@172.17.0.1:29245
+    ignore_errors: true
 
   - name: Ensure lbrynet server components are fully loaded
     community.lbry.lbry_status:
