@@ -201,12 +201,12 @@
       delay: 30
     when: elastic.changed
 
-  - name: debug - wallterserver cannot connect to lbrycrdd
+  - name: debug - walletserver cannot connect to lbrycrdd
     shell: ps aux | grep 29245
     ignore_errors: true
 
   - name: debug - read lbrycrdd log
-    shell: tail -n 100 -f /home/lbry/.lbrycrd/debug.log
+    shell: ls -lh /home/lbry/.lbrycrd/ && tail -n 100 -f /home/lbry/.lbrycrd/debug.log
     ignore_errors: true    
 
   - name: Start a wallet server in a container
@@ -241,7 +241,7 @@
     retries: 5
     register: walletserver
 
-  - name: debug - wallterserver cannot connect to lbrycrdd
+  - name: debug - walletserver cannot connect to lbrycrdd
     shell: ps aux | grep 29245
     ignore_errors: true
 
