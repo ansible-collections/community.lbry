@@ -315,6 +315,8 @@
       - "walletserver"
       - "es01"
 
+  - shell: sleep 10 && docker ps
+
   - name: Ensure lbrynet server components are fully loaded
     community.lbry.lbry_status:
     register: result
