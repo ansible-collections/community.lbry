@@ -205,6 +205,10 @@
     shell: ps aux | grep 29245
     ignore_errors: true
 
+  - name: debug - read lbrycrdd log
+    shell: tail -n 100 -f ~/.lbrycrd/debug.log
+    ignore_errors: true    
+
   - name: Start a wallet server in a container
     docker_container:
       name: walletserver
@@ -239,6 +243,10 @@
 
   - name: debug - wallterserver cannot connect to lbrycrdd
     shell: ps aux | grep 29245
+    ignore_errors: true
+
+  - name: debug - read lbrycrdd log
+    shell: tail -n 100 -f ~/.lbrycrd/debug.log
     ignore_errors: true
 
   #- name: Wait for the walletserver to become active
