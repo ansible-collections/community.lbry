@@ -205,6 +205,10 @@
     shell: ps aux | grep 29245
     ignore_errors: true
 
+  - name: Check lbrycrdd
+    shell: systemctl status lbrycrdd
+    ignore_errors: true
+
   - name: debug - read lbrycrdd log
     shell: ls -lh /home/lbry/.lbrycrd/ && tail -n 100 -f /home/lbry/.lbrycrd/debug.log
     ignore_errors: true    
