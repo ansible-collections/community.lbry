@@ -318,7 +318,7 @@
       - "walletserver"
       - "es01"
 
-  - shell: docker exec walletserver apt-get install -y curl && docker exec walletserver curl --data-binary '{"jsonrpc":"1.0","id":"curltext","method":"getblockchaininfo","params":[]}' -H 'content-type:text/plain;' http://lbry:lbry@172.17.0.1:29245
+  - shell: docker exec -u root walletserver apt-get install -y curl && docker exec walletserver curl --data-binary '{"jsonrpc":"1.0","id":"curltext","method":"getblockchaininfo","params":[]}' -H 'content-type:text/plain;' http://lbry:lbry@172.17.0.1:29245
     ignore_errors: true
 
   - name: Ensure lbrynet server components are fully loaded
