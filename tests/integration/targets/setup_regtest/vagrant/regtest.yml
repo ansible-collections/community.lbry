@@ -124,7 +124,7 @@
         rpcpassword=lbry
         dustrelayfee=0.00000001
         rpcport=29245
-        rpcbind=0.0.0.0
+        rpcbind=127.0.0.1
         rpcallowip=0.0.0.0/0
         regtest=1
       dest: /home/lbry/.lbrycrd/lbrycrd.conf
