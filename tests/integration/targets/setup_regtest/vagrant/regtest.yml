@@ -311,6 +311,8 @@
       - "walletserver"
       - "es01"
 
+- shell: docker network inspect lbry
+
   - name: Check container status
     shell: docker logs {{ item  }}
     loop:
