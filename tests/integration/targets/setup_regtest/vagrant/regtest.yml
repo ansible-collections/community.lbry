@@ -202,17 +202,12 @@
     when: elastic.changed
 
   - name: debug - walletserver cannot connect to lbrycrdd
-    shell: ps aux | grep 29245
+    shell: ps aux | grep lbry
     ignore_errors: true
 
   - name: Check lbrycrdd
     shell: systemctl status lbrycrdd
     ignore_errors: true
-
-  - name: Ensure lbrycrdd is running
-    service:
-      name: lbrycrdd
-      state: started
 
   - name: debug - read lbrycrdd log
     #shell: find /home/lbry -name '*.log'
@@ -234,7 +229,7 @@
         - name: "lbry"
       env:
         "DB_DIRECTORY": "/database"
-        "DAEMON_URL": "http://lbry:lbry@172.17.0.1:29245"  # host ip of the docker host on default network
+        "DAEMON_URL": "http://lbry:lbry@host.docker.internal:29245"  # host ip of the docker host on default network - 172.17.0.1
         "MAX_QUERY_WORKERS": "4"
         "CACHE_MB": "1024"
         "MAX_SEND": "1000000000000000000"
