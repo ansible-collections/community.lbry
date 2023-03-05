@@ -219,17 +219,17 @@
   - name: Start a wallet server in a container
     docker_container:
       name: walletserver
-      image: lbry/wallet-server:v0.105.0
+      image: lbry/wallet-server:v0.106.0
       ports:
-        - "127.0.0.1:50001:50001/tcp" # rpc port
-        - "127.0.0.1:2112:2112"
+        - "0.0.0.0:50001:50001/tcp" # rpc port
+        - "0.0.0.0:2112:2112"
       volumes:
         - "wallet_server:/database"
       networks:
         - name: "lbry"
       env:
         "DB_DIRECTORY": "/database"
-        "DAEMON_URL": "http://lbry:lbry@host.docker.internal:29245"  # host ip of the docker host on default network - 172.17.0.1
+        "DAEMON_URL": "http://lbry:lbry@172.17.0.1:29245"  # host ip of the docker host on default network - 172.17.0.1
         "MAX_QUERY_WORKERS": "4"
         "CACHE_MB": "1024"
         "MAX_SEND": "1000000000000000000"
