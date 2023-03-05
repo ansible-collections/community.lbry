@@ -223,6 +223,10 @@
       ports:
         - "127.0.0.1:50001:50001/tcp" # rpc port
         - "127.0.0.1:2112:2112"
+      volumes:
+        - "wallet_server:/database"
+      networks:
+        - name: "lbry"
       env:
         "DB_DIRECTORY": "/database"
         "DAEMON_URL": "http://lbry:lbry@172.17.0.1:29245"  # host ip of the docker host on default network
@@ -241,12 +245,10 @@
         "ALLOW_LAN_UDP": "True"
         "ALLOW_LOCALHOST": " True"
         "NET": "regtest"
-      volumes:
-        - "wallet_server:/database"
-      networks:
-        - name: "lbry"
     retries: 5
     register: walletserver
+
+  - shell: docker container inspect walletserver
 
   - name: debug - walletserver cannot connect to lbrycrdd
     shell: ps aux | grep 29245
