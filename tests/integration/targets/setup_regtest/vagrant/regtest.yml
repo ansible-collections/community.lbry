@@ -316,10 +316,10 @@
   - name: ENsure all container are connected to the network
     community.docker.docker_network:
       name: lbry
-    connected:
-      - "lbrynet"
-      - "walletserver"
-      - "es01"    
+      connected:
+        - "lbrynet"
+        - "walletserver"
+        - "es01"    
 
   - shell: docker network inspect lbry
 
