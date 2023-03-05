@@ -25,7 +25,7 @@
     pip:
       name: "{{ pip_packages }}"
       state: present
-      executable: /opt/hostedtoolcache/Python/3.7.15/x64/bin/pip3
+      #executable: /opt/hostedtoolcache/Python/3.7.15/x64/bin/pip3
     retries: 5
 
   - name: Debug
@@ -124,7 +124,7 @@
         rpcpassword=lbry
         dustrelayfee=0.00000001
         rpcport=29245
-        rpcbind=127.0.0.1
+        rpcbind=0.0.0.0
         rpcallowip=0.0.0.0/0
         regtest=1
       dest: /home/lbry/.lbrycrd/lbrycrd.conf
@@ -221,8 +221,8 @@
       name: walletserver
       image: lbry/wallet-server:v0.106.0
       ports:
-        - "0.0.0.0:50001:50001/tcp" # rpc port
-        - "0.0.0.0:2112:2112"
+        - "127.0.0.1:50001:50001/tcp" # rpc port
+        - "127.0.0.1:2112:2112"
       volumes:
         - "wallet_server:/database"
       networks:
@@ -339,7 +339,7 @@
     community.lbry.lbry_status:
     register: result
     until: "result.result.startup_status.values() is all"
-    retries: 25
+    retries: 10
     delay: 10
     ignore_errors: yes
 
