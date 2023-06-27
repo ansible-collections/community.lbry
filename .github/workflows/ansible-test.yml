@@ -19,21 +19,19 @@ jobs:
     strategy:
       matrix:
         ansible:
-          - stable-2.12
-          - stable-2.13
-          - devel
+          - stable-2.11
     runs-on: ubuntu-latest
     steps:
 
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.7
 
       - name: Install ansible-base (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
@@ -109,7 +107,7 @@ jobs:
     steps:
 
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: ansible_collections/community/lbry
 
@@ -131,52 +129,47 @@ jobs:
       fail-fast: false
       matrix:
         ansible:
-          - stable-2.12
-          - stable-2.13
-          - devel
+          - stable-2.11
         python:
-          #- 2.6
-          #- 2.7
-          #- 3.5
-          #- 3.6
-          #- 3.7
-          - 3.8
-          #- 3.9
+          - 3.7
         lbry_module: ${{ fromJson(needs.integration_matrix.outputs.matrix) }}
-        exclude:
-          # Because ansible-test doesn't support python3.9 for Ansible 2.9
-          - ansible: stable-2.9
-            python: 3.9
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
+
+      - name: Set up Python - ${{ matrix.python }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+
+      #- name: Rejig python
+      #  run: |
+      #    unlink python3 && unlink pip3 || true;
+      #    cd /opt/hostedtoolcache/Python/3.7.15/x64/bin/
+      #    link ./python3 python3
+      #    link ./pip3 pip3
+
+      - name: Install pip packages
+        run: pip3 install docker requests --user
+
+      - name: Install coverage
+        run: pip3 install coverage --user
+
+      - name: Install ansible-base (${{ matrix.ansible }})
+        run: pip3 install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
 
       - name: Build and install collection
         run: ansible-galaxy collection build && ansible-galaxy collection install community-lbry-*.tar.gz
         working-directory: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
-      - name: Set up Python - ${{ matrix.python }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python }}
-
-      - name: Install pip packages
-        run: pip install docker requests --user
-
-      - name: Install coverage
-        run: pip install coverage --user
-
-      - name: Install ansible-base (${{ matrix.ansible }})
-        run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
-
       - name: Install community.docker
         run: ansible-galaxy collection install community.docker -p /home/runner/.ansible/collections
 
       - name: Run Playbook to setup regtest env
-        run: ansible-playbook -l localhost ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}/tests/integration/targets/setup_regtest/vagrant/regtest.yml -b
+        run: ansible-playbook -v -l localhost ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}/tests/integration/targets/setup_regtest/vagrant/regtest.yml -b
 
       # Run the integration tests
       - name: Run integration test - ${{ matrix.lbry_module }} - ${{ matrix.python }} - ${{ matrix.ansible }}

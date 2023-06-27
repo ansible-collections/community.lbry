@@ -19,11 +19,18 @@
       state: present
     retries: 5
 
+  #- shell: ls -lh /opt/hostedtoolcache/Python/3.7.15/x64/bin/
+
   - name: Install pip packages
     pip:
       name: "{{ pip_packages }}"
       state: present
+      executable: /opt/hostedtoolcache/Python/3.7.15/x64/bin/pip3
     retries: 5
+
+  - name: Debug
+    debug:
+      var: ansible_python_interpreter
 
   - name: Add dockers gpg key
     shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -194,16 +201,35 @@
       delay: 30
     when: elastic.changed
 
+  - name: debug - walletserver cannot connect to lbrycrdd
+    shell: ps aux | grep lbry
+    ignore_errors: true
+
+  - name: Check lbrycrdd
+    shell: systemctl status lbrycrdd
+    ignore_errors: true
+
+  - name: debug - read lbrycrdd log
+    #shell: find /home/lbry -name '*.log'
+    shell: tail -n 100 /home/lbry/.lbrycrd/regtest/debug.log
+    ignore_errors: true
+
+  - shell: netstat -tulpen
+
   - name: Start a wallet server in a container
     docker_container:
       name: walletserver
-      image: lbry/wallet-server:latest-release
+      image: lbry/wallet-server:v0.106.0
       ports:
         - "127.0.0.1:50001:50001/tcp" # rpc port
         - "127.0.0.1:2112:2112"
+      volumes:
+        - "wallet_server:/database"
+      networks:
+        - name: "lbry"
       env:
         "DB_DIRECTORY": "/database"
-        "DAEMON_URL": "http://lbry:lbry@172.17.0.1:29245"  # host ip of the docker host on default network
+        "DAEMON_URL": "http://lbry:lbry@172.17.0.1:29245"  # host ip of the docker host on default network - 172.17.0.1
         "MAX_QUERY_WORKERS": "4"
         "CACHE_MB": "1024"
         "MAX_SEND": "1000000000000000000"
@@ -219,13 +245,22 @@
         "ALLOW_LAN_UDP": "True"
         "ALLOW_LOCALHOST": " True"
         "NET": "regtest"
-      volumes:
-        - "wallet_server:/database"
-      networks:
-        - name: "lbry"
     retries: 5
     register: walletserver
-  
+
+  - shell: docker container inspect walletserver
+
+  - name: debug - walletserver cannot connect to lbrycrdd
+    shell: ps aux | grep 29245
+    ignore_errors: true
+
+  - name: debug - read lbrycrdd log
+    shell: tail -n 100 /home/lbry/.lbrycrd/regtest/debug.log
+    ignore_errors: true
+
+  - shell: curl --data-binary '{"jsonrpc":"1.0","id":"curltext","method":"getblockchaininfo","params":[]}' -H 'content-type:text/plain;' http://lbry:lbry@172.17.0.1:29245
+    ignore_errors: true
+
   #- name: Wait for the walletserver to become active
   #  wait_for:
   #    port: 50001
@@ -278,13 +313,37 @@
       - "walletserver"
       - "es01"
 
+  - name: Ensure all containers are connected to the network
+    community.docker.docker_network:
+      name: lbry
+      connected:
+        - "lbrynet"
+        - "walletserver"
+        - "es01"    
+
+  - shell: docker network inspect lbry
+
+  - name: Check container status
+    shell: docker logs {{ item  }}
+    loop:
+      - "lbrynet"
+      - "walletserver"
+      - "es01"
+
+  - shell: docker exec -u root walletserver apt-get update && apt-get install -y curl && find / -name curl && docker exec walletserver /usr/bin/curl --data-binary '{"jsonrpc":"1.0","id":"curltext","method":"getblockchaininfo","params":[]}' -H 'content-type:text/plain;' http://lbry:lbry@172.17.0.1:29245
+    ignore_errors: true
+
+  
+
   - name: Ensure lbrynet server components are fully loaded
     community.lbry.lbry_status:
     register: result
     until: "result.result.startup_status.values() is all"
-    retries: 25
+    retries: 10
     delay: 10
-    #ignore_errors: yes
+    ignore_errors: yes
+
+  - shell: docker logs walletserver
 
   #- debug:
   #    var: result
