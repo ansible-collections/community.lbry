@@ -197,7 +197,7 @@
   - name: Start a wallet server in a container
     docker_container:
       name: walletserver
-      image: lbry/wallet-server:latest-release
+      image: lbry/wallet-server:v0.110.0
       ports:
         - "127.0.0.1:50001:50001/tcp" # rpc port
         - "127.0.0.1:2112:2112"
@@ -277,6 +277,12 @@
       - "lbrynet"
       - "walletserver"
       - "es01"
+
+  - shell: sleep 60 && python --version && docker ps && docker container logs walletserver
+    register: debug
+
+  - debug:
+      var: debug
 
   - name: Ensure lbrynet server components are fully loaded
     community.lbry.lbry_status:
